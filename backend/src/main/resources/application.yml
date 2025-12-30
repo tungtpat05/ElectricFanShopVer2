@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: electricfanshop
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=ElectricFanShopDB;encrypt=false
+    username: sa
+    password: 1234
+  jpa:
+    show-sql: true
