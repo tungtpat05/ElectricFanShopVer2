@@ -1,0 +1,24 @@
+import React from "react";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import MainLayout from "../layouts/MainLayout";
+import NotFoundPage from "../pages/NotFoundPage";
+import HomePage from "../pages/HomePage";
+
+const AppRoutes = () => {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    )
+  );
+  return <RouterProvider router={router} />;
+};
+
+export default AppRoutes;
