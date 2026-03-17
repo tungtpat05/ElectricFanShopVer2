@@ -1,5 +1,3 @@
-import React from "react";
-import { useState, useEffect } from "react";
 import ProductCard from "./ProductItem";
 import { Product } from "../types/product";
 

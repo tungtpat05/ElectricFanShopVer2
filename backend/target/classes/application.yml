@@ -1,9 +1,38 @@
 spring:
+  config:
+    import: optional:dotenv:.env
+
   application:
-    name: electricfanshop
+    name: ${SPRING_APPLICATION_NAME}
+
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=ElectricFanShopDBVer2;encrypt=false
-    username: sa
-    password: 1234
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: none
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
+            client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
+
+server:
+  port: ${SERVER_PORT}
+
+app:
+  oauth2:
+    success-redirect-url: ${OAUTH2_SUCCESS_REDIRECT_URL:http://localhost:3000}
+
+logging:
+  level:
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
+    org.springframework.web.client.RestTemplate: DEBUG
+

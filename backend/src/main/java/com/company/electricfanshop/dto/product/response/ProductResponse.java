@@ -1,21 +1,30 @@
 package com.company.electricfanshop.dto.product.response;
 
+import lombok.*;
 import java.math.BigDecimal;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 public class ProductResponse {
     private Integer id;
     private String productName;
+    private String slug;
+    private BrandResponse brand;
+    private CategoryResponse category;
+    private String summary;
     private String description;
-    private BigDecimal price;
-    private String image;
-    private Integer stock;    
+    private BigDecimal basePrice;
+    private BigDecimal discountPrice;
+    private String thumbnail;
+    private Integer weightGram;
+    private Integer lengthCm;
+    private Integer widthCm;
+    private Integer heightCm;
+    private Boolean isFeatured;
+    private Boolean isActive;
+    private LocalDateTime createdAt;
 }
+
