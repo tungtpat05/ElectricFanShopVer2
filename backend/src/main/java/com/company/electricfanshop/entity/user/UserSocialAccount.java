@@ -3,11 +3,13 @@ package com.company.electricfanshop.entity.user;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Builder
 @Entity
 @Table(name = "user_social_accounts", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"provider", "provider_id"})
 })
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSocialAccount {
