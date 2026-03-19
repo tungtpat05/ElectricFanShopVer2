@@ -42,10 +42,7 @@ public class BrandService {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        brand.setBrandName(request.getBrandName());
-        brand.setLogoUrl(request.getLogoUrl());
-        brand.setDescription(request.getDescription());
-        brand.setIsActive(request.getIsActive());
+        brandMapper.updateEntiryFromRequest(request, brand);
 
         brandRepository.save(brand);
         return brandMapper.toResponse(brand);

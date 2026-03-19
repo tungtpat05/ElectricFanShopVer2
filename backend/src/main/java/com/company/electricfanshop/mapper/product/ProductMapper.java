@@ -1,5 +1,6 @@
 package com.company.electricfanshop.mapper.product;
 
+import com.company.electricfanshop.dto.product.request.ProductUpdateRequest;
 import org.springframework.stereotype.Component;
 
 import com.company.electricfanshop.dto.product.request.ProductCreateRequest;
@@ -72,5 +73,21 @@ public class ProductMapper {
         entity.setHeightCm(request.getHeightCm());
         entity.setIsFeatured(request.getIsFeatured());
         return entity;
+    }
+
+    public void updateEntityFromRequest(ProductUpdateRequest request, Product entity) {
+        entity.setProductName(request.getProductName());
+        entity.setSlug(request.getSlug());
+        entity.setSummary(request.getSummary());
+        entity.setDescription(request.getDescription());
+        entity.setBasePrice(request.getBasePrice());
+        entity.setDiscountPrice(request.getDiscountPrice());
+        entity.setThumbnail(request.getThumbnail());
+        entity.setWeightGram(request.getWeightGram());
+        entity.setLengthCm(request.getLengthCm());
+        entity.setWidthCm(request.getWidthCm());
+        entity.setHeightCm(request.getHeightCm());
+        entity.setIsFeatured(request.getIsFeatured());
+        entity.setIsActive(request.getIsActive());
     }
 }

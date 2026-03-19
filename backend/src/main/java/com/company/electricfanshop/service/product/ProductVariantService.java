@@ -67,12 +67,9 @@ public class ProductVariantService {
                 .orElseThrow(() -> new ResourceNotFoundException(productId));
         Color color = colorRepository.findById(request.getColorId())
                 .orElseThrow(() -> new ResourceNotFoundException(request.getColorId()));
+
+        productVariantMapper.updateEntityFromRequest(request, variant);
         variant.setColor(color);
-        variant.setSku(request.getSku());
-        variant.setAdditionalPrice(request.getAdditionalPrice());
-        variant.setStockQuantity(request.getStockQuantity());
-        variant.setVariantImage(request.getVariantImage());
-        variant.setIsActive(request.getIsActive());
         productVariantRepository.save(variant);
 
         return productVariantMapper.toResponse(variant);

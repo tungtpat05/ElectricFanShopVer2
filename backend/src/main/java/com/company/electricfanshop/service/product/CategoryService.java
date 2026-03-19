@@ -42,11 +42,7 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        category.setCategoryName(request.getCategoryName());
-        category.setSlug(request.getSlug());
-        category.setCategoryImage(request.getCategoryImage());
-        category.setDescription(request.getDescription());
-        category.setIsActive(request.getIsActive());
+        categoryMapper.updateEntityFromRequest(request, category);
 
         categoryRepository.save(category);
         return categoryMapper.toResponse(category);

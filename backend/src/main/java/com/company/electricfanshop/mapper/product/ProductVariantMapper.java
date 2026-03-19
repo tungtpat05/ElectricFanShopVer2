@@ -1,6 +1,7 @@
 package com.company.electricfanshop.mapper.product;
 
 import com.company.electricfanshop.dto.product.request.ProductVariantCreateRequest;
+import com.company.electricfanshop.dto.product.request.ProductVariantUpdateRequest;
 import com.company.electricfanshop.dto.product.response.ColorResponse;
 import com.company.electricfanshop.dto.product.response.ProductVariantResponse;
 import com.company.electricfanshop.entity.product.ProductVariant;
@@ -40,6 +41,14 @@ public class ProductVariantMapper {
         entity.setVariantImage(request.getVariantImage());
 
         return entity;
+    }
+
+    public void updateEntityFromRequest(ProductVariantUpdateRequest request, ProductVariant variant) {
+        variant.setSku(request.getSku());
+        variant.setAdditionalPrice(request.getAdditionalPrice());
+        variant.setStockQuantity(request.getStockQuantity());
+        variant.setVariantImage(request.getVariantImage());
+        variant.setIsActive(request.getIsActive());
     }
 }
 

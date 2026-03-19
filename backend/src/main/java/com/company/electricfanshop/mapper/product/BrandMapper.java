@@ -1,6 +1,7 @@
 package com.company.electricfanshop.mapper.product;
 
 import com.company.electricfanshop.dto.product.request.BrandCreateRequest;
+import com.company.electricfanshop.dto.product.request.BrandUpdateRequest;
 import com.company.electricfanshop.dto.product.response.BrandResponse;
 import com.company.electricfanshop.entity.product.Brand;
 import org.springframework.stereotype.Component;
@@ -27,5 +28,12 @@ public class BrandMapper {
         dto.setDescription(request.getDescription());
 
         return dto;
+    }
+
+    public void updateEntiryFromRequest(BrandUpdateRequest request, Brand brand) {
+        brand.setBrandName(request.getBrandName());
+        brand.setLogoUrl(request.getLogoUrl());
+        brand.setDescription(request.getDescription());
+        brand.setIsActive(request.getIsActive());
     }
 }

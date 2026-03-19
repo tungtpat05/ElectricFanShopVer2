@@ -62,19 +62,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        product.setProductName(request.getProductName());
-        product.setSlug(request.getSlug());
-        product.setSummary(request.getSummary());
-        product.setDescription(request.getDescription());
-        product.setBasePrice(request.getBasePrice());
-        product.setDiscountPrice(request.getDiscountPrice());
-        product.setThumbnail(request.getThumbnail());
-        product.setWeightGram(request.getWeightGram());
-        product.setLengthCm(request.getLengthCm());
-        product.setWidthCm(request.getWidthCm());
-        product.setHeightCm(request.getHeightCm());
-        product.setIsFeatured(request.getIsFeatured());
-        product.setIsActive(request.getIsActive());
+        productMapper.updateEntityFromRequest(request, product);
 
         // Update brand if provided
         if (request.getBrandId() != null) {

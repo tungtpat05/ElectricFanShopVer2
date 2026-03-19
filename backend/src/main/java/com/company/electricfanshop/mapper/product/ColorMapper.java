@@ -1,6 +1,7 @@
 package com.company.electricfanshop.mapper.product;
 
 import com.company.electricfanshop.dto.product.request.ColorCreateRequest;
+import com.company.electricfanshop.dto.product.request.ColorUpdateRequest;
 import com.company.electricfanshop.dto.product.response.ColorResponse;
 import com.company.electricfanshop.entity.product.Color;
 import org.springframework.stereotype.Component;
@@ -26,4 +27,8 @@ public class ColorMapper {
         return dto;
     }
 
+    public void updateEntityFromRequest(ColorUpdateRequest request, Color color) {
+        color.setColorName(request.getColorName());
+        color.setColorCode(request.getColorCode());
+    }
 }

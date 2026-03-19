@@ -2,6 +2,7 @@ package com.company.electricfanshop.mapper.product;
 
 import com.company.electricfanshop.dto.product.request.BrandCreateRequest;
 import com.company.electricfanshop.dto.product.request.CategoryCreateRequest;
+import com.company.electricfanshop.dto.product.request.CategoryUpdateRequest;
 import com.company.electricfanshop.dto.product.response.BrandResponse;
 import com.company.electricfanshop.entity.product.Brand;
 import org.springframework.stereotype.Component;
@@ -33,5 +34,13 @@ public class CategoryMapper {
         dto.setDescription(request.getDescription());
 
         return dto;
+    }
+
+    public void updateEntityFromRequest(CategoryUpdateRequest request, Category category) {
+        category.setCategoryName(request.getCategoryName());
+        category.setSlug(request.getSlug());
+        category.setCategoryImage(request.getCategoryImage());
+        category.setDescription(request.getDescription());
+        category.setIsActive(request.getIsActive());
     }
 }

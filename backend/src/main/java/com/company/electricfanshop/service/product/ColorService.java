@@ -41,8 +41,8 @@ public class ColorService {
         Color color = colorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        color.setColorName(request.getColorName());
-        color.setColorCode(request.getColorCode());
+        colorMapper.updateEntityFromRequest(request, color);
+
         colorRepository.save(color);
         return colorMapper.toResponse(color);
     }
