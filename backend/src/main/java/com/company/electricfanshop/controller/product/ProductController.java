@@ -10,6 +10,7 @@ import com.company.electricfanshop.service.product.ProductVariantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,12 +37,14 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody ProductCreateRequest request) {
         ProductResponse response = productService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> update(@PathVariable Integer id, @RequestBody ProductUpdateRequest request) {
         ProductResponse response = productService.update(id, request);
@@ -60,6 +63,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{productId}/images")
     public ResponseEntity<ProductImageResponse> createImage(
             @PathVariable Integer productId,
@@ -68,6 +72,7 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{productId}/images/{imageId}")
     public ResponseEntity<ProductImageResponse> updateImage(
             @PathVariable Integer productId,
@@ -89,6 +94,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{productId}/variants")
     public ResponseEntity<ProductVariantResponse> createVariant(
             @PathVariable Integer productId,
@@ -97,6 +103,7 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{productId}/variants/{variantId}")
     public ResponseEntity<ProductVariantResponse> update(
             @PathVariable Integer productId,
