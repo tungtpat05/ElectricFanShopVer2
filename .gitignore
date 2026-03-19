@@ -5,25 +5,17 @@ frontend/node_modules/
 frontend/dist/
 frontend/dist-ssr/
 frontend/*.local
-
-# TypeScript & Vite logs
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
 frontend/.eslintcache
 frontend/.stylelintcache
 
 # ==========================================
 # 2. BACKEND (Spring Boot)
 # ==========================================
+**/target/
 backend/target/
 backend/*.jar
 backend/*.war
-backend/*.ear
-backend/*.zip
-backend/*.tar.gz
 
-# Maven/Gradle wrapper & temp files
 backend/.mvn/wrapper/
 backend/.gradle/
 backend/build/
@@ -31,16 +23,13 @@ backend/build/
 # ==========================================
 # 3. DATABASE & ENVIRONMENT
 # ==========================================
-# Nếu có file chứa mật khẩu SQL Server hoặc API Key
 .env
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
 *.db
 *.sqlite
 
 # ==========================================
-# 4. IDE & SYSTEM (Quan trọng)
+# 4. IDE & SYSTEM
 # ==========================================
 .idea/
 *.iml
@@ -48,8 +37,5 @@ backend/build/
 .settings/
 .classpath
 .project
-.factorypath
-
-# OS files
 .DS_Store
 Thumbs.db
