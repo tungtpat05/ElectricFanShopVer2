@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import com.company.electricfanshop.dto.product.request.ProductCreateRequest;
 import com.company.electricfanshop.dto.product.response.BrandResponse;
 import com.company.electricfanshop.dto.product.response.CategoryResponse;
-import com.company.electricfanshop.dto.product.response.ProductListResponse;
 import com.company.electricfanshop.dto.product.response.ProductResponse;
 import com.company.electricfanshop.entity.product.Product;
 
@@ -71,7 +70,7 @@ public class ProductMapper {
         entity.setLengthCm(request.getLengthCm());
         entity.setWidthCm(request.getWidthCm());
         entity.setHeightCm(request.getHeightCm());
-
+        entity.setIsFeatured(request.getIsFeatured());
         return entity;
     }
 }

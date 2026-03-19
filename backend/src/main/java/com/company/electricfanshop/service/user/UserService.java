@@ -3,6 +3,7 @@ package com.company.electricfanshop.service.user;
 import com.company.electricfanshop.entity.common.enums.Role;
 import com.company.electricfanshop.entity.user.User;
 import com.company.electricfanshop.entity.user.UserSocialAccount;
+import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.repository.user.UserRepository;
 import com.company.electricfanshop.repository.user.UserSocialAccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class UserService {
     private final UserSocialAccountRepository userSocialAccountRepository;
 
     public User getByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        return userRepository.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found with email: " + email));
     }
 
 }

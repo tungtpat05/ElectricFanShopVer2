@@ -6,8 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 public class ProductImageCreateRequest {
-    private Integer productId;
     private String imageUrl;
-    private Integer displayOrder;
 }
 

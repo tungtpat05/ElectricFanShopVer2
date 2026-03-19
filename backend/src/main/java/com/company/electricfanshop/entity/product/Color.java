@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Color {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

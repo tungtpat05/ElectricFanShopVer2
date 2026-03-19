@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProductVariant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +28,14 @@ public class ProductVariant {
 
     private String sku;
 
+    @Builder.Default
     private BigDecimal additionalPrice = BigDecimal.ZERO;
+
+    @Builder.Default
     private Integer stockQuantity = 0;
+
     private String variantImage;
+
+    @Builder.Default
     private Boolean isActive = true;
 }

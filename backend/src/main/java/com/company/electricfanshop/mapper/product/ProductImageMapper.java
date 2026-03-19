@@ -12,7 +12,6 @@ public class ProductImageMapper {
         ProductImageResponse dto = new ProductImageResponse();
 
         dto.setId(entity.getId());
-        dto.setProductId(entity.getProduct().getId());
         dto.setImageUrl(entity.getImageUrl());
         dto.setDisplayOrder(entity.getDisplayOrder());
 
@@ -23,7 +22,6 @@ public class ProductImageMapper {
         ProductImage entity = new ProductImage();
 
         entity.setImageUrl(request.getImageUrl());
-        entity.setDisplayOrder(request.getDisplayOrder());
 
         return entity;
     }

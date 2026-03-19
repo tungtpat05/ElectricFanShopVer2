@@ -7,6 +7,5 @@ import lombok.*;
 @Data
 public class ProductImageUpdateRequest {
     private String imageUrl;
-    private Integer displayOrder;
 }
 

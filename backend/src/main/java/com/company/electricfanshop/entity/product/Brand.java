@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +22,7 @@ public class Brand {
 
     private String description;
 
+    @Builder.Default
     private Boolean isActive = true;
 
     // One Brand -> Many Products

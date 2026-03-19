@@ -5,17 +5,18 @@ import com.company.electricfanshop.dto.product.request.ColorUpdateRequest;
 import com.company.electricfanshop.dto.product.response.ColorResponse;
 import com.company.electricfanshop.service.product.ColorService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/colors")
+@RequestMapping("/api/v1/colors")
 public class ColorController {
-    private ColorService colorService;
+    private final ColorService colorService;
 
     @GetMapping
     public ResponseEntity<List<ColorResponse>> getAll() {

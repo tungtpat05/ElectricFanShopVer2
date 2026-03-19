@@ -7,5 +7,6 @@ import com.company.electricfanshop.entity.product.Category;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer>{
-    
+
+    boolean existsByCategoryName(String categoryName);
 }

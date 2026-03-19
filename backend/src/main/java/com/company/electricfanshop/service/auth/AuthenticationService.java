@@ -5,6 +5,7 @@ import com.company.electricfanshop.dto.auth.request.RegisterRequest;
 import com.company.electricfanshop.dto.auth.response.AuthenticationResponse;
 import com.company.electricfanshop.entity.common.enums.Role;
 import com.company.electricfanshop.entity.user.User;
+import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,7 +50,7 @@ public class AuthenticationService {
 
         // If authentication is successful, load the user and generate a JWT token
         User user = userRepository.findByEmail(authenticationRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(authenticationRequest.getEmail()));
         String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)

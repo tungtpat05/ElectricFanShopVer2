@@ -5,6 +5,7 @@ import com.company.electricfanshop.dto.product.request.BrandUpdateRequest;
 import com.company.electricfanshop.dto.product.response.BrandResponse;
 import com.company.electricfanshop.service.product.BrandService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/brands")
-@AllArgsConstructor
+@RequestMapping("/api/v1/brands")
+@RequiredArgsConstructor
 public class BrandController {
-    private BrandService brandService;
+    private final BrandService brandService;
 
     @GetMapping
     public ResponseEntity<List<BrandResponse>> getAll() {

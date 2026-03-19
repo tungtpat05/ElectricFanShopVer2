@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +21,10 @@ public class Category {
     private String slug;
 
     private String categoryImage;
+
     private String description;
+
+    @Builder.Default
     private Boolean isActive = true;
 
     @OneToMany(mappedBy = "category")

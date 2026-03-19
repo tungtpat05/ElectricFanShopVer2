@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Data
 public class ProductVariantCreateRequest {
-    private Integer productId;
     private Integer colorId;
     private String sku;
     private BigDecimal additionalPrice;

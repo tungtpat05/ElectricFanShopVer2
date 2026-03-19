@@ -1,22 +1,50 @@
 package com.company.electricfanshop.service.product;
 
-import com.company.electricfanshop.dto.product.request.BrandCreateRequest;
-import com.company.electricfanshop.dto.product.request.BrandUpdateRequest;
 import com.company.electricfanshop.dto.product.request.ColorCreateRequest;
 import com.company.electricfanshop.dto.product.request.ColorUpdateRequest;
-import com.company.electricfanshop.dto.product.response.BrandResponse;
 import com.company.electricfanshop.dto.product.response.ColorResponse;
+import com.company.electricfanshop.entity.product.Color;
+import com.company.electricfanshop.exception.ResourceNotFoundException;
+import com.company.electricfanshop.mapper.product.ColorMapper;
+import com.company.electricfanshop.repository.product.ColorRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface ColorService {
+@Service
+@RequiredArgsConstructor
+public class ColorService {
+    private final ColorRepository colorRepository;
+    private final ColorMapper colorMapper;
 
-    List<ColorResponse> getAll();
+    public List<ColorResponse> getAll() {
+        List<Color> colors = colorRepository.findAll();
+        return colors.stream().map(colorMapper::toResponse).toList();
+    }
+    public ColorResponse getById(Integer id) {
+        Color color = colorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
+        return colorMapper.toResponse(color);
+    }
 
-    ColorResponse getById(Integer id);
+    public ColorResponse create(ColorCreateRequest request) {
+        if(colorRepository.existsByColorName(request.getColorName())) {
+            throw new ResourceNotFoundException(request.getColorName());
+        }
+        Color color = colorMapper.toEntity(request);
+        colorRepository.save(color);
+        return colorMapper.toResponse(color);
+    }
 
-    ColorResponse create(ColorCreateRequest request);
+    public ColorResponse update(Integer id, ColorUpdateRequest request) {
+        Color color = colorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
-    ColorResponse update(Integer id, ColorUpdateRequest request);
+        color.setColorName(request.getColorName());
+        color.setColorCode(request.getColorCode());
+        colorRepository.save(color);
+        return colorMapper.toResponse(color);
+    }
 
 }

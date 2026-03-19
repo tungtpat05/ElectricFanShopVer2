@@ -28,6 +28,7 @@ public class UserAddress {
     private String ward;
     private String detailAddress;
 
+    @Builder.Default
     private Boolean isDefault = false;
 
     @CreationTimestamp

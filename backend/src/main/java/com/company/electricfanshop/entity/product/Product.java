@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +48,10 @@ public class Product {
     private Integer widthCm;
     private Integer heightCm;
 
+    @Builder.Default
     private Boolean isFeatured = false;
+
+    @Builder.Default
     private Boolean isActive = true;
 
     @CreationTimestamp
