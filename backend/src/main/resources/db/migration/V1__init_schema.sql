@@ -1,19 +1,3 @@
-USE
-master;
-GO
-
-IF DB_ID('ElectricFanShopDB_V3') IS NOT NULL
-    DROP
-DATABASE ElectricFanShopDB_V3;
-GO
-
-CREATE
-DATABASE ElectricFanShopDB_V3;
-GO
-
-USE ElectricFanShopDB_V3;
-GO
-
 CREATE TABLE Brands
 (
     id          INT IDENTITY PRIMARY KEY,
