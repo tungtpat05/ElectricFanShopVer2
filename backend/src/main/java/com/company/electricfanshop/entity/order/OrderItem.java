@@ -3,12 +3,16 @@ package com.company.electricfanshop.entity.order;
 import com.company.electricfanshop.entity.review.Review;
 import com.company.electricfanshop.entity.product.ProductVariant;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderItem {

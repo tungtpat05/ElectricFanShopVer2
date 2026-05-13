@@ -2,13 +2,17 @@ package com.company.electricfanshop.entity.cart;
 
 import com.company.electricfanshop.entity.product.ProductVariant;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "cart_items", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"cart_id", "variant_id"})
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItem {

@@ -4,13 +4,17 @@ import com.company.electricfanshop.entity.order.OrderItem;
 import com.company.electricfanshop.entity.product.Product;
 import com.company.electricfanshop.entity.user.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reviews")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Review {
