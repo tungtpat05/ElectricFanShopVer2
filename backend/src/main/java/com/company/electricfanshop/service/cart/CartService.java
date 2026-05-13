@@ -1,6 +1,7 @@
 package com.company.electricfanshop.service.cart;
 
 import com.company.electricfanshop.dto.cart.request.AddToCartRequest;
+import com.company.electricfanshop.dto.cart.request.AdjustCartItemQuantityRequest;
 import com.company.electricfanshop.dto.cart.response.CartSummaryResponse;
 import com.company.electricfanshop.entity.cart.Cart;
 import com.company.electricfanshop.entity.cart.CartItem;
@@ -84,6 +85,44 @@ public class CartService {
             cartItemRepository.save(item);
         }
 
+        List<CartItem> items = cartItemRepository.findByCartId(cart.getId());
+        return cartMapper.toSummary(cart, items);
+    }
+
+    @Transactional
+    public CartSummaryResponse increaseQuantity(Principal principal, AdjustCartItemQuantityRequest request) {
+        return updateQuantityDelta(principal, request.getVariantId(), request.getQuantity());
+    }
+
+    @Transactional
+    public CartSummaryResponse decreaseQuantity(Principal principal, AdjustCartItemQuantityRequest request) {
+        return updateQuantityDelta(principal, request.getVariantId(), -request.getQuantity());
+    }
+
+    private CartSummaryResponse updateQuantityDelta(Principal principal, Integer variantId, int delta) {
+        User user = userService.getByEmail(principal.getName());
+        Cart cart = cartRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("cart for user " + user.getId()));
+
+        CartItem item = cartItemRepository.findByCartIdAndVariantId(cart.getId(), variantId)
+                .orElseThrow(() -> new ResourceNotFoundException(variantId));
+
+        ProductVariant variant = item.getVariant();
+        if (delta > 0 && !Boolean.TRUE.equals(variant.getIsActive())) {
+            throw new IllegalArgumentException("Variant is inactive");
+        }
+
+        int newQuantity = item.getQuantity() + delta;
+        if (newQuantity <= 0) {
+            cartItemRepository.delete(item);
+        } else {
+            int stockQuantity = variant.getStockQuantity() == null ? 0 : variant.getStockQuantity();
+            if (newQuantity > stockQuantity) {
+                throw new IllegalArgumentException("Insufficient stock for variant: " + variant.getId());
+            }
+            item.setQuantity(newQuantity);
+            cartItemRepository.save(item);
+        }
         List<CartItem> items = cartItemRepository.findByCartId(cart.getId());
         return cartMapper.toSummary(cart, items);
     }
