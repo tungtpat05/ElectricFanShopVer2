@@ -127,6 +127,23 @@ public class CartService {
         return cartMapper.toSummary(cart, items);
     }
 
+    @Transactional
+    public CartSummaryResponse removeFromCart(Principal principal, Integer variantId) {
+        User user = userService.getByEmail(principal.getName());
+        Optional<Cart> cartOptional = cartRepository.findByUserId(user.getId());
+        if (cartOptional.isEmpty()) {
+            return cartMapper.toEmptySummary(user);
+        }
+
+        Cart cart = cartOptional.get();
+        CartItem item = cartItemRepository.findByCartIdAndVariantId(cart.getId(), variantId)
+                .orElseThrow(() -> new ResourceNotFoundException(variantId));
+        cartItemRepository.delete(item);
+
+        List<CartItem> items = cartItemRepository.findByCartId(cart.getId());
+        return cartMapper.toSummary(cart, items);
+    }
+
     private Cart createCart(User user) {
         Cart cart = new Cart();
         cart.setUser(user);

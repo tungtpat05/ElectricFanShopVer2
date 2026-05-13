@@ -53,4 +53,12 @@ public class CartController {
         CartSummaryResponse response = cartService.decreaseQuantity(principal, request);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/items/{variantId}")
+    public ResponseEntity<CartSummaryResponse> removeFromCart(
+            Principal principal,
+            @PathVariable Integer variantId) {
+        CartSummaryResponse response = cartService.removeFromCart(principal, variantId);
+        return ResponseEntity.ok(response);
+    }
 }
