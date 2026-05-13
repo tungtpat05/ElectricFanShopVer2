@@ -10,6 +10,7 @@ public class BrandResponse {
     private Integer id;
     private String brandName;
     private String logoUrl;
+
     private String description;
     private Boolean isActive;
 }

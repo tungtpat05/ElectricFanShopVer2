@@ -23,6 +23,7 @@ public class ProductResponse {
     private Integer lengthCm;
     private Integer widthCm;
     private Integer heightCm;
+
     private Boolean isFeatured;
     private Boolean isActive;
     private LocalDateTime createdAt;

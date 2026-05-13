@@ -14,6 +14,7 @@ public class CategoryResponse {
     private String categoryName;
     private String slug;
     private String categoryImage;
+
     private String description;
     private Boolean isActive;
 }

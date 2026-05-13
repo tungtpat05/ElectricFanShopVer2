@@ -15,6 +15,7 @@ public class ProductVariantResponse {
     private BigDecimal additionalPrice;
     private Integer stockQuantity;
     private String variantImage;
+
     private Boolean isActive;
 }
 
