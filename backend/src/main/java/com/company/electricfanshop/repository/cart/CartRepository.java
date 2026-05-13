@@ -4,11 +4,12 @@
  */
 package com.company.electricfanshop.repository.cart;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.company.electricfanshop.entity.cart.Cart;
-import com.company.electricfanshop.entity.user.User;
 
 /**
  *
@@ -16,5 +17,5 @@ import com.company.electricfanshop.entity.user.User;
  */
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer>{
-
+    Optional<Cart> findByUserId(Integer userId);
 }

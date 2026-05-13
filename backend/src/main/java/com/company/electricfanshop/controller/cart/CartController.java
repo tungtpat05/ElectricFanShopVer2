@@ -4,12 +4,36 @@
  */
 package com.company.electricfanshop.controller.cart;
 
-import org.springframework.stereotype.Controller;
+import com.company.electricfanshop.dto.cart.request.AddToCartRequest;
+import com.company.electricfanshop.dto.cart.response.CartSummaryResponse;
+import com.company.electricfanshop.service.cart.CartService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 /**
  * Created by Tungtpat05 on Oct 2, 2025.
  */
-@Controller
+@RestController
+@RequestMapping("/api/v1/cart")
+@RequiredArgsConstructor
 public class CartController {
+    private final CartService cartService;
 
+    @GetMapping
+    public ResponseEntity<CartSummaryResponse> getCart(Principal principal) {
+        CartSummaryResponse response = cartService.getCartSummary(principal);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/items")
+    public ResponseEntity<CartSummaryResponse> addToCart(
+            Principal principal,
+            @Valid @RequestBody AddToCartRequest request) {
+        CartSummaryResponse response = cartService.addToCart(principal, request);
+        return ResponseEntity.ok(response);
+    }
 }

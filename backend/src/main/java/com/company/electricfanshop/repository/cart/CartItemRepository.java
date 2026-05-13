@@ -5,12 +5,11 @@
 package com.company.electricfanshop.repository.cart;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.company.electricfanshop.entity.cart.Cart;
 import com.company.electricfanshop.entity.cart.CartItem;
-import com.company.electricfanshop.entity.product.Product;
 
 /**
  *
@@ -18,5 +17,6 @@ import com.company.electricfanshop.entity.product.Product;
  */
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer>{
-
+    Optional<CartItem> findByCartIdAndVariantId(Integer cartId, Integer variantId);
+    List<CartItem> findByCartId(Integer cartId);
 }

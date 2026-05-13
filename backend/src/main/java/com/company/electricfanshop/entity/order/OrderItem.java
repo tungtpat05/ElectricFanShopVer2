@@ -1,7 +1,6 @@
 package com.company.electricfanshop.entity.order;
 
 import com.company.electricfanshop.entity.review.Review;
-import com.company.electricfanshop.entity.product.Product;
 import com.company.electricfanshop.entity.product.ProductVariant;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,9 +20,6 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "variant_id", nullable = false)
