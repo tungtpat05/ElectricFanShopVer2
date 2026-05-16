@@ -4,9 +4,11 @@ import com.company.electricfanshop.dto.product.request.*;
 import com.company.electricfanshop.dto.product.response.ProductImageResponse;
 import com.company.electricfanshop.dto.product.response.ProductResponse;
 import com.company.electricfanshop.dto.product.response.ProductVariantResponse;
+import com.company.electricfanshop.dto.product.response.ProductSpecificationResponse;
 import com.company.electricfanshop.service.product.ProductImageService;
 import com.company.electricfanshop.service.product.ProductService;
 import com.company.electricfanshop.service.product.ProductVariantService;
+import com.company.electricfanshop.service.product.ProductSpecificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ public class ProductController {
     private final ProductService productService;
     private final ProductImageService productImageService;
     private final ProductVariantService productVariantService;
+    private final ProductSpecificationService productSpecificationService;
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAll(@RequestParam(required = false) Integer categoryId) {
@@ -105,11 +108,53 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{productId}/variants/{variantId}")
-    public ResponseEntity<ProductVariantResponse> update(
+    public ResponseEntity<ProductVariantResponse> updateVariant(
             @PathVariable Integer productId,
             @PathVariable Integer variantId,
             @RequestBody ProductVariantUpdateRequest request) {
         ProductVariantResponse response = productVariantService.update(productId, variantId, request);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{productId}/specifications")
+    public ResponseEntity<List<ProductSpecificationResponse>> getSpecifications(@PathVariable Integer productId) {
+        List<ProductSpecificationResponse> list = productSpecificationService.getAll(productId);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/{productId}/specifications/{specificationId}")
+    public ResponseEntity<ProductSpecificationResponse> getSpecificationById(
+            @PathVariable Integer productId,
+            @PathVariable Integer specificationId) {
+        ProductSpecificationResponse response = productSpecificationService.getById(productId, specificationId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{productId}/specifications")
+    public ResponseEntity<ProductSpecificationResponse> createSpecification(
+            @PathVariable Integer productId,
+            @RequestBody ProductSpecificationCreateRequest request) {
+        ProductSpecificationResponse response = productSpecificationService.create(productId, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{productId}/specifications/{specificationId}")
+    public ResponseEntity<ProductSpecificationResponse> updateSpecification(
+            @PathVariable Integer productId,
+            @PathVariable Integer specificationId,
+            @RequestBody ProductSpecificationUpdateRequest request) {
+        ProductSpecificationResponse response = productSpecificationService.update(productId, specificationId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{productId}/specifications/{specificationId}")
+    public ResponseEntity<Void> deleteSpecification(
+            @PathVariable Integer productId,
+            @PathVariable Integer specificationId) {
+        productSpecificationService.delete(productId, specificationId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -43,6 +43,8 @@ public class Product {
     private BigDecimal discountPrice;
     private String thumbnail;
 
+    private Integer engineCapacity;
+
     private Integer weightGram;
     private Integer lengthCm;
     private Integer widthCm;
@@ -66,4 +68,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductSpecification> specifications;
 }

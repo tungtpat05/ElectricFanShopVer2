@@ -19,23 +19,24 @@ CREATE TABLE Categories
 
 CREATE TABLE Products
 (
-    id             INT IDENTITY PRIMARY KEY,
-    product_name   NVARCHAR(200) NOT NULL,
-    slug           NVARCHAR(200) UNIQUE NOT NULL,
-    brand_id       INT REFERENCES Brands (id),
-    category_id    INT            NOT NULL REFERENCES Categories (id),
-    summary        NVARCHAR(500),
-    description    NVARCHAR(MAX),
-    base_price     DECIMAL(18, 2) NOT NULL CHECK (base_price >= 0),
-    discount_price DECIMAL(18, 2) CHECK (discount_price >= 0),
-    thumbnail      NVARCHAR(255) NOT NULL,
-    weight_gram    INT      DEFAULT 1000,
-    length_cm      INT      DEFAULT 50,
-    width_cm       INT      DEFAULT 50,
-    height_cm      INT      DEFAULT 50,
-    is_featured    BIT      DEFAULT 0,
-    is_active      BIT      DEFAULT 1,
-    created_at     DATETIME DEFAULT GETDATE()
+    id              INT IDENTITY PRIMARY KEY,
+    product_name    NVARCHAR(200) NOT NULL,
+    slug            NVARCHAR(200) UNIQUE NOT NULL,
+    brand_id        INT REFERENCES Brands (id),
+    category_id     INT            NOT NULL REFERENCES Categories (id),
+    summary         NVARCHAR(500),
+    description     NVARCHAR(MAX),
+    base_price      DECIMAL(18, 2) NOT NULL CHECK (base_price >= 0),
+    discount_price  DECIMAL(18, 2) CHECK (discount_price >= 0),
+    thumbnail       NVARCHAR(255) NOT NULL,
+    engine_capacity INT      DEFAULT 0,
+    weight_gram     INT      DEFAULT 1000,
+    length_cm       INT      DEFAULT 50,
+    width_cm        INT      DEFAULT 50,
+    height_cm       INT      DEFAULT 50,
+    is_featured     BIT      DEFAULT 0,
+    is_active       BIT      DEFAULT 1,
+    created_at      DATETIME DEFAULT GETDATE()
 );
 
 CREATE TABLE ProductImages
@@ -98,7 +99,6 @@ CREATE TABLE CartItems
 (
     id         INT IDENTITY PRIMARY KEY,
     cart_id    INT NOT NULL REFERENCES Carts (id) ON DELETE CASCADE,
-    product_id INT NOT NULL REFERENCES Products (id),
     variant_id INT NOT NULL REFERENCES ProductVariants (id),
     quantity   INT NOT NULL CHECK (quantity > 0),
     CONSTRAINT uq_cart_variant UNIQUE (cart_id, variant_id)
@@ -162,7 +162,6 @@ CREATE TABLE OrderItems
 (
     id         INT IDENTITY PRIMARY KEY,
     order_id   INT            NOT NULL REFERENCES Orders (id) ON DELETE CASCADE,
-    product_id INT            NOT NULL REFERENCES Products (id),
     variant_id INT            NOT NULL REFERENCES ProductVariants (id),
     quantity   INT            NOT NULL CHECK (quantity > 0),
     price      DECIMAL(18, 2) NOT NULL CHECK (price >= 0)
@@ -183,10 +182,18 @@ CREATE TABLE Reviews
 (
     id            INT IDENTITY PRIMARY KEY,
     order_item_id INT NOT NULL UNIQUE REFERENCES OrderItems (id),
-    product_id    INT NOT NULL REFERENCES Products (id),
     user_id       INT NOT NULL REFERENCES Users (id),
     rating        INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment       NVARCHAR(MAX),
     is_active     BIT      DEFAULT 1,
     created_at    DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE ProductSpecifications
+(
+    id         INT IDENTITY PRIMARY KEY,
+    product_id INT NOT NULL REFERENCES Products (id) ON DELETE CASCADE,
+    spec_key   NVARCHAR(100) NOT NULL,
+    spec_value NVARCHAR(255) NOT NULL,
+    CONSTRAINT uq_product_spec UNIQUE (product_id, spec_key)
 );

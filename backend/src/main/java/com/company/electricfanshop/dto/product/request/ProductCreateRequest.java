@@ -45,6 +45,9 @@ public class ProductCreateRequest {
     @URL(message = "Thumbnail URL must be a valid URL")
     private String thumbnail;
 
+    @PositiveOrZero(message = "Engine capacity must be zero or positive")
+    private Integer engineCapacity;
+
     @Positive(message = "Weight must be positive")
     private Integer weightGram;
 
@@ -67,4 +70,3 @@ public class ProductCreateRequest {
         return discountPrice.compareTo(basePrice) <= 0;
     }
 }
-

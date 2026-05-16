@@ -19,6 +19,7 @@ public class ProductResponse {
     private BigDecimal basePrice;
     private BigDecimal discountPrice;
     private String thumbnail;
+    private Integer engineCapacity;
     private Integer weightGram;
     private Integer lengthCm;
     private Integer widthCm;
@@ -28,4 +29,3 @@ public class ProductResponse {
     private Boolean isActive;
     private LocalDateTime createdAt;
 }
-
