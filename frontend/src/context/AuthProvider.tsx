@@ -19,15 +19,19 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
                 // Check if token exists in localStorage
                 const token = localStorage.getItem("authToken");
                 if (!token) {
+                    // No token = user not logged in
+                    setIsLogin(false);
+                    setUser(null);
                     setLoading(false);
                     return;
                 }
 
+                // If token exists, verify it by fetching user info
                 const userData = await getUser();
                 setUser(userData);
                 setIsLogin(true);
             } catch (_err) {
-                // User not authenticated or token expired
+                // Token invalid or expired
                 localStorage.removeItem("authToken");
                 setUser(null);
                 setIsLogin(false);

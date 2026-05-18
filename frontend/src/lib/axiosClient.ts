@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const axiosClient = axios.create({
-  baseURL: "/api",
+  baseURL: "/api/v1",
   timeout: 5000,
 });
 
@@ -23,11 +23,14 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // If token is expired (401), remove it
+    // If token is expired (401), remove it and redirect (but not on login/register pages)
     if (error.response?.status === 401) {
-      localStorage.removeItem("authToken");
-      // Optionally redirect to login page
-      window.location.href = "/login";
+      const currentPath = window.location.pathname;
+      // Only redirect if not already on login or register page
+      if (currentPath !== "/login" && currentPath !== "/register") {
+        localStorage.removeItem("authToken");
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }

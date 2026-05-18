@@ -19,7 +19,7 @@ export const useCategories = () => {
       }
     };
 
-    fetchCategories();
+    void fetchCategories();
   }, []);
 
   return { categories, loading, error };
