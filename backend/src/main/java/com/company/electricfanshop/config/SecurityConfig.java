@@ -35,6 +35,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/login**", "/oauth2/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        // Allow public read access to product catalog
+                        .requestMatchers("GET", "/api/v1/brands/**").permitAll()
+                        .requestMatchers("GET", "/api/v1/colors/**").permitAll()
+                        .requestMatchers("GET", "/api/v1/categories/**").permitAll()
+                        .requestMatchers("GET", "/api/v1/products/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
