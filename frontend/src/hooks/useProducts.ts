@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { Product } from "../types/product";
-import { getProducts } from "../services/productService";
+import { getProducts, getProductsByCategory } from "../services/productService";
 
-export const useProducts = () => {
+interface UseProductsOptions {
+  categoryId?: number;
+}
+
+export const useProducts = (options?: UseProductsOptions) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -10,17 +14,28 @@ export const useProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProducts();
+        setLoading(true);
+        setError(null);
+        
+        let data: Product[];
+        if (options?.categoryId) {
+          data = await getProductsByCategory(options.categoryId);
+        } else {
+          data = await getProducts();
+        }
+        
         setProducts(data);
-      } catch (_err) {
-        setError("Failed to load products");
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to load products";
+        setError(errorMessage);
+        console.error("useProducts error:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProducts();
-  }, []);
+    void fetchProducts();
+  }, [options?.categoryId]);
 
   return { products, loading, error };
 };
