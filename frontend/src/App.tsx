@@ -7,36 +7,70 @@ const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#c3e04d",
+      main: "#e28a3a", // Gold/Amber accent color
+      contrastText: "#000000",
     },
     secondary: {
-      main: "#dc004e",
+      main: "#a1a1aa", // Muted slate gray
     },
     background: {
-      default: "#0E0E0E",
-      paper: "#1a1a1a",
+      default: "#09090b", // Deep dark background
+      paper: "#18181b", // Zinc 900 paper/card background
     },
     text: {
       primary: "#ffffff",
-      secondary: "#b0b0b0",
+      secondary: "#a1a1aa", // Zinc 400
     },
   },
   typography: {
-    fontFamily: '"Segoe UI", "Roboto", "Oxygen", "Ubuntu", sans-serif',
-    h2: {
+    fontFamily: '"Outfit", "Inter", "Segoe UI", "Roboto", sans-serif',
+    h1: {
       fontWeight: 900,
+      letterSpacing: "-0.03em",
+    },
+    h2: {
+      fontWeight: 800,
       letterSpacing: "-0.02em",
     },
     h4: {
       fontWeight: 700,
     },
+    button: {
+      textTransform: "none",
+      fontWeight: 600,
+    },
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: "#09090b",
+          color: "#ffffff",
+          fontFamily: '"Outfit", "Inter", "Segoe UI", sans-serif',
+        },
+      },
+    },
     MuiAppBar: {
       styleOverrides: {
         root: {
           backgroundImage: "none",
-          backgroundColor: "#0E0E0E",
+          backgroundColor: "rgba(9, 9, 11, 0.8)",
+          backdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
         },
       },
     },

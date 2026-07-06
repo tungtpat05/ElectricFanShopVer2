@@ -117,9 +117,11 @@ const ResponsiveAppBar = () => {
     return (
             <AppBar
                 position="fixed"
+                elevation={0}
                 sx={{
-                    backgroundColor: "rgba(14, 14, 14, 0.8)",
+                    backgroundColor: "rgba(9, 9, 11, 0.8)",
                     backdropFilter: "blur(20px)",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
                     zIndex: 1100
                 }}
             >

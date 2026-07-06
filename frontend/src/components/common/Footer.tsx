@@ -18,11 +18,11 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        mt: 8,
-        pt: { xs: 6, md: 10 },
+        mt: 12,
+        pt: { xs: 8, md: 10 },
         pb: { xs: 4, md: 6 },
-        backgroundColor: "background.default",
-        borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+        backgroundColor: "#09090b",
+        borderTop: "1px solid rgba(255, 255, 255, 0.05)",
       }}
     >
       <Container maxWidth={false} sx={{ px: { xs: 2, md: 6 } }}>

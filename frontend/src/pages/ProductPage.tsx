@@ -1,76 +1,139 @@
-import ProductList from '@/components/product/ProductList.tsx'
-import { useProducts } from '../hooks/useProducts';
+import { Box, Grid, Typography } from "@mui/material";
+import { useProducts } from "../hooks/useProducts";
+import HeroSection from "../components/product/HeroSection.tsx";
+import FeaturedBrands from "../components/product/FeaturedBrands.tsx";
+import ProductList from "../components/product/ProductList.tsx";
 
 const ProductPage = () => {
   const { products, loading, error } = useProducts();
 
+  // Premium loading skeletons matching the actual layout
   if (loading) {
     return (
-      <div className="bg-gradient-to-b from-slate-50 to-white px-4 py-16 sm:py-20">
-        <div className="container-xl lg:container m-auto">
-          <div className="mb-12">
-            <div className="h-12 bg-gray-300 rounded w-1/3 mb-3 animate-pulse"></div>
-            <div className="h-1.5 bg-gray-300 rounded-full w-20 mb-4 animate-pulse"></div>
-            <div className="h-6 bg-gray-200 rounded w-2/3 animate-pulse"></div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-md">
-                <div className="h-64 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse"></div>
-                <div className="p-5">
-                  <div className="h-6 bg-gray-200 rounded mb-3 animate-pulse"></div>
-                  <div className="h-4 bg-gray-100 rounded mb-3 animate-pulse"></div>
-                  <div className="h-4 bg-gray-100 rounded mb-4 w-5/6 animate-pulse"></div>
-                  <div className="border-t border-gray-200 my-4"></div>
-                  <div className="h-8 bg-gray-200 rounded mb-4 w-2/3 animate-pulse"></div>
-                  <div className="h-12 bg-gray-300 rounded animate-pulse"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <Box sx={{ mt: "-64px", backgroundColor: "#09090b", minHeight: "100vh" }}>
+        <HeroSection />
+        <Box sx={{ px: { xs: 2, md: 6 } }}>
+          <FeaturedBrands />
+        </Box>
+        <Box sx={{ py: 6, px: { xs: 2, md: 6 } }}>
+          <Grid container spacing={4}>
+            {/* Filter Sidebar Skeleton */}
+            <Grid size={{ xs: 12, lg: 3 }}>
+              <Box
+                sx={{
+                  backgroundColor: "#121214",
+                  height: "550px",
+                  borderRadius: "16px",
+                  border: "1px solid rgba(255,255,255,0.05)",
+                  animation: "pulse 1.8s infinite ease-in-out",
+                  "@keyframes pulse": {
+                    "0%, 100%": { opacity: 0.6 },
+                    "50%": { opacity: 0.35 },
+                  },
+                }}
+              />
+            </Grid>
+            {/* Product Items Skeletons */}
+            <Grid size={{ xs: 12, lg: 9 }}>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: {
+                    xs: "1fr",
+                    sm: "1fr 1fr",
+                    md: "1fr 1fr 1fr",
+                    xl: "1fr 1fr 1fr 1fr",
+                  },
+                  gap: 3,
+                }}
+              >
+                {[...Array(8)].map((_, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      backgroundColor: "#121214",
+                      height: "460px",
+                      borderRadius: "16px",
+                      border: "1px solid rgba(255,255,255,0.05)",
+                      animation: "pulse 1.8s infinite ease-in-out",
+                      animationDelay: `${i * 0.1}s`,
+                    }}
+                  />
+                ))}
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
     );
   }
 
+  // Handle Fetch Errors gracefully
   if (error) {
     return (
-      <div className="bg-gradient-to-b from-slate-50 to-white px-4 py-20">
-        <div className="container-xl lg:container m-auto">
-          <div className="flex flex-col items-center justify-center text-center">
-            <svg
-              className="w-24 h-24 text-red-400 mb-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Error Loading Products</h2>
-            <p className="text-gray-600 mb-6">{error}</p>
-            <button
+      <Box sx={{ mt: "-64px", backgroundColor: "#09090b", minHeight: "100vh" }}>
+        <HeroSection />
+        <Box sx={{ px: { xs: 2, md: 6 } }}>
+          <FeaturedBrands />
+        </Box>
+        <Box sx={{ py: 12, textAlign: "center", color: "white" }}>
+          <Box
+            sx={{
+              display: "inline-flex",
+              flexDirection: "column",
+              alignItems: "center",
+              p: 5,
+              borderRadius: "16px",
+              backgroundColor: "#121214",
+              border: "1px solid rgba(239, 68, 68, 0.2)",
+              maxWidth: "500px",
+              mx: 2,
+            }}
+          >
+            <Typography variant="h5" sx={{ fontWeight: 800, mb: 1, color: "#f87171" }}>
+              Error Retrieving Products
+            </Typography>
+            <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.5)", mb: 3 }}>
+              {error || "We encountered an issue connecting to the product service. Please verify server connection and try again."}
+            </Typography>
+            <Box
+              component="button"
               onClick={() => window.location.reload()}
-              className="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-lg transition-colors"
+              sx={{
+                cursor: "pointer",
+                backgroundColor: "#e28a3a",
+                color: "black",
+                border: "none",
+                fontWeight: 700,
+                borderRadius: "8px",
+                px: 4,
+                py: 1.5,
+                transition: "background-color 0.2s",
+                "&:hover": { backgroundColor: "#f0a256" },
+              }}
             >
               Try Again
-            </button>
-          </div>
-        </div>
-      </div>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     );
   }
-  
-  return (
-    <div>
-      <ProductList products={products}/>
-    </div>
-  )
-}
 
-export default ProductPage
+  return (
+    <Box sx={{ mt: "-64px", backgroundColor: "#09090b", minHeight: "100vh" }}>
+      {/* 1. Hero / Search section */}
+      <HeroSection />
+
+      {/* 2. Featured Brand Logo Grid Section */}
+      <Box sx={{ px: { xs: 2, md: 6 } }}>
+        <FeaturedBrands />
+      </Box>
+
+      {/* 3. Sidebar Filters & Product Catalog Cards Layout */}
+      <ProductList products={products} />
+    </Box>
+  );
+};
+
+export default ProductPage;
