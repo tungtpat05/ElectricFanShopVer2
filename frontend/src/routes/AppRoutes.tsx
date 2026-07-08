@@ -12,6 +12,7 @@ import ProductDetailPage from "../pages/ProductDetailPage";
 import SignInPage from "../pages/SignInPage.tsx";
 import AuthSuccessPage from "../pages/AuthSuccessPage";
 import SignUpPage from "../pages/SignUpPage.tsx";
+import CartPage from "../pages/CartPage";
 
 const AppRoutes = () => {
   const router = createBrowserRouter(
@@ -24,6 +25,7 @@ const AppRoutes = () => {
           <Route index element={<HomePage />} />
           <Route path="/products" element={<ProductPage />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </>
