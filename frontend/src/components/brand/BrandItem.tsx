@@ -1,46 +1,41 @@
-import {Card, CardMedia} from "@mui/material";
-import {Brand} from "@/types/brand.ts";
+import { Box, Typography } from "@mui/material";
+import { Brand } from "@/types/brand";
 
 interface BrandItemProps {
-    brand: Brand;
+  brand: Brand;
 }
 
-const BrandItem = ({brand}: BrandItemProps) => {
-
-    return (
-        <Card
-            sx={{
-                backgroundImage: 'black',
-                borderRadius: "20px",
-                overflow: "hidden",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                cursor: "pointer",
-                "&:hover": {
-                    transform: "translateY(-8px)",
-                    boxShadow: "0 12px 24px rgba(0, 0, 0, 0.3)",
-                },
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-            }}
-        >
-            <CardMedia
-                component="img"
-                image={brand.logoUrl}
-                alt={brand.brandName}
-                sx={{
-                    height: 100,
-                    objectFit: "contain",
-                    backgroundColor: '#0E0E0E',
-                    p: 2,
-                }}
-            />
-        </Card>
-    );
+const BrandItem = ({ brand }: BrandItemProps) => {
+  return (
+    <Box
+      sx={{
+        backgroundColor: "rgba(255, 255, 255, 0.03)",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        borderRadius: "100px",
+        px: 4,
+        py: 1.8,
+        cursor: "pointer",
+        textAlign: "center",
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "&:hover": {
+          borderColor: "#e28a3a",
+          backgroundColor: "rgba(226, 138, 58, 0.08)",
+          transform: "translateY(-2px)",
+          boxShadow: "0 10px 20px rgba(226, 138, 58, 0.05)",
+        },
+      }}
+    >
+      <Typography
+        sx={{
+          color: "#ffffff",
+          fontWeight: 600,
+          fontSize: "1rem",
+        }}
+      >
+        {brand.brandName}
+      </Typography>
+    </Box>
+  );
 };
 
 export default BrandItem;
-
-
-
-

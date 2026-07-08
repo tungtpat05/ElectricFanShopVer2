@@ -1,86 +1,49 @@
-import {
-    Box,
-    Button,
-    Container,
-    Typography,
-} from "@mui/material";
-import {useNavigate} from "react-router-dom";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import BrandSection from "@/components/brand/BrandSection.tsx";
+import { Box } from "@mui/material";
+import HomeHero from "@/components/home/HomeHero";
+import HomeStats from "@/components/home/HomeStats";
 import CategorySection from "@/components/category/CategorySection";
+import BrandSection from "@/components/brand/BrandSection";
+import FeaturedSection from "@/components/product/FeaturedSection";
+import HomePromise from "@/components/home/HomePromise";
+import NewArrivalsSection from "@/components/home/NewArrivalsSection";
+import HomeCommunity from "@/components/home/HomeCommunity";
+import HomeReviews from "@/components/home/HomeReviews";
+import HomeNewsletter from "@/components/home/HomeNewsletter";
 
 const HomePage = () => {
-    const navigate = useNavigate();
+  return (
+    <Box sx={{ width: "100%", backgroundColor: "#09090b", minHeight: "100vh" }}>
+      {/* 1. Hero / Search section */}
+      <HomeHero />
 
-    return (
-        <Box sx={{width: "100%"}}>
-            {/* Hero Section */}
-            <Container maxWidth={false} sx={{width: "80%"}}>
-                <Box
-                    sx={{
-                        minHeight: "60vh",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        py: 2,
-                    }}
-                >
-                    <Typography
-                        variant="h2"
-                        sx={{
-                            fontWeight: 700,
-                            mb: 3,
-                            fontSize: {xs: "3.5rem", md: "5rem"},
-                            color: "#fff",
-                        }}
-                    >
-                        Experience the Art of Speed and Freedom
-                    </Typography>
-                    <Typography
-                        variant="h6"
-                        sx={{
-                            mb: 10,
-                            maxWidth: "40vw",
-                            color: "#b0b0b0",
-                            fontSize: {xs: "1rem", md: "1.2rem"},
-                            lineHeight: 1.6,
-                        }}
-                    >
-                        Explore a curated world of premium motorcycles from the most iconic brands. Unmatched
-                        performance, cutting-edge technology, and bold design—crafted for the next generation of riders.
-                    </Typography>
-                    <Button
-                        variant="contained"
-                        endIcon={<ArrowForwardIcon/>}
-                        onClick={() => navigate("/products")}
-                        sx={{
-                            backgroundColor: "#DF7036",
-                            color: "#000",
-                            fontWeight: 600,
-                            fontSize: "1.3rem",
-                            px: 4,
-                            py: 1.5,
-                            borderRadius: "50px",
-                            textTransform: "none",
-                            "&:hover": {
-                                backgroundColor: "#E9A222",
-                            },
-                        }}
-                    >
-                        Explore Now
-                    </Button>
-                </Box>
-            </Container>
+      {/* 2. Stat summary banner */}
+      <HomeStats />
 
-            {/* Brand Showcase Section */}
-            <Container maxWidth={false} sx={{width: "80%"}}>
-                <CategorySection />
-                <BrandSection />
-            </Container>
-        </Box>
-    );
+      {/* 3. Browse by Category */}
+      <CategorySection />
+
+      {/* 4. World's Greatest Brands */}
+      <BrandSection />
+
+      {/* 5. Featured Motorcycles */}
+      <FeaturedSection />
+
+      {/* 6. Why Choose MotoVault Promise */}
+      <HomePromise />
+
+      {/* 7. New Arrivals and Trust checklist */}
+      <NewArrivalsSection />
+
+      {/* 8. More than a Marketplace Banner */}
+      <HomeCommunity />
+
+      {/* 9. Trusted by Riders Reviews */}
+      <HomeReviews />
+
+      {/* 10. Stay Connected newsletter signup */}
+      <HomeNewsletter />
+    </Box>
+  );
 };
 
 export default HomePage;

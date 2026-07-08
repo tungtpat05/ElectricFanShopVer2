@@ -1,11 +1,11 @@
-import { CircularProgress, Typography, Box, Button, Container } from "@mui/material";
+import { Box, Typography, Button, Grid, CircularProgress, Container } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Link } from "react-router-dom";
-import { useCategories } from "@/hooks/useCategories";
-import CategoryList from "./CategoryList";
+import { useProducts } from "@/hooks/useProducts";
+import FeaturedCard from "./FeaturedCard";
 
-const CategorySection = () => {
-  const { categories, loading, error } = useCategories();
+const FeaturedSection = () => {
+  const { products, loading, error } = useProducts();
 
   if (loading) {
     return (
@@ -22,6 +22,9 @@ const CategorySection = () => {
       </Box>
     );
   }
+
+  // Display the first 4 products as featured
+  const featuredProducts = products.slice(0, 4);
 
   return (
     <Box
@@ -54,7 +57,7 @@ const CategorySection = () => {
                 mb: 1.5,
               }}
             >
-              EXPLORE
+              HANDPICKED
             </Typography>
             <Typography
               variant="h3"
@@ -65,7 +68,7 @@ const CategorySection = () => {
                 fontFamily: "'Outfit', sans-serif",
               }}
             >
-              Browse by Category
+              Featured Motorcycles
             </Typography>
           </Box>
           <Button
@@ -85,15 +88,21 @@ const CategorySection = () => {
               },
             }}
           >
-            View all categories
+            Browse all
           </Button>
         </Box>
 
-        {/* Categories List */}
-        <CategoryList categories={categories} />
+        {/* Featured Cards Grid */}
+        <Grid container spacing={4}>
+          {featuredProducts.map((product, index) => (
+            <Grid key={product.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+              <FeaturedCard product={product} index={index} />
+            </Grid>
+          ))}
+        </Grid>
       </Container>
     </Box>
   );
 };
 
-export default CategorySection;
+export default FeaturedSection;
