@@ -8,6 +8,7 @@ import MainLayout from "../layouts/MainLayout";
 import NotFoundPage from "../pages/NotFoundPage";
 import HomePage from "../pages/HomePage";
 import ProductPage from "../pages/ProductPage";
+import ProductDetailPage from "../pages/ProductDetailPage";
 import SignInPage from "../pages/SignInPage.tsx";
 import AuthSuccessPage from "../pages/AuthSuccessPage";
 import SignUpPage from "../pages/SignUpPage.tsx";
@@ -22,6 +23,7 @@ const AppRoutes = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/products" element={<ProductPage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </>
