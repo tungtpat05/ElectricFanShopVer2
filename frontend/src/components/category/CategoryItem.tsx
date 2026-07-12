@@ -7,15 +7,6 @@ interface CategoryItemProps {
   category: Category;
 }
 
-const CATEGORY_IMAGES: Record<string, string> = {
-  sport: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&auto=format&fit=crop&q=80",
-  naked: "https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?w=600&auto=format&fit=crop&q=80",
-  adventure: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&auto=format&fit=crop&q=80",
-  enduro: "https://images.unsplash.com/photo-1536640712-4d4c36ff0e4e?w=600&auto=format&fit=crop&q=80",
-  cruiser: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6?w=600&auto=format&fit=crop&q=80",
-  electric: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop&q=80",
-};
-
 const CATEGORY_MODEL_COUNTS: Record<string, string> = {
   sport: "124 Models",
   naked: "92 Models",
@@ -29,7 +20,6 @@ const CategoryItem = ({ category }: CategoryItemProps) => {
   const navigate = useNavigate();
   const nameKey = category.categoryName.toLowerCase();
 
-  const bgImage = CATEGORY_IMAGES[nameKey] || CATEGORY_IMAGES.adventure;
   const modelCount = CATEGORY_MODEL_COUNTS[nameKey] || "45 Models";
 
   return (
@@ -40,11 +30,10 @@ const CategoryItem = ({ category }: CategoryItemProps) => {
         position: "relative",
         borderRadius: "24px",
         overflow: "hidden",
-        backgroundImage: `linear-gradient(to top, rgba(9, 9, 11, 0.95) 0%, rgba(9, 9, 11, 0.3) 50%, rgba(9, 9, 11, 0) 100%), url("${bgImage}")`,
+        backgroundImage: `linear-gradient(to top, rgba(9, 9, 11, 0.95) 0%, rgba(9, 9, 11, 0.3) 50%, rgba(9, 9, 11, 0) 100%), url("${category.categoryImage}")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         cursor: "pointer",
-        border: "1px solid rgba(255, 255, 255, 0.05)",
         transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease",
         "&:hover": {
           transform: "translateY(-8px)",

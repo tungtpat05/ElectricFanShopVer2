@@ -20,7 +20,7 @@ const HomeHero = () => {
         alignItems: "center",
         textAlign: "center",
         px: 3,
-        pt: { xs: 12, md: 16 },
+        pt: { xs: 4, md: 8 },
         pb: { xs: 8, md: 10 },
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(9, 9, 11, 0.95) 90%), url("https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=1600&auto=format&fit=crop&q=80")`,
         backgroundSize: "cover",
@@ -59,7 +59,7 @@ const HomeHero = () => {
               fontSize: "0.75rem",
             }}
           >
-            • 2024 Collection Now Live
+            • 2026 Collection Now Live
           </Typography>
         </Box>
 
@@ -69,17 +69,17 @@ const HomeHero = () => {
           sx={{
             fontWeight: 800,
             color: "#fff",
-            fontSize: { xs: "3rem", sm: "4rem", md: "5.5rem" },
+            fontSize: { xs: "4rem", sm: "5rem", md: "6.5rem" },
             lineHeight: 1.1,
             letterSpacing: "-0.02em",
             mb: 3,
           }}
         >
-          Your Next{" "}
+          <Box> Your Next</Box>
           <Box component="span" sx={{ color: "#e28a3a" }}>
             Adventure
-          </Box>{" "}
-          Starts Here.
+          </Box>
+          <Box> Starts Here.</Box>
         </Typography>
 
         {/* Subtitle */}

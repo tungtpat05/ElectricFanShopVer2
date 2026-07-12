@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
-import logo from "@/assets/images/icons8-react.png";
+import logo from "@/assets/images/common/logo.png";
 import { useAuth } from '../../context';
 
 const navItems = [
@@ -181,7 +181,7 @@ const ResponsiveAppBar = () => {
                                     textDecoration: 'none',
                                 }}
                             >
-                                TORQUEX
+                                TORQUE<span style={{color: '#ff6b35'}}>X</span>
                             </Typography>
                         </Box>
 
@@ -207,7 +207,7 @@ const ResponsiveAppBar = () => {
                                     textDecoration: 'none',
                                 }}
                             >
-                                TORQUEX
+                                TORQUE<span style={{color: '#ff6b35'}}>X</span>
                             </Typography>
                         </Box>
 

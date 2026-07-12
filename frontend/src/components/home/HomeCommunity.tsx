@@ -1,6 +1,7 @@
 import { Box, Typography, Button, Grid, Container } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
+import communityBanner from "../../assets/images/home/community-banner.jpg";
 
 const HomeCommunity = () => {
   const navigate = useNavigate();
@@ -13,12 +14,11 @@ const HomeCommunity = () => {
             position: "relative",
             borderRadius: "28px",
             overflow: "hidden",
-            backgroundImage: `linear-gradient(to right, rgba(9, 9, 11, 0.95) 0%, rgba(9, 9, 11, 0.75) 50%, rgba(9, 9, 11, 0.25) 100%), url("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=1200&auto=format&fit=crop&q=80")`,
+            backgroundImage: `linear-gradient(to right, rgba(9, 9, 11, 0.95) 0%, rgba(9, 9, 11, 0.75) 50%, rgba(9, 9, 11, 0.25) 100%), url("${communityBanner}")`,
             backgroundSize: "cover",
             backgroundPosition: "center 40%",
             py: { xs: 8, md: 10 },
             px: { xs: 4, md: 8 },
-            border: "1px solid rgba(255, 255, 255, 0.05)",
           }}
         >
           <Box sx={{ maxWidth: { xs: "100%", md: "600px" }, relative: "zIndex: 2" }}>
