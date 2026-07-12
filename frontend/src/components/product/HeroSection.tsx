@@ -1,5 +1,6 @@
 import { Box, Typography, InputBase, Button, Chip } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import heroBanner from "@/assets/images/product/hero-banner.jpg";
 
 const QUICK_TAGS = [
   "Honda",
@@ -26,7 +27,7 @@ const HeroSection = () => {
         textAlign: "center",
         px: 3,
         py: 8,
-        backgroundImage: `linear-gradient(rgba(9, 9, 11, 0.75), rgba(9, 9, 11, 0.95)), url("https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1600&auto=format&fit=crop&q=80")`,
+        backgroundImage: `linear-gradient(rgba(9, 9, 11, 0.55), rgba(9, 9, 11, 0.65)), url("${heroBanner}")`,
         backgroundSize: "cover",
         backgroundPosition: "center 30%",
         backgroundRepeat: "no-repeat",

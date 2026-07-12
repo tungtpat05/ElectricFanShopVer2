@@ -1,6 +1,7 @@
 import { Box, Typography, Button } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ExploreIcon from "@mui/icons-material/Explore";
+import advantureBanner from "@/assets/images/product/advanture-banner.jpg";
 
 const AdventureBanner = () => {
   return (
@@ -13,10 +14,9 @@ const AdventureBanner = () => {
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
-        backgroundImage: `linear-gradient(90deg, rgba(9, 9, 11, 0.95) 0%, rgba(9, 9, 11, 0.8) 50%, rgba(9, 9, 11, 0.1) 100%), url("https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?w=1600&auto=format&fit=crop&q=80")`,
+        backgroundImage: `linear-gradient(90deg, rgba(9, 9, 11, 0.95) 0%, rgba(9, 9, 11, 0.3) 50%, rgba(9, 9, 11, 0.1) 100%), url("${advantureBanner}")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        border: "1px solid rgba(255, 255, 255, 0.05)",
         px: { xs: 4, md: 8 },
         py: 6,
         my: 3,

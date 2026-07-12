@@ -9,19 +9,19 @@ const BrandItem = ({ brand }: BrandItemProps) => {
   return (
     <Box
       sx={{
-        backgroundColor: "rgba(255, 255, 255, 0.03)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-        borderRadius: "100px",
+        backgroundColor: "#18181b",
+        border: "1px solid rgba(255, 255, 255, 0.05)",
+        borderRadius: "12px",
         px: 4,
-        py: 1.8,
+        py: 2.2,
         cursor: "pointer",
         textAlign: "center",
-        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: "all 0.2s ease-in-out",
         "&:hover": {
           borderColor: "#e28a3a",
-          backgroundColor: "rgba(226, 138, 58, 0.08)",
+          backgroundColor: "rgba(226, 138, 58, 0.05)",
           transform: "translateY(-2px)",
-          boxShadow: "0 10px 20px rgba(226, 138, 58, 0.05)",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
         },
       }}
     >
