@@ -5,21 +5,10 @@ import ActionButtons from "../common/ActionButtons";
 import Pagination from "../common/Pagination";
 import { useNavigate } from "react-router-dom";
 
-export interface ProductItemType {
-  id: number;
-  name: string;
-  brand: string;
-  sku: string;
-  price: string;
-  originalPrice?: string;
-  stock: number;
-  sales: number;
-  status: string;
-  image: string;
-}
+import { Product } from "../../../types/product";
 
 interface ProductsTableProps {
-  products: ProductItemType[];
+  products: Product[];
 }
 
 const ProductsTable = ({ products }: ProductsTableProps) => {
@@ -73,11 +62,10 @@ const ProductsTable = ({ products }: ProductsTableProps) => {
               </TableCell>
               <TableCell>Image</TableCell>
               <TableCell sx={{ minWidth: 200 }}>Product</TableCell>
+              <TableCell>Category</TableCell>
               <TableCell>Price</TableCell>
-              <TableCell>Stock</TableCell>
-              <TableCell>Sales</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell align="right" sx={{ pr: 3 }}>Actions</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -105,58 +93,51 @@ const ProductsTable = ({ products }: ProductsTableProps) => {
                   <TableCell>
                     <Avatar
                       variant="rounded"
-                      src={product.image}
+                      src={product.thumbnail || ""}
                       sx={{ width: 44, height: 44, border: "1px solid rgba(255, 255, 255, 0.05)", backgroundColor: "#27272a" }}
                     />
                   </TableCell>
                   <TableCell>
                     <Box>
                       <Typography variant="body2" sx={{ fontWeight: 700, color: "#ffffff", fontSize: "0.875rem" }}>
-                        {product.name}
+                        {product.productName || "No Name"}
                       </Typography>
                       <Typography variant="caption" sx={{ color: "#71717a", display: "block", mt: 0.25 }}>
-                        {product.brand} &middot; {product.sku}
+                        {product.brand?.brandName || "Unknown Brand"}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Box>
+                      <Typography variant="body2" sx={{ fontWeight: 700, color: "#ffffff", fontSize: "0.875rem" }}>
+                        {product.category?.categoryName || "Unknown Category"}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: "flex", flexDirection: "column" }}>
                       <Typography variant="body2" sx={{ fontWeight: 700, color: "#ffffff", fontSize: "0.875rem" }}>
-                        {product.price}
+                        ${(() => {
+                          const hasDiscount = product.discountPrice !== null && product.discountPrice !== undefined && product.discountPrice < product.basePrice;
+                          const activePrice = hasDiscount ? product.discountPrice : product.basePrice;
+                          return activePrice !== null && activePrice !== undefined ? activePrice.toLocaleString() : "0";
+                        })()}
                       </Typography>
-                      {product.originalPrice && (
+                      {product.discountPrice !== null && product.discountPrice !== undefined && product.discountPrice < product.basePrice && (
                         <Typography variant="caption" sx={{ color: "#71717a", textDecoration: "line-through", mt: 0.1 }}>
-                          {product.originalPrice}
+                          ${product.basePrice !== null && product.basePrice !== undefined ? product.basePrice.toLocaleString() : "0"}
                         </Typography>
                       )}
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {product.stock === 0 ? (
-                      <Typography variant="body2" sx={{ color: "#ef4444", fontWeight: 700, fontSize: "0.85rem" }}>
-                        Out of stock
-                      </Typography>
-                    ) : product.stock <= 4 ? (
-                      <Typography variant="body2" sx={{ color: "#e28a3a", fontWeight: 700, fontSize: "0.85rem" }}>
-                        {product.stock}
-                      </Typography>
-                    ) : (
-                      <Typography variant="body2" sx={{ color: "#e4e4e7", fontWeight: 650, fontSize: "0.85rem" }}>
-                        {product.stock}
-                      </Typography>
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 600, fontSize: "0.85rem" }}>
-                    {product.sales}
-                  </TableCell>
-                  <TableCell>
-                    <StatusChip status={product.status} />
+                    <StatusChip status={product.isActive ? "Active" : "Inactive"} />
                   </TableCell>
                   <TableCell align="right" sx={{ pr: 3 }}>
                     <ActionButtons
                       onView={() => window.open(`/products/${product.id}`, "_blank")}
                       onEdit={() => navigate(`/admin/products/edit/${product.id}`)}
-                      onDelete={() => console.log(`Deleting ${product.name}`)}
+                      onDelete={() => console.log(`Deleting ${product.productName || ""}`)}
                     />
                   </TableCell>
                 </TableRow>

@@ -4,18 +4,10 @@ import StatusChip from "../common/StatusChip";
 import ActionButtons from "../common/ActionButtons";
 import Pagination from "../common/Pagination";
 
-export interface CategoryItemType {
-  id: number;
-  name: string;
-  code: string;
-  count: number;
-  description: string;
-  status: string;
-  image: string;
-}
+import { Category } from "../../../types/category";
 
 interface CategoriesTableProps {
-  categories: CategoryItemType[];
+  categories: Category[];
 }
 
 const CategoriesTable = ({ categories }: CategoriesTableProps) => {
@@ -67,8 +59,6 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
               </TableCell>
               <TableCell>Image</TableCell>
               <TableCell sx={{ minWidth: 180 }}>Category</TableCell>
-              <TableCell>Code</TableCell>
-              <TableCell>Products Count</TableCell>
               <TableCell>Status</TableCell>
               <TableCell align="right" sx={{ pr: 3 }}>Actions</TableCell>
             </TableRow>
@@ -98,34 +88,28 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
                   <TableCell>
                     <Avatar
                       variant="rounded"
-                      src={category.image}
+                      src={category.categoryImage}
                       sx={{ width: 44, height: 44, border: "1px solid rgba(255, 255, 255, 0.05)", backgroundColor: "#27272a" }}
                     />
                   </TableCell>
                   <TableCell>
                     <Box>
                       <Typography variant="body2" sx={{ fontWeight: 700, color: "#ffffff", fontSize: "0.875rem" }}>
-                        {category.name}
+                        {category.categoryName}
                       </Typography>
                       <Typography variant="caption" sx={{ color: "#71717a", display: "block", mt: 0.25 }}>
                         {category.description}
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell sx={{ fontFamily: "monospace", fontSize: "0.85rem", color: "#a1a1aa" }}>
-                    {category.code}
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 650, fontSize: "0.85rem" }}>
-                    {category.count}
-                  </TableCell>
                   <TableCell>
-                    <StatusChip status={category.status} />
+                    <StatusChip status={category.isActive ? "Active" : "Inactive"} />
                   </TableCell>
                   <TableCell align="right" sx={{ pr: 3 }}>
                     <ActionButtons
-                      onView={() => console.log(`Viewing category ${category.name}`)}
-                      onEdit={() => console.log(`Editing category ${category.name}`)}
-                      onDelete={() => console.log(`Deleting category ${category.name}`)}
+                      onView={() => console.log(`Viewing category ${category.categoryName}`)}
+                      onEdit={() => console.log(`Editing category ${category.categoryName}`)}
+                      onDelete={() => console.log(`Deleting category ${category.categoryName}`)}
                     />
                   </TableCell>
                 </TableRow>

@@ -1,9 +1,8 @@
-import { Box, IconButton, Badge, Typography, Avatar, Button, useTheme, useMediaQuery } from "@mui/material";
+import { Box, IconButton, Badge, Typography, Avatar, useTheme, useMediaQuery } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import AddIcon from "@mui/icons-material/Add";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 interface AdminHeaderProps {
   onOpenMobileSidebar: () => void;
@@ -20,14 +19,12 @@ const AdminHeader = ({
   totalBrands = 8,
 }: AdminHeaderProps) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   // Determine title and subtitle based on path
   let title = "Dashboard";
   let subtitle = "Welcome back — here's what's happening";
-  let actionButton: React.ReactNode = null;
 
   const path = location.pathname;
 
@@ -40,96 +37,12 @@ const AdminHeader = ({
   } else if (path.startsWith("/admin/products")) {
     title = "Products";
     subtitle = `${totalProducts} total products`;
-    actionButton = (
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        onClick={() => navigate("/admin/products/add")}
-        sx={{
-          backgroundColor: "#ff6b35",
-          color: "#ffffff",
-          fontWeight: 600,
-          px: 2,
-          py: 0.75,
-          borderRadius: 2,
-          "&:hover": {
-            backgroundColor: "#e05a2b",
-          },
-        }}
-      >
-        Add Product
-      </Button>
-    );
   } else if (path.startsWith("/admin/categories")) {
     title = "Categories";
     subtitle = `${totalCategories} categories`;
-    actionButton = (
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        sx={{
-          backgroundColor: "#ff6b35",
-          color: "#ffffff",
-          fontWeight: 600,
-          px: 2,
-          py: 0.75,
-          borderRadius: 2,
-          "&:hover": {
-            backgroundColor: "#e05a2b",
-          },
-        }}
-      >
-        Add Category
-      </Button>
-    );
   } else if (path.startsWith("/admin/brands")) {
     title = "Brands";
     subtitle = `${totalBrands} brands`;
-    actionButton = (
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        sx={{
-          backgroundColor: "#ff6b35",
-          color: "#ffffff",
-          fontWeight: 600,
-          px: 2,
-          py: 0.75,
-          borderRadius: 2,
-          "&:hover": {
-            backgroundColor: "#e05a2b",
-          },
-        }}
-      >
-        Add Brand
-      </Button>
-    );
-  } else {
-    // Default dashboard
-    actionButton = (
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        onClick={() => navigate("/admin/products/add")}
-        sx={{
-          backgroundColor: "#e28a3a",
-          color: "#000000",
-          fontWeight: 600,
-          px: 2,
-          py: 0.75,
-          borderRadius: 2,
-          "&:hover": {
-            backgroundColor: "#c7752e",
-          },
-        }}
-      >
-        Add Product
-      </Button>
-    );
   }
 
   return (
@@ -254,8 +167,6 @@ const AdminHeader = ({
           </Box>
         )}
 
-        {/* Action Button (Desktop Only or dynamic depending on width) */}
-        {!isMobile && actionButton}
       </Box>
     </Box>
   );

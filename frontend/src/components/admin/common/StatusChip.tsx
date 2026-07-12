@@ -25,6 +25,7 @@ const StatusChip = ({ status }: StatusChipProps) => {
   switch (normalized) {
     case "completed":
     case "published":
+    case "active":
       colorSetting = {
         bg: "rgba(34, 197, 94, 0.08)",
         text: "#22c55e",
@@ -46,6 +47,7 @@ const StatusChip = ({ status }: StatusChipProps) => {
       };
       break;
     case "cancelled":
+    case "inactive":
       colorSetting = {
         bg: "rgba(239, 68, 68, 0.08)",
         text: "#ef4444",
@@ -71,7 +73,7 @@ const StatusChip = ({ status }: StatusChipProps) => {
         color: colorSetting.text,
         borderColor: colorSetting.border,
         fontWeight: 600,
-        textTransform: "lowercase",
+        textTransform: "capitalize",
         fontSize: "0.75rem",
         height: 24,
         borderRadius: 1.5,

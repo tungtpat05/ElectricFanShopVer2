@@ -4,17 +4,10 @@ import StatusChip from "../common/StatusChip";
 import ActionButtons from "../common/ActionButtons";
 import Pagination from "../common/Pagination";
 
-export interface BrandItemType {
-  id: number;
-  name: string;
-  country: string;
-  count: number;
-  status: string;
-  image: string;
-}
+import { Brand } from "../../../types/brand";
 
 interface BrandsTableProps {
-  brands: BrandItemType[];
+  brands: Brand[];
 }
 
 const BrandsTable = ({ brands }: BrandsTableProps) => {
@@ -66,8 +59,6 @@ const BrandsTable = ({ brands }: BrandsTableProps) => {
               </TableCell>
               <TableCell>Logo</TableCell>
               <TableCell sx={{ minWidth: 154 }}>Brand</TableCell>
-              <TableCell>Country</TableCell>
-              <TableCell>Products Count</TableCell>
               <TableCell>Status</TableCell>
               <TableCell align="right" sx={{ pr: 3 }}>Actions</TableCell>
             </TableRow>
@@ -97,29 +88,23 @@ const BrandsTable = ({ brands }: BrandsTableProps) => {
                   <TableCell>
                     <Avatar
                       variant="rounded"
-                      src={brand.image}
+                      src={brand.logoUrl}
                       sx={{ width: 44, height: 44, border: "1px solid rgba(255, 255, 255, 0.05)", backgroundColor: "#27272a" }}
                     />
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 700, color: "#ffffff", fontSize: "0.875rem" }}>
-                      {brand.name}
+                      {brand.brandName}
                     </Typography>
                   </TableCell>
-                  <TableCell sx={{ fontSize: "0.85rem", color: "#a1a1aa" }}>
-                    {brand.country}
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 650, fontSize: "0.85rem" }}>
-                    {brand.count}
-                  </TableCell>
                   <TableCell>
-                    <StatusChip status={brand.status} />
+                    <StatusChip status={brand.isActive ? "Active" : "Inactive"} />
                   </TableCell>
                   <TableCell align="right" sx={{ pr: 3 }}>
                     <ActionButtons
-                      onView={() => console.log(`Viewing brand ${brand.name}`)}
-                      onEdit={() => console.log(`Editing brand ${brand.name}`)}
-                      onDelete={() => console.log(`Deleting brand ${brand.name}`)}
+                      onView={() => console.log(`Viewing brand ${brand.brandName}`)}
+                      onEdit={() => console.log(`Editing brand ${brand.brandName}`)}
+                      onDelete={() => console.log(`Deleting brand ${brand.brandName}`)}
                     />
                   </TableCell>
                 </TableRow>
