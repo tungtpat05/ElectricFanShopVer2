@@ -14,6 +14,14 @@ import AuthSuccessPage from "../pages/AuthSuccessPage";
 import SignUpPage from "../pages/SignUpPage.tsx";
 import CartPage from "../pages/CartPage";
 
+// Admin Imports
+import AdminLayout from "../layouts/AdminLayout";
+import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
+import AdminProductsPage from "../pages/admin/AdminProductsPage";
+import AdminProductFormPage from "../pages/admin/AdminProductFormPage";
+import AdminCategoriesPage from "../pages/admin/AdminCategoriesPage";
+import AdminBrandsPage from "../pages/admin/AdminBrandsPage";
+
 const AppRoutes = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -21,6 +29,18 @@ const AppRoutes = () => {
         <Route path="/login" element={<SignInPage />} />
         <Route path="/register" element={<SignUpPage />} />
         <Route path="/auth/success" element={<AuthSuccessPage />} />
+        
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboardPage />} />
+          <Route path="dashboard" element={<AdminDashboardPage />} />
+          <Route path="products" element={<AdminProductsPage />} />
+          <Route path="products/add" element={<AdminProductFormPage mode="add" />} />
+          <Route path="products/edit/:id" element={<AdminProductFormPage mode="edit" />} />
+          <Route path="categories" element={<AdminCategoriesPage />} />
+          <Route path="brands" element={<AdminBrandsPage />} />
+        </Route>
+
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/products" element={<ProductPage />} />
