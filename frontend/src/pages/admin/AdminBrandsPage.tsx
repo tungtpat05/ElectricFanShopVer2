@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import SectionCard from "../../components/admin/common/SectionCard";
 import BrandFilterBar from "../../components/admin/brand/BrandFilterBar";
 import BrandsTable from "../../components/admin/brand/BrandsTable";
@@ -7,6 +8,7 @@ import { useBrands } from "../../hooks/useBrands";
 
 const AdminBrandsPage = () => {
   const { brands, loading, error } = useBrands();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
   const filteredBrands = useMemo(() => {
@@ -38,7 +40,7 @@ const AdminBrandsPage = () => {
       <BrandFilterBar
         search={search}
         onSearchChange={setSearch}
-        onAddClick={() => console.log("Add Brand clicked")}
+        onAddClick={() => navigate("/admin/brands/add")}
       />
       <SectionCard>
         <BrandsTable brands={filteredBrands} />

@@ -21,6 +21,8 @@ import AdminProductsPage from "../pages/admin/AdminProductsPage";
 import AdminProductFormPage from "../pages/admin/AdminProductFormPage";
 import AdminCategoriesPage from "../pages/admin/AdminCategoriesPage";
 import AdminBrandsPage from "../pages/admin/AdminBrandsPage";
+import AdminBrandFormPage from "../pages/admin/AdminBrandFormPage";
+import AdminCategoryFormPage from "../pages/admin/AdminCategoryFormPage";
 
 const AppRoutes = () => {
   const router = createBrowserRouter(
@@ -38,7 +40,11 @@ const AppRoutes = () => {
           <Route path="products/add" element={<AdminProductFormPage mode="add" />} />
           <Route path="products/edit/:id" element={<AdminProductFormPage mode="edit" />} />
           <Route path="categories" element={<AdminCategoriesPage />} />
+          <Route path="categories/add" element={<AdminCategoryFormPage mode="add" />} />
+          <Route path="categories/edit/:id" element={<AdminCategoryFormPage mode="edit" />} />
           <Route path="brands" element={<AdminBrandsPage />} />
+          <Route path="brands/add" element={<AdminBrandFormPage mode="add" />} />
+          <Route path="brands/edit/:id" element={<AdminBrandFormPage mode="edit" />} />
         </Route>
 
         <Route path="/" element={<MainLayout />}>

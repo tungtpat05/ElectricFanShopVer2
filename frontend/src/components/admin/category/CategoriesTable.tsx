@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Avatar, Typography, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import StatusChip from "../common/StatusChip";
 import ActionButtons from "../common/ActionButtons";
 import Pagination from "../common/Pagination";
@@ -11,6 +12,7 @@ interface CategoriesTableProps {
 }
 
 const CategoriesTable = ({ categories }: CategoriesTableProps) => {
+  const navigate = useNavigate();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [page, setPage] = useState(1);
 
@@ -108,7 +110,7 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
                   <TableCell align="right" sx={{ pr: 3 }}>
                     <ActionButtons
                       onView={() => console.log(`Viewing category ${category.categoryName}`)}
-                      onEdit={() => console.log(`Editing category ${category.categoryName}`)}
+                      onEdit={() => navigate(`/admin/categories/edit/${category.id}`)}
                       onDelete={() => console.log(`Deleting category ${category.categoryName}`)}
                     />
                   </TableCell>

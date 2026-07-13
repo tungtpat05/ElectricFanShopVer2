@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Avatar, Typography, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import StatusChip from "../common/StatusChip";
 import ActionButtons from "../common/ActionButtons";
 import Pagination from "../common/Pagination";
@@ -11,6 +12,7 @@ interface BrandsTableProps {
 }
 
 const BrandsTable = ({ brands }: BrandsTableProps) => {
+  const navigate = useNavigate();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [page, setPage] = useState(1);
 
@@ -93,9 +95,14 @@ const BrandsTable = ({ brands }: BrandsTableProps) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" sx={{ fontWeight: 700, color: "#ffffff", fontSize: "0.875rem" }}>
-                      {brand.brandName}
-                    </Typography>
+                    <Box>
+                      <Typography variant="body2" sx={{ fontWeight: 700, color: "#ffffff", fontSize: "0.875rem" }}>
+                        {brand.brandName}
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: "#71717a", display: "block", mt: 0.25 }}>
+                        {brand.description}
+                      </Typography>
+                    </Box>
                   </TableCell>
                   <TableCell>
                     <StatusChip status={brand.isActive ? "Active" : "Inactive"} />
@@ -103,7 +110,7 @@ const BrandsTable = ({ brands }: BrandsTableProps) => {
                   <TableCell align="right" sx={{ pr: 3 }}>
                     <ActionButtons
                       onView={() => console.log(`Viewing brand ${brand.brandName}`)}
-                      onEdit={() => console.log(`Editing brand ${brand.brandName}`)}
+                      onEdit={() => navigate(`/admin/brands/edit/${brand.id}`)}
                       onDelete={() => console.log(`Deleting brand ${brand.brandName}`)}
                     />
                   </TableCell>

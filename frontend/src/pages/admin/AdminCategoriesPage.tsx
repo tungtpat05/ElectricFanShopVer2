@@ -1,13 +1,14 @@
 import { useState, useMemo } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import SectionCard from "../../components/admin/common/SectionCard";
 import CategoryFilterBar from "../../components/admin/category/CategoryFilterBar";
 import CategoriesTable from "../../components/admin/category/CategoriesTable";
 import { useCategories } from "../../hooks/useCategories";
 
-
 const AdminCategoriesPage = () => {
   const { categories, loading, error } = useCategories();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
   const filteredCategories = useMemo(() => {
@@ -43,7 +44,7 @@ const AdminCategoriesPage = () => {
       <CategoryFilterBar
         search={search}
         onSearchChange={setSearch}
-        onAddClick={() => console.log("Add Category clicked")}
+        onAddClick={() => navigate("/admin/categories/add")}
       />
       <SectionCard>
         <CategoriesTable categories={filteredCategories} />
