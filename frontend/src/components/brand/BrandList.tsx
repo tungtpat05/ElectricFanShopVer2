@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Box } from "@mui/material";
 import BrandItem from "./BrandItem.tsx";
 import { Brand } from "@/types/brand";
@@ -6,13 +7,15 @@ interface BrandListProps {
   brands: Brand[];
 }
 
-const BrandList = ({ brands }: BrandListProps) => {
+const BrandList = forwardRef<HTMLDivElement, BrandListProps>(({ brands }, ref) => {
   return (
     <Box
+      ref={ref}
       sx={{
         display: "flex",
-        gap: 2,
+        gap: 3,
         overflowX: "auto",
+        scrollBehavior: "smooth",
         pb: 2,
         pt: 1,
         px: 1,
@@ -31,6 +34,8 @@ const BrandList = ({ brands }: BrandListProps) => {
       ))}
     </Box>
   );
-};
+});
+
+BrandList.displayName = "BrandList";
 
 export default BrandList;
