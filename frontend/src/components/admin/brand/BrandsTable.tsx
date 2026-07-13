@@ -31,7 +31,7 @@ const BrandsTable = ({ brands }: BrandsTableProps) => {
   };
 
   // Pagination metrics
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
   const totalItems = brands.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
   const startIndex = (page - 1) * itemsPerPage + 1;
