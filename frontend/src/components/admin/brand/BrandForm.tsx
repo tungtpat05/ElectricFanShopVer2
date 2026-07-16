@@ -3,7 +3,7 @@ import { Box, Grid, Button, Switch, FormControlLabel, TextField, Typography, Ava
 import { useNavigate } from "react-router-dom";
 import SectionCard from "../common/SectionCard";
 import { Brand } from "../../../types/brand";
-import { createBrand, updateBrand } from "../../../services/brandService";
+import { createBrand, updateBrand, uploadLogoImage } from "../../../services/brandService";
 
 interface BrandFormProps {
   mode: "add" | "edit";
@@ -16,22 +16,48 @@ const BrandForm = ({ mode, brandId, initialData }: BrandFormProps) => {
 
   const [brandName, setBrandName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
+  const [logoPublicId, setLogoPublicId] = useState("");
   const [description, setDescription] = useState("");
   const [isActive, setIsActive] = useState(true);
 
   const [errors, setErrors] = useState<{ brandName?: string; logoUrl?: string }>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
 
   // Sync initialData if editing
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setBrandName(initialData.brandName || "");
       setLogoUrl(initialData.logoUrl || "");
+      setLogoPublicId(initialData.logoPublicId || "");
       setDescription(initialData.description || "");
       setIsActive(initialData.isActive !== false);
     }
   }, [mode, initialData]);
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setUploadError(null);
+
+    try {
+      const response = await uploadLogoImage(file);
+      setLogoUrl(response.url);
+      setLogoPublicId(response.publicId);
+    } catch (err: any) {
+      console.error("Failed to upload image:", err);
+      setUploadError(err?.response?.data?.message || err?.message || "Failed to upload image. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
 
   const handleCancel = () => {
     navigate("/admin/brands");
@@ -61,6 +87,7 @@ const BrandForm = ({ mode, brandId, initialData }: BrandFormProps) => {
     const payload = {
       brandName: brandName.trim(),
       logoUrl: logoUrl.trim(),
+      logoPublicId: logoPublicId.trim() || undefined,
       description: description.trim(),
       isActive: isActive,
     };
@@ -133,12 +160,41 @@ const BrandForm = ({ mode, brandId, initialData }: BrandFormProps) => {
                   onChange={(e) => setLogoUrl(e.target.value)}
                   error={Boolean(errors.logoUrl)}
                   helperText={errors.logoUrl}
-                  disabled={submitting}
+                  disabled={submitting || uploading}
                   sx={{
                     "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
                     "& input": { fontSize: "0.95rem" },
                   }}
                 />
+                <Box sx={{ mt: 1.5, display: "flex", gap: 2, alignItems: "center" }}>
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    disabled={submitting || uploading}
+                    sx={{
+                      borderColor: "#71717a",
+                      color: "#ffffff",
+                      fontWeight: 600,
+                      "&:hover": {
+                        borderColor: "#ff6b35",
+                        backgroundColor: "rgba(255, 107, 53, 0.05)",
+                      },
+                    }}
+                  >
+                    {uploading ? "Uploading..." : "Upload Logo Image"}
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handleLogoUpload}
+                    />
+                  </Button>
+                  {uploadError && (
+                    <Typography color="error" variant="caption" sx={{ fontWeight: 550 }}>
+                      {uploadError}
+                    </Typography>
+                  )}
+                </Box>
               </Grid>
 
               <Grid size={{ xs: 12 }}>
