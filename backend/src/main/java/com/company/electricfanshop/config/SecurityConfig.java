@@ -28,29 +28,31 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/api/v1/auth/**").permitAll()
+//                        .requestMatchers("/login**", "/oauth2/**").permitAll()
+//                        .requestMatchers("/error").permitAll()
+//                        // Allow public read access to product catalog
+//                        .requestMatchers("GET", "/api/v1/brands/**").permitAll()
+//                        .requestMatchers("GET", "/api/v1/colors/**").permitAll()
+//                        .requestMatchers("GET", "/api/v1/categories/**").permitAll()
+//                        .requestMatchers("GET", "/api/v1/products/**").permitAll()
+//                        .anyRequest().authenticated())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/login**", "/oauth2/**").permitAll()
-                        .requestMatchers("/error").permitAll()
-                        // Allow public read access to product catalog
-                        .requestMatchers("GET", "/api/v1/brands/**").permitAll()
-                        .requestMatchers("GET", "/api/v1/colors/**").permitAll()
-                        .requestMatchers("GET", "/api/v1/categories/**").permitAll()
-                        .requestMatchers("GET", "/api/v1/products/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/login**", "/oauth2/**", "/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .successHandler(oauth2SuccessHandler)
-                )
+                        .successHandler(oauth2SuccessHandler))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                );
+                        .authenticationEntryPoint(
+                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
 
         return http.build();
     }

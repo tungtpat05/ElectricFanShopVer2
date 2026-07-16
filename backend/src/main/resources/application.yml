@@ -36,8 +36,14 @@ app:
 jwt:
   secret: ${JWT_SECRET_KEY}
 
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+
 logging:
   level:
+
     org.springframework.security: TRACE
     org.springframework.security.oauth2: TRACE
     org.springframework.web.client.RestTemplate: DEBUG

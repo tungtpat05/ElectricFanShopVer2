@@ -1,0 +1,23 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.mycompany:electricfanshop >--------------------
+[INFO] Building ElectricFanShop 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ electricfanshop ---
+[INFO] Deleting D:\ElectricFanShopVer2\ElectricFanShopVer2\backend\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ electricfanshop ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ electricfanshop ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 104 source files with javac [debug release 21] to target\classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.384 s
+[INFO] Finished at: 2026-07-17T00:03:51+07:00
+[INFO] ------------------------------------------------------------------------

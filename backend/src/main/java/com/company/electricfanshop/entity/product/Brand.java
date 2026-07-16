@@ -20,7 +20,10 @@ public class Brand {
 
     private String logoUrl;
 
+    private String logoPublicId;
+
     private String description;
+
 
     @Builder.Default
     private Boolean isActive = true;

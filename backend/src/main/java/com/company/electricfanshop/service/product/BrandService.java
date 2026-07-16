@@ -8,6 +8,7 @@ import com.company.electricfanshop.exception.DuplicateResourceException;
 import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.mapper.product.BrandMapper;
 import com.company.electricfanshop.repository.product.BrandRepository;
+import com.company.electricfanshop.service.storage.ImageStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class BrandService {
     private final BrandRepository brandRepository;
     private final BrandMapper brandMapper;
+    private final ImageStorageService imageStorageService;
 
     public List<BrandResponse> getAll() {
         List<Brand> brands = brandRepository.findAll();
@@ -42,11 +44,19 @@ public class BrandService {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
+        String oldPublicId = brand.getLogoPublicId();
+        String newPublicId = request.getLogoPublicId();
+
+        if (oldPublicId != null && !oldPublicId.isEmpty() && (newPublicId == null || !oldPublicId.equals(newPublicId))) {
+            imageStorageService.delete(oldPublicId);
+        }
+
         brandMapper.updateEntiryFromRequest(request, brand);
 
         brandRepository.save(brand);
         return brandMapper.toResponse(brand);
     }
+
 
     public Brand getEntityById(Integer id) {
         return brandRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(id));

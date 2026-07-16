@@ -16,6 +16,9 @@ public class BrandCreateRequest {
     @URL(message = "Logo URL must be a valid URL")
     private String logoUrl;
 
+    private String logoPublicId;
+
     @Size(max = 500, message = "Description must not exceed 500 characters")
+
     private String description;
 }
