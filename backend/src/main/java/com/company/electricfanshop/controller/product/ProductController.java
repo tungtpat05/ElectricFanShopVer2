@@ -40,14 +40,14 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody ProductCreateRequest request) {
         ProductResponse response = productService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> update(@PathVariable Integer id, @RequestBody ProductUpdateRequest request) {
         ProductResponse response = productService.update(id, request);

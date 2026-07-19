@@ -19,6 +19,7 @@ public class ProductResponse {
     private BigDecimal basePrice;
     private BigDecimal discountPrice;
     private String thumbnail;
+    private String thumbnailPublicId;
     private Integer engineCapacity;
     private Integer weightGram;
     private Integer lengthCm;

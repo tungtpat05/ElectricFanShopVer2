@@ -9,6 +9,7 @@ import com.company.electricfanshop.entity.product.Product;
 import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.mapper.product.ProductMapper;
 import com.company.electricfanshop.repository.product.ProductRepository;
+import com.company.electricfanshop.service.storage.ImageStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class ProductService {
     private final BrandService brandService;
     private final CategoryService categoryService;
     private final ProductMapper productMapper;
+    private final ImageStorageService imageStorageService;
 
     public List<ProductResponse> getAll() {
         List<Product> products = productRepository.findAll();
@@ -61,6 +63,13 @@ public class ProductService {
     public ProductResponse update(Integer id, ProductUpdateRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        String oldPublicId = product.getThumbnailPublicId();
+        String newPublicId = request.getThumbnailPublicId();
+
+        if (oldPublicId != null && !oldPublicId.isEmpty() && (newPublicId == null || !oldPublicId.equals(newPublicId))) {
+            imageStorageService.delete(oldPublicId);
+        }
 
         productMapper.updateEntityFromRequest(request, product);
 

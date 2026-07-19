@@ -45,6 +45,8 @@ public class ProductCreateRequest {
     @URL(message = "Thumbnail URL must be a valid URL")
     private String thumbnail;
 
+    private String thumbnailPublicId;
+
     @PositiveOrZero(message = "Engine capacity must be zero or positive")
     private Integer engineCapacity;
 

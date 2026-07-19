@@ -42,6 +42,7 @@ public class Product {
 
     private BigDecimal discountPrice;
     private String thumbnail;
+    private String thumbnailPublicId;
 
     private Integer engineCapacity;
 
