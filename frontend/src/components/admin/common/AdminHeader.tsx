@@ -6,17 +6,10 @@ import { useLocation } from "react-router-dom";
 
 interface AdminHeaderProps {
   onOpenMobileSidebar: () => void;
-  // Optional custom header actions/meta
-  totalProducts?: number;
-  totalCategories?: number;
-  totalBrands?: number;
 }
 
 const AdminHeader = ({
   onOpenMobileSidebar,
-  totalProducts = 10,
-  totalCategories = 7,
-  totalBrands = 8,
 }: AdminHeaderProps) => {
   const location = useLocation();
   const theme = useTheme();
@@ -36,13 +29,13 @@ const AdminHeader = ({
     subtitle = "Modify product details and inventory specifications";
   } else if (path.startsWith("/admin/products")) {
     title = "Products";
-    subtitle = `${totalProducts} total products`;
+    subtitle = "Manage product catalog and inventory";
   } else if (path.startsWith("/admin/categories")) {
     title = "Categories";
-    subtitle = `${totalCategories} categories`;
+    subtitle = "Manage product categories";
   } else if (path.startsWith("/admin/brands")) {
     title = "Brands";
-    subtitle = `${totalBrands} brands`;
+    subtitle = "Manage brand manufacturers";
   }
 
   return (
