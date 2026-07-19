@@ -10,12 +10,18 @@ const AdminBrandsPage = () => {
   const { brands, loading, error } = useBrands();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
 
   const filteredBrands = useMemo(() => {
-    return brands.filter((brand) =>
-      (brand.brandName || "").toLowerCase().includes(search.toLowerCase())
-    );
-  }, [brands, search]);
+    return brands.filter((brand) => {
+      const matchesSearch = (brand.brandName || "").toLowerCase().includes(search.toLowerCase());
+      const matchesStatus =
+        status === "" ||
+        (status === "active" && brand.isActive) ||
+        (status === "inactive" && !brand.isActive);
+      return matchesSearch && matchesStatus;
+    });
+  }, [brands, search, status]);
 
   if (loading) {
     return (
@@ -40,6 +46,8 @@ const AdminBrandsPage = () => {
       <BrandFilterBar
         search={search}
         onSearchChange={setSearch}
+        status={status}
+        onStatusChange={setStatus}
         onAddClick={() => navigate("/admin/brands/add")}
       />
       <SectionCard>

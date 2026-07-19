@@ -10,16 +10,21 @@ const AdminCategoriesPage = () => {
   const { categories, loading, error } = useCategories();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
 
   const filteredCategories = useMemo(() => {
     return categories.filter((cat) => {
       const matchSearch =
         (cat.categoryName || "").toLowerCase().includes(search.toLowerCase()) ||
         (cat.description || "").toLowerCase().includes(search.toLowerCase());
+      const matchesStatus =
+        status === "" ||
+        (status === "active" && cat.isActive) ||
+        (status === "inactive" && !cat.isActive);
 
-      return matchSearch;
+      return matchSearch && matchesStatus;
     });
-  }, [categories, search]);
+  }, [categories, search, status]);
 
   if (loading) {
     return (
@@ -44,6 +49,8 @@ const AdminCategoriesPage = () => {
       <CategoryFilterBar
         search={search}
         onSearchChange={setSearch}
+        status={status}
+        onStatusChange={setStatus}
         onAddClick={() => navigate("/admin/categories/add")}
       />
       <SectionCard>
