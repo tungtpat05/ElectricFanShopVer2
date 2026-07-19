@@ -137,7 +137,6 @@ const ProductsTable = ({ products }: ProductsTableProps) => {
                     <ActionButtons
                       onView={() => window.open(`/products/${product.id}`, "_blank")}
                       onEdit={() => navigate(`/admin/products/edit/${product.id}`)}
-                      onDelete={() => console.log(`Deleting ${product.productName || ""}`)}
                     />
                   </TableCell>
                 </TableRow>
@@ -155,6 +154,7 @@ const ProductsTable = ({ products }: ProductsTableProps) => {
         startIndex={totalItems === 0 ? 0 : startIndex}
         endIndex={endIndex}
         onPageChange={handlePageChange}
+        itemLabel="products"
       />
     </Box>
   );

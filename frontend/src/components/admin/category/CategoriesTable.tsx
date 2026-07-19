@@ -127,6 +127,7 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
         startIndex={totalItems === 0 ? 0 : startIndex}
         endIndex={endIndex}
         onPageChange={handlePageChange}
+        itemLabel="categories"
       />
     </Box>
   );

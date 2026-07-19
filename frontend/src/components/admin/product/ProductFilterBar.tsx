@@ -12,6 +12,8 @@ interface ProductFilterBarProps {
   onBrandChange: (val: string) => void;
   category: string;
   onCategoryChange: (val: string) => void;
+  status: string;
+  onStatusChange: (val: string) => void;
   brands: Brand[];
   categories: Category[];
   onAddClick?: () => void;
@@ -24,6 +26,8 @@ const ProductFilterBar = ({
   onBrandChange,
   category,
   onCategoryChange,
+  status,
+  onStatusChange,
   brands,
   categories,
   onAddClick,
@@ -72,6 +76,22 @@ const ProductFilterBar = ({
               {c.categoryName}
             </MenuItem>
           ))}
+        </Select>
+      </FormControl>
+
+      <FormControl size="small" sx={{ minWidth: 140, width: { xs: "100%", sm: "auto" } }}>
+        <Select
+          value={status}
+          onChange={(e: SelectChangeEvent) => onStatusChange(e.target.value)}
+          displayEmpty
+          inputProps={{ "aria-label": "Select Status" }}
+          sx={{
+            "& .MuiSelect-select": { py: 1.0, px: 2, fontSize: "0.875rem", fontWeight: 550 },
+          }}
+        >
+          <MenuItem value="">All Statuses</MenuItem>
+          <MenuItem value="active">Active</MenuItem>
+          <MenuItem value="inactive">Inactive</MenuItem>
         </Select>
       </FormControl>
       {onAddClick && (

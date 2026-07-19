@@ -9,7 +9,42 @@ interface PaginationProps {
   startIndex: number;
   endIndex: number;
   onPageChange: (page: number) => void;
+  itemLabel?: string;
 }
+
+const getPaginationRange = (currentPage: number, totalPages: number) => {
+  const siblings = 1; // Number of page buttons to show on either side of the current page
+
+  // If total pages is small, show all pages
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  const leftSiblingIndex = Math.max(currentPage - siblings, 1);
+  const rightSiblingIndex = Math.min(currentPage + siblings, totalPages);
+
+  const shouldShowLeftDots = leftSiblingIndex > 2;
+  const shouldShowRightDots = rightSiblingIndex < totalPages - 1;
+
+  if (!shouldShowLeftDots && shouldShowRightDots) {
+    const leftItemCount = 3 + 2 * siblings;
+    const leftRange = Array.from({ length: leftItemCount }, (_, i) => i + 1);
+    return [...leftRange, "...", totalPages];
+  }
+
+  if (shouldShowLeftDots && !shouldShowRightDots) {
+    const rightItemCount = 3 + 2 * siblings;
+    const rightRange = Array.from({ length: rightItemCount }, (_, i) => totalPages - rightItemCount + i + 1);
+    return [1, "...", ...rightRange];
+  }
+
+  if (shouldShowLeftDots && shouldShowRightDots) {
+    const middleRange = Array.from({ length: rightSiblingIndex - leftSiblingIndex + 1 }, (_, i) => leftSiblingIndex + i);
+    return [1, "...", ...middleRange, "...", totalPages];
+  }
+
+  return [];
+};
 
 const Pagination = ({
   currentPage,
@@ -18,6 +53,7 @@ const Pagination = ({
   startIndex,
   endIndex,
   onPageChange,
+  itemLabel = "items",
 }: PaginationProps) => {
   return (
     <Box
@@ -33,7 +69,7 @@ const Pagination = ({
     >
       {/* Description text */}
       <Typography variant="body2" sx={{ color: "#71717a", fontSize: "0.85rem" }}>
-        Showing {startIndex}-{endIndex} of {totalItems} products
+        Showing {startIndex}-{endIndex} of {totalItems} {itemLabel}
       </Typography>
 
       {/* Pages Navigation */}
@@ -56,14 +92,33 @@ const Pagination = ({
           <ChevronLeftIcon fontSize="small" />
         </IconButton>
 
-        {Array.from({ length: totalPages }).map((_, i) => {
-          const page = i + 1;
+        {getPaginationRange(currentPage, totalPages).map((page, index) => {
+          if (page === "...") {
+            return (
+              <Box
+                key={`dots-${index}`}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  minWidth: 32,
+                  height: 32,
+                  color: "#71717a",
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                }}
+              >
+                ...
+              </Box>
+            );
+          }
+
           const isSelected = page === currentPage;
 
           return (
             <Button
               key={page}
-              onClick={() => onPageChange(page)}
+              onClick={() => onPageChange(page as number)}
               sx={{
                 minWidth: 32,
                 height: 32,

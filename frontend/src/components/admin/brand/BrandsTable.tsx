@@ -127,6 +127,7 @@ const BrandsTable = ({ brands }: BrandsTableProps) => {
         startIndex={totalItems === 0 ? 0 : startIndex}
         endIndex={endIndex}
         onPageChange={handlePageChange}
+        itemLabel="brands"
       />
     </Box>
   );

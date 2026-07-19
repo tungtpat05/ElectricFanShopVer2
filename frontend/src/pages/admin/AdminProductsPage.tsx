@@ -17,6 +17,7 @@ const AdminProductsPage = () => {
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
+  const [status, setStatus] = useState("");
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -32,9 +33,14 @@ const AdminProductsPage = () => {
 
       const matchCategory = category === "" || categoryName === category;
 
-      return matchSearch && matchBrand && matchCategory;
+      const matchStatus =
+        status === "" ||
+        (status === "active" && product.isActive) ||
+        (status === "inactive" && !product.isActive);
+
+      return matchSearch && matchBrand && matchCategory && matchStatus;
     });
-  }, [products, search, brand, category]);
+  }, [products, search, brand, category, status]);
 
   const loading = productsLoading || brandsLoading || categoriesLoading;
   const error = productsError || brandsError || categoriesError;
@@ -67,6 +73,8 @@ const AdminProductsPage = () => {
         onBrandChange={setBrand}
         category={category}
         onCategoryChange={setCategory}
+        status={status}
+        onStatusChange={setStatus}
         brands={brands}
         categories={categories}
         onAddClick={() => navigate("/admin/products/add")}
