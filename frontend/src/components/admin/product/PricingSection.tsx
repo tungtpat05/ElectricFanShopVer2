@@ -4,9 +4,10 @@ import SectionCard from "../common/SectionCard";
 interface PricingSectionProps {
   formData: any;
   onChange: (field: string, value: any) => void;
+  errors?: Record<string, string>;
 }
 
-const PricingSection = ({ formData, onChange }: PricingSectionProps) => {
+const PricingSection = ({ formData, onChange, errors }: PricingSectionProps) => {
   return (
     <SectionCard title="Pricing Details">
       <Grid container spacing={2.5}>
@@ -15,10 +16,12 @@ const PricingSection = ({ formData, onChange }: PricingSectionProps) => {
             required
             fullWidth
             type="number"
-            label="PRICE"
-            placeholder="e.g. 9499"
-            value={formData.priceNum || ""}
-            onChange={(e) => onChange("priceNum", e.target.value)}
+            label="BASE PRICE"
+            placeholder="e.g. 99"
+            value={formData.basePrice || ""}
+            onChange={(e) => onChange("basePrice", e.target.value)}
+            error={Boolean(errors?.basePrice)}
+            helperText={errors?.basePrice}
             slotProps={{
               input: {
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -33,10 +36,12 @@ const PricingSection = ({ formData, onChange }: PricingSectionProps) => {
           <TextField
             fullWidth
             type="number"
-            label="ORIGINAL PRICE (BEFORE DISCOUNT)"
-            placeholder="e.g. 10299"
-            value={formData.originalPriceNum || ""}
-            onChange={(e) => onChange("originalPriceNum", e.target.value)}
+            label="DISCOUNT PRICE"
+            placeholder="e.g. 89"
+            value={formData.discountPrice || ""}
+            onChange={(e) => onChange("discountPrice", e.target.value)}
+            error={Boolean(errors?.discountPrice)}
+            helperText={errors?.discountPrice}
             slotProps={{
               input: {
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,

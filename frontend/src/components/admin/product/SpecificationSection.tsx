@@ -13,10 +13,11 @@ const SpecificationSection = ({ formData, onChange }: SpecificationSectionProps)
         <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             fullWidth
-            label="ENGINE DISPLACEMENT"
-            placeholder="e.g. 649 cc Inline-4"
-            value={formData.engine || ""}
-            onChange={(e) => onChange("engine", e.target.value)}
+            type="number"
+            label="MOTOR CAPACITY (W / cc)"
+            placeholder="e.g. 55"
+            value={formData.engineCapacity || ""}
+            onChange={(e) => onChange("engineCapacity", e.target.value)}
             sx={{
               "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
             }}
@@ -25,58 +26,50 @@ const SpecificationSection = ({ formData, onChange }: SpecificationSectionProps)
         <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             fullWidth
-            label="HORSEPOWER"
-            placeholder="e.g. 94 HP @ 12,000 RPM"
-            value={formData.horsepower || ""}
-            onChange={(e) => onChange("horsepower", e.target.value)}
+            type="number"
+            label="WEIGHT (GRAMS)"
+            placeholder="e.g. 3500"
+            value={formData.weightGram || ""}
+            onChange={(e) => onChange("weightGram", e.target.value)}
             sx={{
               "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
             }}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <TextField
             fullWidth
-            label="MAX TORQUE"
-            placeholder="e.g. 64 Nm @ 8,500 RPM"
-            value={formData.torque || ""}
-            onChange={(e) => onChange("torque", e.target.value)}
+            type="number"
+            label="LENGTH (CM)"
+            placeholder="e.g. 40"
+            value={formData.lengthCm || ""}
+            onChange={(e) => onChange("lengthCm", e.target.value)}
             sx={{
               "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
             }}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <TextField
             fullWidth
-            label="TRANSMISSION"
-            placeholder="e.g. 6-speed manual with slipper clutch"
-            value={formData.transmission || ""}
-            onChange={(e) => onChange("transmission", e.target.value)}
+            type="number"
+            label="WIDTH (CM)"
+            placeholder="e.g. 40"
+            value={formData.widthCm || ""}
+            onChange={(e) => onChange("widthCm", e.target.value)}
             sx={{
               "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
             }}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <TextField
             fullWidth
-            label="SEAT HEIGHT"
-            placeholder="e.g. 810 mm"
-            value={formData.seatHeight || ""}
-            onChange={(e) => onChange("seatHeight", e.target.value)}
-            sx={{
-              "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
-            }}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <TextField
-            fullWidth
-            label="CURB WEIGHT"
-            placeholder="e.g. 202.5 kg"
-            value={formData.curbWeight || ""}
-            onChange={(e) => onChange("curbWeight", e.target.value)}
+            type="number"
+            label="HEIGHT (CM)"
+            placeholder="e.g. 120"
+            value={formData.heightCm || ""}
+            onChange={(e) => onChange("heightCm", e.target.value)}
             sx={{
               "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
             }}

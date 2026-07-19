@@ -12,6 +12,7 @@ export interface Product {
   basePrice: number;
   discountPrice: number;
   thumbnail: string;
+  thumbnailPublicId: string;
   engineCapacity: number;
   weightGram: number;
   lengthCm: number;
