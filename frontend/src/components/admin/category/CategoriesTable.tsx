@@ -62,7 +62,7 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
               <TableCell>Image</TableCell>
               <TableCell sx={{ minWidth: 180 }}>Category</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell align="right" sx={{ pr: 3 }}>Actions</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -107,11 +107,10 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
                   <TableCell>
                     <StatusChip status={category.isActive ? "Active" : "Inactive"} />
                   </TableCell>
-                  <TableCell align="right" sx={{ pr: 3 }}>
+                  <TableCell>
                     <ActionButtons
                       onView={() => console.log(`Viewing category ${category.categoryName}`)}
                       onEdit={() => navigate(`/admin/categories/edit/${category.id}`)}
-                      onDelete={() => console.log(`Deleting category ${category.categoryName}`)}
                     />
                   </TableCell>
                 </TableRow>

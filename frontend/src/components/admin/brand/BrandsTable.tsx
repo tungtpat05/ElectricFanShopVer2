@@ -62,7 +62,7 @@ const BrandsTable = ({ brands }: BrandsTableProps) => {
               <TableCell>Logo</TableCell>
               <TableCell sx={{ minWidth: 154 }}>Brand</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell align="right" sx={{ pr: 3 }}>Actions</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -107,11 +107,10 @@ const BrandsTable = ({ brands }: BrandsTableProps) => {
                   <TableCell>
                     <StatusChip status={brand.isActive ? "Active" : "Inactive"} />
                   </TableCell>
-                  <TableCell align="right" sx={{ pr: 3 }}>
+                  <TableCell>
                     <ActionButtons
                       onView={() => console.log(`Viewing brand ${brand.brandName}`)}
                       onEdit={() => navigate(`/admin/brands/edit/${brand.id}`)}
-                      onDelete={() => console.log(`Deleting brand ${brand.brandName}`)}
                     />
                   </TableCell>
                 </TableRow>
