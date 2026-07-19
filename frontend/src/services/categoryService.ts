@@ -40,3 +40,20 @@ export const updateCategory = async (
   const response = await axiosClient.put<Category>(`/categories/${id}`, payload);
   return response.data;
 };
+
+export interface ImageUploadResponse {
+  url: string;
+  publicId: string;
+}
+
+export const uploadCategoryImage = async (file: File): Promise<ImageUploadResponse> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await axiosClient.post<ImageUploadResponse>("/images/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
