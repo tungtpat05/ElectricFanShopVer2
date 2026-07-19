@@ -152,21 +152,64 @@ const BrandForm = ({ mode, brandId, initialData }: BrandFormProps) => {
 
               <Grid size={{ xs: 12 }}>
                 <TextField
+                  multiline
+                  rows={4}
+                  fullWidth
+                  label="BRAND DESCRIPTION"
+                  placeholder="Provide a brief summary of the brand history, target audience, and specialization..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  disabled={submitting}
+                  sx={{
+                    "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
+                    "& .MuiInputBase-root": { fontSize: "0.95rem" },
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </SectionCard>
+
+          {/* Logo Preview Section with Upload and Readonly URL */}
+          <SectionCard title="Logo Preview">
+            <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, alignItems: { xs: "center", sm: "flex-start" }, gap: 3, py: 1 }}>
+              <Avatar
+                variant="rounded"
+                src={logoUrl.trim() || undefined}
+                sx={{
+                  width: 140,
+                  height: 140,
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  backgroundColor: "#27272a",
+                  fontSize: "2.5rem",
+                  fontWeight: 600,
+                  color: "#ff6b35",
+                }}
+              >
+                {!logoUrl.trim() && (brandName ? brandName.charAt(0).toUpperCase() : "?")}
+              </Avatar>
+              <Box sx={{ flex: 1, width: "100%", display: "flex", flexDirection: "column", gap: 2 }}>
+                <TextField
                   required
                   fullWidth
                   label="LOGO IMAGE URL"
-                  placeholder="https://example.com/logo.png"
+                  placeholder="No logo uploaded yet"
                   value={logoUrl}
-                  onChange={(e) => setLogoUrl(e.target.value)}
                   error={Boolean(errors.logoUrl)}
                   helperText={errors.logoUrl}
-                  disabled={submitting || uploading}
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    }
+                  }}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                   sx={{
                     "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
-                    "& input": { fontSize: "0.95rem" },
+                    "& input": { fontSize: "0.95rem", color: "#a1a1aa" },
                   }}
                 />
-                <Box sx={{ mt: 1.5, display: "flex", gap: 2, alignItems: "center" }}>
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
                   <Button
                     variant="outlined"
                     component="label"
@@ -195,52 +238,9 @@ const BrandForm = ({ mode, brandId, initialData }: BrandFormProps) => {
                     </Typography>
                   )}
                 </Box>
-              </Grid>
-
-              <Grid size={{ xs: 12 }}>
-                <TextField
-                  multiline
-                  rows={4}
-                  fullWidth
-                  label="BRAND DESCRIPTION"
-                  placeholder="Provide a brief summary of the brand history, target audience, and specialization..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  disabled={submitting}
-                  sx={{
-                    "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
-                    "& .MuiInputBase-root": { fontSize: "0.95rem" },
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </SectionCard>
-
-          {/* Dynamic Logo Image Preview */}
-          {logoUrl.trim().startsWith("http") && (
-            <SectionCard title="Logo Preview">
-              <Box sx={{ display: "flex", alignItems: "center", gap: 3, py: 1 }}>
-                <Avatar
-                  variant="rounded"
-                  src={logoUrl.trim()}
-                  sx={{
-                    width: 96,
-                    height: 96,
-                    border: "1px solid rgba(255, 255, 255, 0.08)",
-                    backgroundColor: "#27272a",
-                  }}
-                />
-                <Box>
-                  <Typography variant="body2" sx={{ color: "#ffffff", fontWeight: 600, mb: 0.5 }}>
-                    Previewing Brand Icon
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: "#71717a", display: "block", wordBreak: "break-all" }}>
-                    {logoUrl}
-                  </Typography>
-                </Box>
               </Box>
-            </SectionCard>
-          )}
+            </Box>
+          </SectionCard>
         </Grid>
 
         {/* Right Side: Options Settings Card & Action Buttons */}
