@@ -1,11 +1,43 @@
 import { Brand } from './brand';
 import { Category } from './category';
+import { Color } from './color';
 
 export interface ProductImage {
   id: number;
   imageUrl: string;
   imagePublicId?: string;
   displayOrder: number;
+}
+
+export interface ProductVariant {
+  id: number;
+  productId: number;
+  color: Color;
+  sku: string;
+  additionalPrice: number;
+  stockQuantity: number;
+  variantImage: string;
+  variantImagePublicId?: string;
+  isActive: boolean;
+}
+
+export interface ProductVariantCreateRequest {
+  colorId: number;
+  sku: string;
+  additionalPrice: number;
+  stockQuantity: number;
+  variantImage: string;
+  variantImagePublicId?: string;
+}
+
+export interface ProductVariantUpdateRequest {
+  colorId?: number;
+  sku?: string;
+  additionalPrice?: number;
+  stockQuantity?: number;
+  variantImage?: string;
+  variantImagePublicId?: string;
+  isActive?: boolean;
 }
 
 export interface Product {
@@ -29,4 +61,5 @@ export interface Product {
   isActive: boolean;
   createdAt: string;
   images?: ProductImage[];
+  variants?: ProductVariant[];
 }

@@ -1,5 +1,5 @@
 import { axiosClient } from "../lib/axiosClient";
-import { Product, ProductImage } from "../types/product";
+import { Product, ProductImage, ProductVariant, ProductVariantCreateRequest, ProductVariantUpdateRequest } from "../types/product";
 
 export interface ProductCreateRequest {
   productName: string;
@@ -110,4 +110,27 @@ export const reorderProductImages = async (productId: number, imageIds: number[]
   const response = await axiosClient.put<ProductImage[]>(`/products/${productId}/images/reorder`, imageIds);
   return response.data;
 };
+
+export const getProductVariants = async (productId: number): Promise<ProductVariant[]> => {
+  const response = await axiosClient.get<ProductVariant[]>(`/products/${productId}/variants`);
+  return response.data;
+};
+
+export const createProductVariant = async (
+  productId: number,
+  payload: ProductVariantCreateRequest
+): Promise<ProductVariant> => {
+  const response = await axiosClient.post<ProductVariant>(`/products/${productId}/variants`, payload);
+  return response.data;
+};
+
+export const updateProductVariant = async (
+  productId: number,
+  variantId: number,
+  payload: ProductVariantUpdateRequest
+): Promise<ProductVariant> => {
+  const response = await axiosClient.put<ProductVariant>(`/products/${productId}/variants/${variantId}`, payload);
+  return response.data;
+};
+
 

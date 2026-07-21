@@ -6,6 +6,7 @@ import BasicInfoSection from "./BasicInfoSection";
 import PricingSection from "./PricingSection";
 import SpecificationSection from "./SpecificationSection";
 import MediaSection from "./MediaSection";
+import VariantSection from "./VariantSection";
 import SectionCard from "../common/SectionCard";
 
 import { Brand } from "../../../types/brand";
@@ -21,7 +22,7 @@ interface ProductFormProps {
   initialData?: Product | null;
 }
 
-const tabsList = ["Basic Info", "Pricing", "Specifications", "Product Images"];
+const tabsList = ["Basic Info", "Pricing", "Specifications", "Product Images", "Variants"];
 
 const slugify = (text: string) => {
   return text
@@ -326,6 +327,13 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
               disabled={submitting}
               error={errors.thumbnail}
               productName={formData.productName}
+            />
+          )}
+          {activeTab === 4 && (
+            <VariantSection
+              productId={productId ? Number(productId) : undefined}
+              productName={formData.productName}
+              disabled={submitting}
             />
           )}
         </Grid>
