@@ -26,5 +26,7 @@ public class ProductVariantCreateRequest {
 
     @NotBlank(message = "Variant image must not be blank")
     private String variantImage;
+
+    private String variantImagePublicId;
 }
 

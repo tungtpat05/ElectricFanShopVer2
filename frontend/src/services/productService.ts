@@ -1,5 +1,5 @@
 import { axiosClient } from "../lib/axiosClient";
-import { Product } from "../types/product";
+import { Product, ProductImage } from "../types/product";
 
 export interface ProductCreateRequest {
   productName: string;
@@ -82,3 +82,32 @@ export const uploadProductImage = async (file: File): Promise<ImageUploadRespons
   });
   return response.data;
 };
+
+export const getProductImages = async (productId: number): Promise<ProductImage[]> => {
+  const response = await axiosClient.get<ProductImage[]>(`/products/${productId}/images`);
+  return response.data;
+};
+
+export const addProductImage = async (productId: number, imageUrl: string, imagePublicId?: string): Promise<ProductImage> => {
+  const response = await axiosClient.post<ProductImage>(`/products/${productId}/images`, { imageUrl, imagePublicId });
+  return response.data;
+};
+
+export const updateProductImage = async (
+  productId: number,
+  imageId: number,
+  payload: { imageUrl?: string; imagePublicId?: string; displayOrder?: number }
+): Promise<ProductImage> => {
+  const response = await axiosClient.put<ProductImage>(`/products/${productId}/images/${imageId}`, payload);
+  return response.data;
+};
+
+export const deleteProductImage = async (productId: number, imageId: number): Promise<void> => {
+  await axiosClient.delete(`/products/${productId}/images/${imageId}`);
+};
+
+export const reorderProductImages = async (productId: number, imageIds: number[]): Promise<ProductImage[]> => {
+  const response = await axiosClient.put<ProductImage[]>(`/products/${productId}/images/reorder`, imageIds);
+  return response.data;
+};
+

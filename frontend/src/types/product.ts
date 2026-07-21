@@ -1,6 +1,13 @@
 import { Brand } from './brand';
 import { Category } from './category';
 
+export interface ProductImage {
+  id: number;
+  imageUrl: string;
+  imagePublicId?: string;
+  displayOrder: number;
+}
+
 export interface Product {
   id: number;
   productName: string;
@@ -21,4 +28,5 @@ export interface Product {
   isFeatured: boolean;
   isActive: boolean;
   createdAt: string;
+  images?: ProductImage[];
 }

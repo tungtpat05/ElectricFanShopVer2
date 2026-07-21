@@ -11,5 +11,7 @@ public class ProductImageCreateRequest {
     @NotBlank(message = "Image URL must not be blank")
     @URL(message = "Image URL must be a valid URL")
     private String imageUrl;
+
+    private String imagePublicId;
 }
 

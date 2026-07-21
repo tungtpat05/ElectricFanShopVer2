@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProductImageRepository extends JpaRepository<ProductImage, Integer> {
     List<ProductImage> findByProductIdOrderByDisplayOrder(Integer productId);
 
-    @Query(value = "SELECT MAX(display_order) FROM product_images WHERE product_id = :productId",
+    @Query(value = "SELECT MAX(display_order) FROM product_image WHERE product_id = :productId",
             nativeQuery = true)
     Integer findMaxDisplayOrderByProductId(@Param("productId") Integer productId);
 

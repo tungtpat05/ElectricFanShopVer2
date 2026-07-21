@@ -18,6 +18,7 @@ public class ProductVariantMapper {
         dto.setAdditionalPrice(entity.getAdditionalPrice());
         dto.setStockQuantity(entity.getStockQuantity());
         dto.setVariantImage(entity.getVariantImage());
+        dto.setVariantImagePublicId(entity.getVariantImagePublicId());
         dto.setIsActive(entity.getIsActive());
 
         // Map color to response
@@ -39,6 +40,7 @@ public class ProductVariantMapper {
         entity.setAdditionalPrice(request.getAdditionalPrice() != null ? request.getAdditionalPrice() : java.math.BigDecimal.ZERO);
         entity.setStockQuantity(request.getStockQuantity() != null ? request.getStockQuantity() : 0);
         entity.setVariantImage(request.getVariantImage());
+        entity.setVariantImagePublicId(request.getVariantImagePublicId());
 
         return entity;
     }
@@ -48,6 +50,7 @@ public class ProductVariantMapper {
         variant.setAdditionalPrice(request.getAdditionalPrice());
         variant.setStockQuantity(request.getStockQuantity());
         variant.setVariantImage(request.getVariantImage());
+        variant.setVariantImagePublicId(request.getVariantImagePublicId());
         variant.setIsActive(request.getIsActive());
     }
 }

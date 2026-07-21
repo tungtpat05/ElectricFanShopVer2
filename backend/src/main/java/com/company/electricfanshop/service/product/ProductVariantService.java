@@ -11,6 +11,7 @@ import com.company.electricfanshop.mapper.product.ProductVariantMapper;
 import com.company.electricfanshop.repository.product.ColorRepository;
 import com.company.electricfanshop.repository.product.ProductRepository;
 import com.company.electricfanshop.repository.product.ProductVariantRepository;
+import com.company.electricfanshop.service.storage.ImageStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class ProductVariantService {
     private final ProductRepository productRepository;
     private final ColorRepository colorRepository;
     private final ProductVariantMapper productVariantMapper;
+    private final ImageStorageService imageStorageService;
 
     public List<ProductVariantResponse> getAll(Integer productId) {
         List<ProductVariant> variants = productVariantRepository.findByProductId(productId);
@@ -68,12 +70,18 @@ public class ProductVariantService {
         Color color = colorRepository.findById(request.getColorId())
                 .orElseThrow(() -> new ResourceNotFoundException(request.getColorId()));
 
+        String oldPublicId = variant.getVariantImagePublicId();
+        String newPublicId = request.getVariantImagePublicId();
+
+        if (oldPublicId != null && !oldPublicId.isEmpty() && (newPublicId == null || !oldPublicId.equals(newPublicId))) {
+            imageStorageService.delete(oldPublicId);
+        }
+
         productVariantMapper.updateEntityFromRequest(request, variant);
         variant.setColor(color);
         productVariantRepository.save(variant);
 
         return productVariantMapper.toResponse(variant);
     }
-
 }
 

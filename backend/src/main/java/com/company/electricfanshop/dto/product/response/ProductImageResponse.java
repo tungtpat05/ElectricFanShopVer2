@@ -9,6 +9,7 @@ import lombok.*;
 public class ProductImageResponse {
     private Integer id;
     private String imageUrl;
+    private String imagePublicId;
     private Integer displayOrder;
 }
 

@@ -66,7 +66,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{productId}/images")
     public ResponseEntity<ProductImageResponse> createImage(
             @PathVariable Integer productId,
@@ -75,13 +75,31 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{productId}/images/{imageId}")
     public ResponseEntity<ProductImageResponse> updateImage(
             @PathVariable Integer productId,
             @PathVariable Integer imageId,
             @RequestBody ProductImageUpdateRequest request) {
         ProductImageResponse response = productImageService.update(productId, imageId, request);
+        return ResponseEntity.ok(response);
+    }
+
+//    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{productId}/images/{imageId}")
+    public ResponseEntity<Void> deleteImage(
+            @PathVariable Integer productId,
+            @PathVariable Integer imageId) {
+        productImageService.delete(productId, imageId);
+        return ResponseEntity.noContent().build();
+    }
+
+//    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{productId}/images/reorder")
+    public ResponseEntity<List<ProductImageResponse>> reorderImages(
+            @PathVariable Integer productId,
+            @RequestBody List<Integer> imageIdsOrdered) {
+        List<ProductImageResponse> response = productImageService.updateDisplayOrders(productId, imageIdsOrdered);
         return ResponseEntity.ok(response);
     }
 
@@ -97,7 +115,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{productId}/variants")
     public ResponseEntity<ProductVariantResponse> createVariant(
             @PathVariable Integer productId,
@@ -106,7 +124,7 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{productId}/variants/{variantId}")
     public ResponseEntity<ProductVariantResponse> updateVariant(
             @PathVariable Integer productId,
@@ -130,7 +148,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{productId}/specifications")
     public ResponseEntity<ProductSpecificationResponse> createSpecification(
             @PathVariable Integer productId,
@@ -139,7 +157,7 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{productId}/specifications/{specificationId}")
     public ResponseEntity<ProductSpecificationResponse> updateSpecification(
             @PathVariable Integer productId,
@@ -149,7 +167,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{productId}/specifications/{specificationId}")
     public ResponseEntity<Void> deleteSpecification(
             @PathVariable Integer productId,

@@ -21,7 +21,7 @@ interface ProductFormProps {
   initialData?: Product | null;
 }
 
-const tabsList = ["Basic Info", "Pricing", "Specifications", "Thumbnail Image"];
+const tabsList = ["Basic Info", "Pricing", "Specifications", "Product Images"];
 
 const slugify = (text: string) => {
   return text
@@ -317,6 +317,7 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
           )}
           {activeTab === 3 && (
             <MediaSection
+              productId={productId ? Number(productId) : undefined}
               thumbnail={formData.thumbnail}
               onChange={(url, publicId) => {
                 handleFieldChange("thumbnail", url);

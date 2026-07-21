@@ -12,6 +12,7 @@ public class ProductVariantUpdateRequest {
     private BigDecimal additionalPrice;
     private Integer stockQuantity;
     private String variantImage;
+    private String variantImagePublicId;
     private Boolean isActive;
 }
 
