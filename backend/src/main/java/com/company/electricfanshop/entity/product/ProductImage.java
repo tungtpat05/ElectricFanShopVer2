@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "product_images")
+@Table(name = "product_image")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,6 +20,8 @@ public class ProductImage {
     private Product product;
 
     private String imageUrl;
+
+    private String imagePublicId;
 
     private Integer displayOrder;
 }

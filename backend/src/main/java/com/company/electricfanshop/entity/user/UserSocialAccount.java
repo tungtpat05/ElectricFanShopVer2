@@ -5,7 +5,7 @@ import lombok.*;
 
 @Builder
 @Entity
-@Table(name = "user_social_accounts", uniqueConstraints = {
+@Table(name = "user_social_account", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"provider", "provider_id"})
 })
 @Setter

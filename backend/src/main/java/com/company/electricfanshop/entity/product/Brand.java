@@ -5,7 +5,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "brands")
+@Table(name = "brand")
 @Setter
 @Getter
 @NoArgsConstructor

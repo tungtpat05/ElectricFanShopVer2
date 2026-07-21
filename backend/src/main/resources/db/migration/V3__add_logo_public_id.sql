@@ -1,5 +1,6 @@
 -- Using for delete image on cloud
-ALTER TABLE Brands ADD logo_public_id NVARCHAR(255) NULL;
-ALTER TABLE Categories ADD logo_public_id NVARCHAR(255) NULL;
-ALTER TABLE Products ADD thumbnail_public_id NVARCHAR(255) NULL;
-
+ALTER TABLE brand ADD logo_public_id NVARCHAR(255) NULL;
+ALTER TABLE category ADD logo_public_id NVARCHAR(255) NULL;
+ALTER TABLE product ADD thumbnail_public_id NVARCHAR(255) NULL;
+ALTER TABLE product_image ADD image_public_id NVARCHAR(255) NULL;
+ALTER TABLE product_variant ADD variant_image_public_id NVARCHAR(255) NULL;

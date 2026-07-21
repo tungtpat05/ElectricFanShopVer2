@@ -5,7 +5,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "product_variants", uniqueConstraints = {
+@Table(name = "product_variant", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"product_id", "color_id"})
 })
 @Setter
@@ -35,6 +35,8 @@ public class ProductVariant {
     private Integer stockQuantity = 0;
 
     private String variantImage;
+
+    private String variantImagePublicId;
 
     @Builder.Default
     private Boolean isActive = true;

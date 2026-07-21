@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_addresses")
+@Table(name = "user_address")
 @Getter
 @Setter
 @Builder

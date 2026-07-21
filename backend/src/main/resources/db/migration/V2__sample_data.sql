@@ -1,5 +1,5 @@
 -- BRANDS (Full Details)
-INSERT INTO Brands (brand_name, logo_url, description)
+INSERT INTO brand (brand_name, logo_url, description)
 VALUES ('Honda', 'https://logos.com/honda.png',
         'Leading Japanese manufacturer known for reliability and engineering excellence.'),
        ('Yamaha', 'https://logos.com/yamaha.png',
@@ -14,7 +14,7 @@ VALUES ('Honda', 'https://logos.com/honda.png',
         'Japanese manufacturer known for practical, durable, and high-speed legendary bikes.');
 
 -- CATEGORIES
-INSERT INTO Categories (category_name, slug, category_image, description)
+INSERT INTO category (category_name, slug, category_image, description)
 VALUES ('Sport', 'sport', 'sport.jpg', 'High-speed motorcycles with full fairings and aggressive riding positions.'),
        ('Naked', 'naked', 'naked.jpg',
         'Stripped-down bikes with exposed engines, ideal for urban riding and versatility.'),
@@ -24,7 +24,7 @@ VALUES ('Sport', 'sport', 'sport.jpg', 'High-speed motorcycles with full fairing
         'Specialized off-road bikes focused on agility and conquering extreme terrain.');
 
 -- COLORS
-INSERT INTO Colors (color_name, color_code)
+INSERT INTO color (color_name, color_code)
 VALUES ('Grand Prix Red', '#CC0000'),
        ('Yamaha Blue', '#003399'),
        ('Lime Green', '#32CD32'),
@@ -33,7 +33,7 @@ VALUES ('Grand Prix Red', '#CC0000'),
        ('Crystal White', '#FFFFFF');
 
 -- HONDA (IDs 1-16)
-INSERT INTO Products (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
+INSERT INTO product (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
 VALUES
 -- Sport
 ('CBR1000RR-R Fireblade SP', 'cbr1000rr-r-sp', 1, 1, 28900.00, 1000, 'honda-cbr1k.jpg'),
@@ -57,7 +57,7 @@ VALUES
 ('CRF250L Rally', 'crf250l-rally', 1, 4, 6100.00, 250, 'honda-crf250.jpg');
 
 -- YAMAHA (IDs 17-32)
-INSERT INTO Products (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
+INSERT INTO product (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
 VALUES
 -- Sport
 ('YZF-R1M', 'yzf-r1m', 2, 1, 27300.00, 998, 'yamaha-r1m.jpg'),
@@ -81,7 +81,7 @@ VALUES
 ('TT-R230', 'tt-r230', 2, 4, 4600.00, 223, 'yamaha-ttr230.jpg');
 
 -- KAWASAKI (IDs 33-48)
-INSERT INTO Products (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
+INSERT INTO product (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
 VALUES
 -- Sport
 ('Ninja H2 Carbon', 'ninja-h2', 3, 1, 35000.00, 998, 'kawa-h2.jpg'),
@@ -105,7 +105,7 @@ VALUES
 ('KX450', 'kx450', 3, 4, 9600.00, 449, 'kawa-kx450.jpg');
 
 -- KTM (IDs 49-64)
-INSERT INTO Products (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
+INSERT INTO product (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
 VALUES
 -- Sport
 ('RC 8C', 'rc-8c', 4, 1, 39000.00, 889, 'ktm-rc8c.jpg'),
@@ -129,7 +129,7 @@ VALUES
 ('150 EXC TPI', '150-exc-tpi', 4, 4, 9800.00, 144, 'ktm-exc150.jpg');
 
 -- TRIUMPH (IDs 65-80)
-INSERT INTO Products (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
+INSERT INTO product (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
 VALUES
 -- Sport
 ('Speed Triple 1200 RR', 'speed-triple-rr', 5, 1, 21000.00, 1160, 'triumph-rr.jpg'),
@@ -153,7 +153,7 @@ VALUES
 ('Tiger 900 Rally Pro', 'tiger-900-rally', 5, 4, 17400.00, 888, 'triumph-tiger9rally.jpg');
 
 -- SUZUKI (IDs 81-96)
-INSERT INTO Products (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
+INSERT INTO product (product_name, slug, brand_id, category_id, base_price, engine_capacity, thumbnail)
 VALUES
 -- Sport
 ('Hayabusa Gen 3', 'hayabusa', 6, 1, 18800.00, 1340, 'suzuki-haya.jpg'),
@@ -177,7 +177,7 @@ VALUES
 ('DR200S', 'dr200s', 6, 4, 4700.00, 199, 'suzuki-dr200.jpg');
 
 -- ====================== PRODUCT VARIANTS (192 records) ======================
-INSERT INTO ProductVariants
+INSERT INTO product_variant
 (product_id, color_id, sku, additional_price, stock_quantity, variant_image, is_active)
 VALUES
 
@@ -610,7 +610,7 @@ VALUES
  'https://p7.hiclipart.com/preview/53/766/529/ktm-250-sx-f-motorcycle-ktm-250-exc-interest-rate.jpg', 1);
 
 -- ====================== PRODUCT SPECIFICATIONS ======================
-INSERT INTO ProductSpecifications (product_id, spec_key, spec_value)
+INSERT INTO product_specification (product_id, spec_key, spec_value)
 VALUES
 
 -- HONDA (1-16)
