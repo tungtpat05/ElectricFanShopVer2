@@ -44,8 +44,6 @@ public class Product {
     private String thumbnail;
     private String thumbnailPublicId;
 
-    private Integer engineCapacity;
-
     private Integer weightGram;
     private Integer lengthCm;
     private Integer widthCm;

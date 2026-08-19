@@ -3,9 +3,11 @@ package com.company.electricfanshop.entity.product;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "product_specification", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"product_id", "spec_key"})
+        @UniqueConstraint(columnNames = {"product_id", "spec_definition_id"})
 })
 @Getter
 @Setter
@@ -21,8 +23,15 @@ public class ProductSpecification {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private String specKey;
+    @ManyToOne
+    @JoinColumn(name = "spec_definition_id", nullable = false)
+    private SpecDefinition specDefinition;
 
-    private String specValue;
+    private String value;
+
+    private BigDecimal valueNumber;
+
+    @ManyToOne
+    @JoinColumn(name = "option_id")
+    private SpecDefinitionOption option;
 }
-

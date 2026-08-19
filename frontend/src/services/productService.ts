@@ -1,5 +1,6 @@
 import { axiosClient } from "../lib/axiosClient";
 import { Product, ProductImage, ProductVariant, ProductVariantCreateRequest, ProductVariantUpdateRequest } from "../types/product";
+import { ProductSpecification, ProductSpecificationCreateRequest, ProductSpecificationUpdateRequest } from "../types/specDefinition";
 
 export interface ProductCreateRequest {
   productName: string;
@@ -12,7 +13,6 @@ export interface ProductCreateRequest {
   discountPrice: number;
   thumbnail: string;
   thumbnailPublicId: string;
-  engineCapacity?: number;
   weightGram?: number;
   lengthCm?: number;
   widthCm?: number;
@@ -31,7 +31,6 @@ export interface ProductUpdateRequest {
   discountPrice: number;
   thumbnail: string;
   thumbnailPublicId: string;
-  engineCapacity?: number;
   weightGram?: number;
   lengthCm?: number;
   widthCm?: number;
@@ -133,4 +132,32 @@ export const updateProductVariant = async (
   return response.data;
 };
 
+// Product Specification APIs
+export const getProductSpecifications = async (productId: number): Promise<ProductSpecification[]> => {
+  const response = await axiosClient.get<ProductSpecification[]>(`/products/${productId}/specifications`);
+  return response.data;
+};
 
+export const createProductSpecification = async (
+  productId: number,
+  payload: ProductSpecificationCreateRequest
+): Promise<ProductSpecification> => {
+  const response = await axiosClient.post<ProductSpecification>(`/products/${productId}/specifications`, payload);
+  return response.data;
+};
+
+export const updateProductSpecification = async (
+  productId: number,
+  specId: number,
+  payload: ProductSpecificationUpdateRequest
+): Promise<ProductSpecification> => {
+  const response = await axiosClient.put<ProductSpecification>(`/products/${productId}/specifications/${specId}`, payload);
+  return response.data;
+};
+
+export const deleteProductSpecification = async (
+  productId: number,
+  specId: number
+): Promise<void> => {
+  await axiosClient.delete(`/products/${productId}/specifications/${specId}`);
+};

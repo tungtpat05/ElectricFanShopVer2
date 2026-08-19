@@ -36,8 +36,8 @@ const FeaturedCard = ({ product, index }: FeaturedCardProps) => {
   const badge = getProductBadge(index);
   const catColors = getCategoryColors(product.category?.categoryName || "Sport");
   
-  const ccVal = product.engineCapacity || 650;
-  const hpVal = Math.round(ccVal * 0.14) || 95;
+  const ccVal = 650;
+  const hpVal = 95;
   const year = product.createdAt ? new Date(product.createdAt).getFullYear() : 2024;
 
   return (

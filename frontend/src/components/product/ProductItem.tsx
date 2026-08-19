@@ -37,8 +37,8 @@ const ProductItem = ({ product }: ProductItemProps) => {
   const displayPrice = hasDiscount ? product.discountPrice : product.basePrice;
 
   // Resolve specs dynamically from backend model or default to realistic model specs.
-  const ccVal = product.engineCapacity || 650;
-  const hpVal = Math.round(ccVal * 0.14) || 95;
+  const ccVal = 650;
+  const hpVal = 95;
   const isElectric = product.category?.categoryName?.toLowerCase() === "electric";
   const transVal = isElectric ? "Direct" : (ccVal > 900 ? "DCT" : "Manual");
   const absVal = "Standard";

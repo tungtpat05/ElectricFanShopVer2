@@ -1,6 +1,7 @@
 import { Brand } from './brand';
 import { Category } from './category';
 import { Color } from './color';
+import { ProductSpecification } from './specDefinition';
 
 export interface ProductImage {
   id: number;
@@ -52,14 +53,14 @@ export interface Product {
   discountPrice: number;
   thumbnail: string;
   thumbnailPublicId: string;
-  engineCapacity: number;
-  weightGram: number;
-  lengthCm: number;
-  widthCm: number;
-  heightCm: number;
+  weightGram?: number;
+  lengthCm?: number;
+  widthCm?: number;
+  heightCm?: number;
   isFeatured: boolean;
   isActive: boolean;
   createdAt: string;
   images?: ProductImage[];
   variants?: ProductVariant[];
+  specifications?: ProductSpecification[];
 }

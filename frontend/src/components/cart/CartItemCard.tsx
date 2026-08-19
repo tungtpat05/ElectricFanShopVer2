@@ -21,8 +21,8 @@ interface CartItemCardProps {
 const CartItemCard = ({ item, onIncrease, onDecrease, onRemove }: CartItemCardProps) => {
   const { product, quantity } = item;
   
-  const ccVal = product.engineCapacity || 650;
-  const hpVal = Math.round(ccVal * 0.14) || 95;
+  const ccVal = 650;
+  const hpVal = 95;
   const singlePrice = product.discountPrice || product.basePrice;
   const totalPrice = singlePrice * quantity;
 

@@ -1,19 +1,26 @@
 package com.company.electricfanshop.dto.product.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class ProductSpecificationUpdateRequest {
-    @NotBlank(message = "Specification key must not be blank")
-    @Size(max = 100, message = "Specification key must be at most 100 characters")
-    private String specKey;
+    @NotNull(message = "Spec definition ID must not be null")
+    @Positive(message = "Spec definition ID must be positive")
+    private Integer specDefinitionId;
 
-    @NotBlank(message = "Specification value must not be blank")
-    @Size(max = 255, message = "Specification value must be at most 255 characters")
-    private String specValue;
+    @Size(max = 255, message = "Value must be at most 255 characters")
+    private String value;
+
+    private BigDecimal valueNumber;
+
+    private Integer optionId;
 }
-

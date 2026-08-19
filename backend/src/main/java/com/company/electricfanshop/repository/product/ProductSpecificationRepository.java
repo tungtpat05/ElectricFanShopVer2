@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface ProductSpecificationRepository extends JpaRepository<ProductSpecification, Integer> {
     List<ProductSpecification> findByProductId(Integer productId);
-    boolean existsByProductIdAndSpecKey(Integer productId, String specKey);
+    boolean existsByProductIdAndSpecDefinitionId(Integer productId, Integer specDefinitionId);
 }
-

@@ -49,7 +49,6 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
     discountPrice: "",
     thumbnail: "",
     thumbnailPublicId: "",
-    engineCapacity: "",
     weightGram: "",
     lengthCm: "",
     widthCm: "",
@@ -105,7 +104,6 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
         discountPrice: initialData.discountPrice !== undefined && initialData.discountPrice !== null ? String(initialData.discountPrice) : "",
         thumbnail: initialData.thumbnail || "",
         thumbnailPublicId: initialData.thumbnailPublicId || "",
-        engineCapacity: initialData.engineCapacity !== undefined && initialData.engineCapacity !== null ? String(initialData.engineCapacity) : "",
         weightGram: initialData.weightGram !== undefined && initialData.weightGram !== null ? String(initialData.weightGram) : "",
         lengthCm: initialData.lengthCm !== undefined && initialData.lengthCm !== null ? String(initialData.lengthCm) : "",
         widthCm: initialData.widthCm !== undefined && initialData.widthCm !== null ? String(initialData.widthCm) : "",
@@ -202,7 +200,6 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
       discountPrice: formData.discountPrice ? Number(formData.discountPrice) : 0,
       thumbnail: formData.thumbnail.trim(),
       thumbnailPublicId: formData.thumbnailPublicId.trim(),
-      engineCapacity: formData.engineCapacity ? Number(formData.engineCapacity) : undefined,
       weightGram: formData.weightGram ? Number(formData.weightGram) : undefined,
       lengthCm: formData.lengthCm ? Number(formData.lengthCm) : undefined,
       widthCm: formData.widthCm ? Number(formData.widthCm) : undefined,
@@ -314,7 +311,12 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
             <PricingSection formData={formData} onChange={handleFieldChange} errors={errors} />
           )}
           {activeTab === 2 && (
-            <SpecificationSection formData={formData} onChange={handleFieldChange} />
+            <SpecificationSection
+              categoryId={formData.categoryId ? Number(formData.categoryId) : undefined}
+              productId={productId ? Number(productId) : undefined}
+              formData={formData}
+              onChange={handleFieldChange}
+            />
           )}
           {activeTab === 3 && (
             <MediaSection

@@ -24,7 +24,6 @@ public class ProductMapper {
         dto.setDiscountPrice(entity.getDiscountPrice());
         dto.setThumbnail(entity.getThumbnail());
         dto.setThumbnailPublicId(entity.getThumbnailPublicId());
-        dto.setEngineCapacity(entity.getEngineCapacity());
         dto.setWeightGram(entity.getWeightGram());
         dto.setLengthCm(entity.getLengthCm());
         dto.setWidthCm(entity.getWidthCm());
@@ -70,7 +69,6 @@ public class ProductMapper {
         entity.setDiscountPrice(request.getDiscountPrice());
         entity.setThumbnail(request.getThumbnail());
         entity.setThumbnailPublicId(request.getThumbnailPublicId());
-        entity.setEngineCapacity(request.getEngineCapacity());
         entity.setWeightGram(request.getWeightGram());
         entity.setLengthCm(request.getLengthCm());
         entity.setWidthCm(request.getWidthCm());
@@ -88,7 +86,6 @@ public class ProductMapper {
         entity.setDiscountPrice(request.getDiscountPrice());
         entity.setThumbnail(request.getThumbnail());
         entity.setThumbnailPublicId(request.getThumbnailPublicId());
-        entity.setEngineCapacity(request.getEngineCapacity());
         entity.setWeightGram(request.getWeightGram());
         entity.setLengthCm(request.getLengthCm());
         entity.setWidthCm(request.getWidthCm());

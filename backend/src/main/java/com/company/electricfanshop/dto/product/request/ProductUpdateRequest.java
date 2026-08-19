@@ -47,9 +47,6 @@ public class ProductUpdateRequest {
 
     private String thumbnailPublicId;
 
-    @PositiveOrZero(message = "Engine capacity must be zero or positive")
-    private Integer engineCapacity;
-
     @Positive(message = "Weight must be positive")
     private Integer weightGram;
 

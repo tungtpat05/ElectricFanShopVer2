@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Product } from "../types/product";
-import { getProductById } from "../services/productService";
+import { getProductById, getProductSpecifications } from "../services/productService";
 
 export const useProductDetail = (id: number | string | undefined) => {
   const [product, setProduct] = useState<Product | null>(null);
@@ -13,8 +13,15 @@ export const useProductDetail = (id: number | string | undefined) => {
       try {
         setLoading(true);
         setError(null);
-        const data = await getProductById(Number(id));
-        setProduct(data);
+        const [productData, specsData] = await Promise.all([
+          getProductById(Number(id)),
+          getProductSpecifications(Number(id)).catch(() => []),
+        ]);
+
+        setProduct({
+          ...productData,
+          specifications: specsData,
+        });
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Failed to load product detail";
         setError(errorMessage);

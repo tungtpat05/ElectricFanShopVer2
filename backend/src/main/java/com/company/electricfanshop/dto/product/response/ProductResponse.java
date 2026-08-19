@@ -20,7 +20,6 @@ public class ProductResponse {
     private BigDecimal discountPrice;
     private String thumbnail;
     private String thumbnailPublicId;
-    private Integer engineCapacity;
     private Integer weightGram;
     private Integer lengthCm;
     private Integer widthCm;

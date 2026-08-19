@@ -1,3 +1,5 @@
+import { SpecDefinition } from './specDefinition';
+
 export interface Category {
   id: number;
   categoryName: string;
@@ -5,4 +7,5 @@ export interface Category {
   categoryImage: string;
   description: string;
   isActive: boolean;
+  specDefinitions?: SpecDefinition[];
 }

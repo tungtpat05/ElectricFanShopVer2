@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Grid, Button, Switch, FormControlLabel, TextField, Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SectionCard from "../common/SectionCard";
+import SpecDefinitionManager from "./SpecDefinitionManager";
 import { Category } from "../../../types/category";
 import { createCategory, updateCategory, uploadCategoryImage } from "../../../services/categoryService";
 
@@ -282,6 +283,9 @@ const CategoryForm = ({ mode, categoryId, initialData }: CategoryFormProps) => {
               </Box>
             </Box>
           </SectionCard>
+
+          {/* Specification Fields Configuration Section */}
+          <SpecDefinitionManager categoryId={categoryId ? Number(categoryId) : undefined} />
         </Grid>
 
         {/* Right Side: Options & Actions */}
