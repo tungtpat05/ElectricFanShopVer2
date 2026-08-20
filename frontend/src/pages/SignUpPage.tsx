@@ -8,6 +8,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { register } from '../services/authService';
+import { useAuth } from '../context';
 import logo from '@/assets/images/common/logo.png';
 
 const SignUpPage = () => {
@@ -18,6 +19,7 @@ const SignUpPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { loginSuccess } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -26,6 +28,8 @@ const SignUpPage = () => {
 
         try {
             const response = await register(email, password, fullName);
+            loginSuccess(response.user, response.token);
+
             const userRole = response.user?.role?.toUpperCase() || "";
             const isAdmin = userRole === "ADMIN" || userRole === "ROLE_ADMIN";
 
@@ -34,8 +38,18 @@ const SignUpPage = () => {
             } else {
                 navigate('/', { replace: true });
             }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to sign up. Please try again.');
+        } catch (err: any) {
+            console.error("Sign up error:", err);
+            const status = err?.response?.status;
+            const serverMessage = err?.response?.data?.message || (typeof err?.response?.data === 'string' ? err?.response?.data : null);
+
+            if (status === 409 || status === 400) {
+                setError(serverMessage || 'Email này đã được sử dụng hoặc thông tin đăng ký không hợp lệ.');
+            } else if (status === 404) {
+                setError('Không tìm thấy API đăng ký (404 Not Found). Vui lòng kiểm tra Server.');
+            } else {
+                setError(serverMessage || err?.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+            }
         } finally {
             setLoading(false);
         }

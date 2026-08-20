@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
     Box,
     CircularProgress,
@@ -14,7 +14,16 @@ import { useAuth } from "../context";
 
 const AuthSuccessPage = () => {
     const navigate = useNavigate();
-    const { isLogin, user, loading } = useAuth();
+    const [searchParams] = useSearchParams();
+    const { isLogin, user, loading, refetchUser } = useAuth();
+
+    useEffect(() => {
+        const token = searchParams.get("token");
+        if (token) {
+            localStorage.setItem("authToken", token);
+            refetchUser();
+        }
+    }, [searchParams, refetchUser]);
 
     useEffect(() => {
         if (!loading && isLogin && user) {

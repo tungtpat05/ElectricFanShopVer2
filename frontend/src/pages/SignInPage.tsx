@@ -9,6 +9,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { loginWithEmail } from '../services/authService';
+import { useAuth } from '../context';
 import logo from '@/assets/images/common/logo.png';
 
 const handleGoogleLogin = () => {
@@ -23,6 +24,7 @@ const SignInPage = () => {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const location = useLocation();
+    const { loginSuccess } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -31,6 +33,8 @@ const SignInPage = () => {
 
         try {
             const response = await loginWithEmail(email, password);
+            loginSuccess(response.user, response.token);
+
             const userRole = response.user?.role?.toUpperCase() || "";
             const isAdmin = userRole === "ADMIN" || userRole === "ROLE_ADMIN";
 
@@ -40,8 +44,18 @@ const SignInPage = () => {
                 const from = (location.state as any)?.from?.pathname || '/';
                 navigate(from, { replace: true });
             }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to sign in. Please check your email and password.');
+        } catch (err: any) {
+            console.error("Sign in error:", err);
+            const status = err?.response?.status;
+            const serverMessage = err?.response?.data?.message || (typeof err?.response?.data === 'string' ? err?.response?.data : null);
+
+            if (status === 401 || status === 403 || status === 400) {
+                setError(serverMessage || 'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.');
+            } else if (status === 404) {
+                setError('Không tìm thấy API đăng nhập (404 Not Found). Vui lòng kiểm tra Server.');
+            } else {
+                setError(serverMessage || err?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại kết nối.');
+            }
         } finally {
             setLoading(false);
         }

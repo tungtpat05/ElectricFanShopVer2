@@ -1,5 +1,5 @@
-import {axiosClient} from "../lib/axiosClient";
-import {User} from "../types/user.ts";
+import { axiosClient } from "../lib/axiosClient";
+import { User } from "../types/user.ts";
 
 export const getUser = async (): Promise<User> => {
     const response = await axiosClient.get<User>("/auth/me");
@@ -10,14 +10,15 @@ export const loginWithEmail = async (
     email: string,
     password: string
 ): Promise<{ token: string; user: User }> => {
-    const response = await axiosClient.post<{ token: string; user: User }>(
+    const response = await axiosClient.post<{ token: string }>(
         "/auth/login",
-        {email, password}
+        { email, password }
     );
     if (response.data.token) {
         localStorage.setItem("authToken", response.data.token);
     }
-    return response.data;
+    const user = await getUser();
+    return { token: response.data.token, user };
 };
 
 export const loginWithOAuth = async (provider: string): Promise<string> => {
@@ -33,14 +34,15 @@ export const register = async (
     password: string,
     fullName: string
 ): Promise<{ token: string; user: User }> => {
-    const response = await axiosClient.post<{ token: string; user: User }>(
+    const response = await axiosClient.post<{ token: string }>(
         "/auth/register",
-        {email, password, fullName}
+        { email, password, fullName }
     );
     if (response.data.token) {
         localStorage.setItem("authToken", response.data.token);
     }
-    return response.data;
+    const user = await getUser();
+    return { token: response.data.token, user };
 };
 
 export const logout = async (): Promise<void> => {
