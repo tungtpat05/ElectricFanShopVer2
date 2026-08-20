@@ -50,11 +50,11 @@ const SignInPage = () => {
             const serverMessage = err?.response?.data?.message || (typeof err?.response?.data === 'string' ? err?.response?.data : null);
 
             if (status === 401 || status === 403 || status === 400) {
-                setError(serverMessage || 'Email hoặc mật khẩu không chính xác. Vui lòng thử lại.');
+                setError(serverMessage || 'Incorrect email or password. Please try again.');
             } else if (status === 404) {
-                setError('Không tìm thấy API đăng nhập (404 Not Found). Vui lòng kiểm tra Server.');
+                setError('Login API not found (404 Not Found). Please check the server.');
             } else {
-                setError(serverMessage || err?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại kết nối.');
+                setError(serverMessage || err?.message || 'Login failed. Please check your connection.');
             }
         } finally {
             setLoading(false);

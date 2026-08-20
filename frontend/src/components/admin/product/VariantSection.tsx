@@ -833,7 +833,7 @@ const VariantSection = ({ productId, productName, disabled }: VariantSectionProp
             <TextField
               fullWidth
               label="Color Name *"
-              placeholder="e.g. Metallic Black / Đen bóng"
+              placeholder="e.g. Metallic Black"
               value={colorForm.colorName}
               onChange={(e) => setColorForm({ ...colorForm, colorName: e.target.value })}
               sx={{ "& label": { color: "#71717a", fontWeight: 600 } }}

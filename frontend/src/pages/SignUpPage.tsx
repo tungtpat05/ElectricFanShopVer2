@@ -44,11 +44,11 @@ const SignUpPage = () => {
             const serverMessage = err?.response?.data?.message || (typeof err?.response?.data === 'string' ? err?.response?.data : null);
 
             if (status === 409 || status === 400) {
-                setError(serverMessage || 'Email này đã được sử dụng hoặc thông tin đăng ký không hợp lệ.');
+                setError(serverMessage || 'This email is already in use or the registration information is invalid.');
             } else if (status === 404) {
-                setError('Không tìm thấy API đăng ký (404 Not Found). Vui lòng kiểm tra Server.');
+                setError('Registration API not found (404 Not Found). Please check the server.');
             } else {
-                setError(serverMessage || err?.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+                setError(serverMessage || err?.message || 'Registration failed. Please try again.');
             }
         } finally {
             setLoading(false);

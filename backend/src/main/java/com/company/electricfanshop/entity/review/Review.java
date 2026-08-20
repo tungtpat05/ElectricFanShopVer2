@@ -22,7 +22,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // OneToOne: OrderItem <-> Review (Một sản phẩm trong đơn hàng chỉ được đánh giá 1 lần)
+    // OneToOne: OrderItem <-> Review (Each order item can only be reviewed once)
     @OneToOne
     @JoinColumn(name = "order_item_id", unique = true, nullable = false)
     private OrderItem orderItem;
