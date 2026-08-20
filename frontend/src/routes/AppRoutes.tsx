@@ -24,6 +24,8 @@ import AdminBrandsPage from "../pages/admin/AdminBrandsPage";
 import AdminBrandFormPage from "../pages/admin/AdminBrandFormPage";
 import AdminCategoryFormPage from "../pages/admin/AdminCategoryFormPage";
 
+import ProtectedRoute from "./ProtectedRoute";
+
 const AppRoutes = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -33,7 +35,14 @@ const AppRoutes = () => {
         <Route path="/auth/success" element={<AuthSuccessPage />} />
         
         {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requireAdmin={true}>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<AdminDashboardPage />} />
           <Route path="dashboard" element={<AdminDashboardPage />} />
           <Route path="products" element={<AdminProductsPage />} />
@@ -51,7 +60,14 @@ const AppRoutes = () => {
           <Route index element={<HomePage />} />
           <Route path="/products" element={<ProductPage />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
-          <Route path="/cart" element={<CartPage />} />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </>

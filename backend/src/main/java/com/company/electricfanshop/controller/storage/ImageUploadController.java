@@ -15,7 +15,7 @@ public class ImageUploadController {
 
     private final ImageStorageService imageStorageService;
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/upload")
     public ResponseEntity<ImageUploadResult> uploadImage(@RequestParam("file") MultipartFile file) {
         ImageUploadResult result = imageStorageService.upload(file);

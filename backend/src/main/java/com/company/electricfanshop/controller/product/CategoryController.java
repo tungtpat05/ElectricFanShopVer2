@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 @RestController
@@ -32,14 +33,14 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<CategoryResponse> create(@RequestBody @Valid CategoryCreateRequest request) {
         CategoryResponse response = categoryService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> update(@PathVariable Integer id,
             @RequestBody @Valid CategoryUpdateRequest request) {
@@ -64,7 +65,7 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{categoryId}/spec-definitions")
     public ResponseEntity<SpecDefinitionResponse> createSpecDefinition(
             @PathVariable Integer categoryId,
@@ -73,7 +74,7 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{categoryId}/spec-definitions/{id}")
     public ResponseEntity<SpecDefinitionResponse> updateSpecDefinition(
             @PathVariable Integer categoryId,
@@ -83,7 +84,7 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{categoryId}/spec-definitions/{id}")
     public ResponseEntity<Void> deleteSpecDefinition(
             @PathVariable Integer categoryId,
@@ -101,7 +102,7 @@ public class CategoryController {
         return ResponseEntity.ok(list);
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{categoryId}/spec-definitions/{specDefId}/options")
     public ResponseEntity<SpecDefinitionOptionResponse> createSpecDefinitionOption(
             @PathVariable Integer categoryId,
@@ -111,7 +112,7 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{categoryId}/spec-definitions/{specDefId}/options/{optionId}")
     public ResponseEntity<SpecDefinitionOptionResponse> updateSpecDefinitionOption(
             @PathVariable Integer categoryId,
@@ -123,7 +124,7 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{categoryId}/spec-definitions/{specDefId}/options/{optionId}")
     public ResponseEntity<Void> deleteSpecDefinitionOption(
             @PathVariable Integer categoryId,

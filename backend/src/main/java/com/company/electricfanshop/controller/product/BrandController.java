@@ -35,14 +35,14 @@ public class BrandController {
         }
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<BrandResponse> create(@RequestBody BrandCreateRequest request) {
         BrandResponse response = brandService.create(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<BrandResponse> update(@PathVariable Integer id, @RequestBody BrandUpdateRequest request) {
         BrandResponse response = brandService.update(id, request);

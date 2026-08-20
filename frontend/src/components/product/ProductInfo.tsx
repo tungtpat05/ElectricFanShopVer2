@@ -15,6 +15,8 @@ import GppGoodIcon from "@mui/icons-material/GppGood";
 import RestoreIcon from "@mui/icons-material/Restore";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import CheckIcon from "@mui/icons-material/Check";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/context";
 import { Product } from "@/types/product.ts";
 
 interface ProductInfoProps {
@@ -28,6 +30,17 @@ const COLORS = [
 ];
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isLogin, user } = useAuth();
+
+  const handlePurchaseAction = (targetUrl: string = "/cart") => {
+    if (!isLogin || !user) {
+      navigate("/login", { state: { from: location } });
+    } else {
+      navigate(targetUrl);
+    }
+  };
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
   const [selectedYear, setSelectedYear] = useState("2024");
 
@@ -310,6 +323,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <Button
           variant="contained"
           fullWidth
+          onClick={() => handlePurchaseAction("/cart")}
           sx={{
             backgroundColor: "#e28a3a",
             color: "#000000",
@@ -328,6 +342,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <Button
           variant="outlined"
           fullWidth
+          onClick={() => handlePurchaseAction("/cart")}
           sx={{
             borderColor: "#e28a3a",
             color: "#e28a3a",

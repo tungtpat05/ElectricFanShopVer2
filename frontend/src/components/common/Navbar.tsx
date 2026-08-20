@@ -11,6 +11,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Badge from '@mui/material/Badge';
 import { useNavigate } from 'react-router-dom';
 import logo from "@/assets/images/common/logo.png";
 import { useAuth } from '../../context';
@@ -19,17 +21,22 @@ const navItems = [
     {name: 'Product', path: '/products'},
     {name: 'Support', path: '/support'},
 ];
-const settings = [
-    {name: 'Profile', path: '/profile'},
-    {name: 'Order', path: '/order'},
-    {name: 'Sign Out', action: 'logout'},
-];
 
 const ResponsiveAppBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
     const { isLogin, user, logout, loading } = useAuth();
     const navigate = useNavigate();
+
+    const userRole = user?.role?.toUpperCase() || "";
+    const isAdmin = userRole === "ADMIN" || userRole === "ROLE_ADMIN";
+
+    const userSettings = [
+        ...(isAdmin ? [{ name: 'Admin Dashboard', path: '/admin/dashboard' }] : []),
+        { name: 'Profile', path: '/profile' },
+        { name: 'Order', path: '/order' },
+        { name: 'Sign Out', action: 'logout' },
+    ];
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -46,28 +53,37 @@ const ResponsiveAppBar = () => {
         setAnchorElUser(null);
     };
 
-    const handleSettingClick = async (setting: typeof settings[0]) => {
+    const handleSettingClick = async (setting: { name: string; path?: string; action?: string }) => {
         handleCloseUserMenu();
         if (setting.action === 'logout') {
             await logout();
             navigate('/login');
-        } else if (setting.action !== 'logout' && 'path' in setting) {
-            const settingWithPath = setting as { name: string; path: string };
-            navigate(settingWithPath.path);
+        } else if (setting.path) {
+            navigate(setting.path);
         }
     };
 
     const renderUserMenu = (
-        <Box sx={{flexGrow: 0}}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 0 }}>
             {isLogin && user ? (
                 <>
+                    <Tooltip title="View Shopping Cart">
+                        <IconButton
+                            onClick={() => navigate('/cart')}
+                            sx={{ color: '#ffffff', mr: 1.5 }}
+                        >
+                            <Badge badgeContent={2} sx={{ "& .MuiBadge-badge": { backgroundColor: "#ff6b35", color: "#ffffff", fontWeight: 700 } }}>
+                                <ShoppingCartIcon sx={{ color: '#ff6b35' }} />
+                            </Badge>
+                        </IconButton>
+                    </Tooltip>
                     <Tooltip title="Open settings">
-                        <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                            <Avatar alt={user.fullName} src="/static/images/avatar/2.jpg"/>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <Avatar alt={user.fullName} src="/static/images/avatar/2.jpg" sx={{ border: "2px solid #ff6b35" }} />
                         </IconButton>
                     </Tooltip>
                     <Menu
-                        sx={{mt: '45px'}}
+                        sx={{ mt: '45px' }}
                         id="menu-appbar"
                         anchorEl={anchorElUser}
                         anchorOrigin={{
@@ -81,16 +97,42 @@ const ResponsiveAppBar = () => {
                         }}
                         open={Boolean(anchorElUser)}
                         onClose={handleCloseUserMenu}
+                        PaperProps={{
+                            sx: {
+                                backgroundColor: "#18181b",
+                                color: "#ffffff",
+                                border: "1px solid rgba(255, 255, 255, 0.1)",
+                            }
+                        }}
                     >
-                        {settings.map((setting) => (
+                        {userSettings.map((setting) => (
                             <MenuItem key={setting.name} onClick={() => handleSettingClick(setting)}>
-                                <Typography sx={{textAlign: 'center'}}>{setting.name}</Typography>
+                                <Typography sx={{ textAlign: 'center', fontSize: "0.9rem", fontWeight: setting.name.includes("Admin") ? 700 : 500, color: setting.name.includes("Admin") ? "#ff6b35" : "#ffffff" }}>
+                                    {setting.name}
+                                </Typography>
                             </MenuItem>
                         ))}
                     </Menu>
                 </>
             ) : (
-                <Button color="inherit" href="/login">Sign In</Button>
+                <Button
+                    onClick={() => navigate('/login')}
+                    sx={{
+                        color: '#ffffff',
+                        borderColor: '#ff6b35',
+                        backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                        fontWeight: 600,
+                        px: 2,
+                        py: 0.75,
+                        borderRadius: 1.5,
+                        '&:hover': {
+                            backgroundColor: '#ff6b35',
+                            color: '#ffffff',
+                        }
+                    }}
+                >
+                    Sign In
+                </Button>
             )}
         </Box>
     );

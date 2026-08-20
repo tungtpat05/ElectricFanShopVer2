@@ -5,6 +5,7 @@ import com.company.electricfanshop.security.oauth2.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -30,19 +31,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/v1/auth/**").permitAll()
-//                        .requestMatchers("/login**", "/oauth2/**").permitAll()
-//                        .requestMatchers("/error").permitAll()
-//                        // Allow public read access to product catalog
-//                        .requestMatchers("GET", "/api/v1/brands/**").permitAll()
-//                        .requestMatchers("GET", "/api/v1/colors/**").permitAll()
-//                        .requestMatchers("GET", "/api/v1/categories/**").permitAll()
-//                        .requestMatchers("GET", "/api/v1/products/**").permitAll()
-//                        .anyRequest().authenticated())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/login**", "/oauth2/**", "/error").permitAll()
+                        // Allow public read access to product catalog
+                        .requestMatchers(HttpMethod.GET, "/api/v1/brands/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/colors/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
