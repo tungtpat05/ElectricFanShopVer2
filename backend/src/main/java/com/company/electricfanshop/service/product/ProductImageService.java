@@ -5,6 +5,7 @@ import com.company.electricfanshop.dto.product.request.ProductImageUpdateRequest
 import com.company.electricfanshop.dto.product.response.ProductImageResponse;
 import com.company.electricfanshop.entity.product.Product;
 import com.company.electricfanshop.entity.product.ProductImage;
+import com.company.electricfanshop.exception.DuplicateResourceException;
 import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.mapper.product.ProductImageMapper;
 import com.company.electricfanshop.repository.product.ProductImageRepository;
@@ -30,18 +31,18 @@ public class ProductImageService {
 
     public ProductImageResponse getById(Integer productId, Integer imageId) {
         ProductImage image = productImageRepository.findById(imageId)
-                .orElseThrow(() -> new ResourceNotFoundException(imageId));
+                .orElseThrow(() -> new ResourceNotFoundException("ProductImage", "id", imageId));
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException(productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         return productImageMapper.toResponse(image);
     }
 
     public ProductImageResponse create(Integer productId, ProductImageCreateRequest request) {
         if(productImageRepository.existsByImageUrl(request.getImageUrl())) {
-            throw new ResourceNotFoundException(request.getImageUrl());
+            throw new DuplicateResourceException("ProductImage", "imageUrl", request.getImageUrl());
         }
 
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(productId));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
         ProductImage image = productImageMapper.toEntity(request);
 
@@ -62,10 +63,10 @@ public class ProductImageService {
     public ProductImageResponse update(Integer productId, Integer imageId, ProductImageUpdateRequest request) {
 
         ProductImage image = productImageRepository.findById(imageId)
-                .orElseThrow(() -> new ResourceNotFoundException(imageId));
+                .orElseThrow(() -> new ResourceNotFoundException("ProductImage", "id", imageId));
 
         if (!image.getProduct().getId().equals(productId)) {
-            throw new ResourceNotFoundException(imageId);
+            throw new ResourceNotFoundException("ProductImage", "id", imageId);
         }
 
         String oldPublicId = image.getImagePublicId();
@@ -91,10 +92,10 @@ public class ProductImageService {
 
     public void delete(Integer productId, Integer imageId) {
         ProductImage image = productImageRepository.findById(imageId)
-                .orElseThrow(() -> new ResourceNotFoundException(imageId));
+                .orElseThrow(() -> new ResourceNotFoundException("ProductImage", "id", imageId));
 
         if (!image.getProduct().getId().equals(productId)) {
-            throw new ResourceNotFoundException(imageId);
+            throw new ResourceNotFoundException("ProductImage", "id", imageId);
         }
 
         String publicId = image.getImagePublicId();
@@ -107,7 +108,7 @@ public class ProductImageService {
 
     public List<ProductImageResponse> updateDisplayOrders(Integer productId, List<Integer> imageIdsOrdered) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException(productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
         for (int i = 0; i < imageIdsOrdered.size(); i++) {
             Integer imageId = imageIdsOrdered.get(i);

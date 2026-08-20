@@ -1,7 +1,12 @@
 package com.company.electricfanshop.exception;
 
-public class ResourceNotFoundException extends RuntimeException{
-    public ResourceNotFoundException(Object resourceId) {
-        super("Resource not found with id: " + resourceId);
+public class ResourceNotFoundException extends RuntimeException {
+
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+
+    public ResourceNotFoundException(String resourceName, String fieldName, Object fieldValue) {
+        super(String.format("%s not found with %s: '%s'", resourceName, fieldName, fieldValue));
     }
 }

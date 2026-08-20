@@ -27,13 +27,13 @@ public class BrandService {
     }
 
     public BrandResponse getById(Integer id) {
-        Brand brand = brandRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(id));
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "id", id));
         return brandMapper.toResponse(brand);
     }
 
     public BrandResponse create(BrandCreateRequest request) {
         if(brandRepository.existsByBrandName(request.getBrandName())) {
-            throw new DuplicateResourceException(request.getBrandName());
+            throw new DuplicateResourceException("Brand", "name", request.getBrandName());
         }
         Brand brand = brandMapper.toEntity(request);
         brandRepository.save(brand);
@@ -42,7 +42,7 @@ public class BrandService {
 
     public BrandResponse update(Integer id, BrandUpdateRequest request) {
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("Brand", "id", id));
 
         String oldPublicId = brand.getLogoPublicId();
         String newPublicId = request.getLogoPublicId();
@@ -59,6 +59,6 @@ public class BrandService {
 
 
     public Brand getEntityById(Integer id) {
-        return brandRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(id));
+        return brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "id", id));
     }
 }

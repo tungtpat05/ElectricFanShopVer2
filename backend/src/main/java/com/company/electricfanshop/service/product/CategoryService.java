@@ -4,6 +4,7 @@ import com.company.electricfanshop.dto.product.request.CategoryCreateRequest;
 import com.company.electricfanshop.dto.product.request.CategoryUpdateRequest;
 import com.company.electricfanshop.dto.product.response.CategoryResponse;
 import com.company.electricfanshop.entity.product.Category;
+import com.company.electricfanshop.exception.DuplicateResourceException;
 import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.mapper.product.CategoryMapper;
 import com.company.electricfanshop.repository.product.CategoryRepository;
@@ -25,13 +26,13 @@ public class CategoryService {
 
     public CategoryResponse getById(Integer id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
         return categoryMapper.toResponse(category);
     }
 
     public CategoryResponse create(CategoryCreateRequest request) {
         if(categoryRepository.existsByCategoryName(request.getCategoryName())) {
-            throw new ResourceNotFoundException(request.getCategoryName());
+            throw new DuplicateResourceException("Category", "name", request.getCategoryName());
         }
         Category category = categoryMapper.toEntity(request);
         categoryRepository.save(category);
@@ -40,7 +41,7 @@ public class CategoryService {
 
     public CategoryResponse update(Integer id, CategoryUpdateRequest request) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
 
         categoryMapper.updateEntityFromRequest(request, category);
 
@@ -49,6 +50,6 @@ public class CategoryService {
     }
 
     public Category getEntityById(Integer id) {
-        return categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(id));
+        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
     }
 }

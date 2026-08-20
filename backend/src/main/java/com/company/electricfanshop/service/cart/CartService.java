@@ -51,7 +51,7 @@ public class CartService {
                 .orElseGet(() -> createCart(user));
 
         ProductVariant variant = productVariantRepository.findById(request.getVariantId())
-                .orElseThrow(() -> new ResourceNotFoundException(request.getVariantId()));
+                .orElseThrow(() -> new ResourceNotFoundException("ProductVariant", "id", request.getVariantId()));
         if (!Boolean.TRUE.equals(variant.getIsActive())) {
             throw new IllegalArgumentException("Variant is inactive");
         }
@@ -102,10 +102,10 @@ public class CartService {
     private CartSummaryResponse updateQuantityDelta(Principal principal, Integer variantId, int delta) {
         User user = userService.getByEmail(principal.getName());
         Cart cart = cartRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("cart for user " + user.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Cart", "userId", user.getId()));
 
         CartItem item = cartItemRepository.findByCartIdAndVariantId(cart.getId(), variantId)
-                .orElseThrow(() -> new ResourceNotFoundException(variantId));
+                .orElseThrow(() -> new ResourceNotFoundException("CartItem", "variantId", variantId));
 
         ProductVariant variant = item.getVariant();
         if (delta > 0 && !Boolean.TRUE.equals(variant.getIsActive())) {
@@ -137,7 +137,7 @@ public class CartService {
 
         Cart cart = cartOptional.get();
         CartItem item = cartItemRepository.findByCartIdAndVariantId(cart.getId(), variantId)
-                .orElseThrow(() -> new ResourceNotFoundException(variantId));
+                .orElseThrow(() -> new ResourceNotFoundException("CartItem", "variantId", variantId));
         cartItemRepository.delete(item);
 
         List<CartItem> items = cartItemRepository.findByCartId(cart.getId());

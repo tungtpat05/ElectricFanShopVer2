@@ -6,6 +6,7 @@ import com.company.electricfanshop.dto.product.response.ProductVariantResponse;
 import com.company.electricfanshop.entity.product.Color;
 import com.company.electricfanshop.entity.product.Product;
 import com.company.electricfanshop.entity.product.ProductVariant;
+import com.company.electricfanshop.exception.DuplicateResourceException;
 import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.mapper.product.ProductVariantMapper;
 import com.company.electricfanshop.repository.product.ColorRepository;
@@ -34,21 +35,21 @@ public class ProductVariantService {
 
     public ProductVariantResponse getById(Integer productId, Integer variantId) {
         ProductVariant variant = productVariantRepository.findById(variantId)
-                .orElseThrow(() -> new ResourceNotFoundException(variantId));
+                .orElseThrow(() -> new ResourceNotFoundException("ProductVariant", "id", variantId));
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException(productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         return productVariantMapper.toResponse(variant);
     }
 
     @Transactional
     public ProductVariantResponse create(Integer productId, ProductVariantCreateRequest request) {
         if(productVariantRepository.existsBySku(request.getSku())) {
-            throw new ResourceNotFoundException(request.getSku());
+            throw new DuplicateResourceException("ProductVariant", "sku", request.getSku());
         }
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException(productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         Color color = colorRepository.findById(request.getColorId())
-                .orElseThrow(() -> new ResourceNotFoundException(request.getColorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Color", "id", request.getColorId()));
 
         ProductVariant variant = productVariantMapper.toEntity(request);
 
@@ -64,11 +65,11 @@ public class ProductVariantService {
     @Transactional
     public ProductVariantResponse update(Integer productId, Integer variantId, ProductVariantUpdateRequest request) {
         ProductVariant variant = productVariantRepository.findById(variantId)
-                .orElseThrow(() -> new ResourceNotFoundException(variantId));
+                .orElseThrow(() -> new ResourceNotFoundException("ProductVariant", "id", variantId));
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException(productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         Color color = colorRepository.findById(request.getColorId())
-                .orElseThrow(() -> new ResourceNotFoundException(request.getColorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Color", "id", request.getColorId()));
 
         String oldPublicId = variant.getVariantImagePublicId();
         String newPublicId = request.getVariantImagePublicId();

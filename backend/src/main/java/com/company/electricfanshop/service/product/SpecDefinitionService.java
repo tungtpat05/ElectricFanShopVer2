@@ -29,7 +29,7 @@ public class SpecDefinitionService {
 
     public List<SpecDefinitionResponse> getAllByCategory(Integer categoryId, boolean activeOnly) {
         if (!categoryRepository.existsById(categoryId)) {
-            throw new ResourceNotFoundException(categoryId);
+            throw new ResourceNotFoundException("Category", "id", categoryId);
         }
         List<SpecDefinition> list = activeOnly
                 ? specDefinitionRepository.findByCategoryIdAndIsActiveTrueOrderByDisplayOrderAsc(categoryId)
@@ -39,9 +39,9 @@ public class SpecDefinitionService {
 
     public SpecDefinitionResponse getById(Integer categoryId, Integer id) {
         SpecDefinition entity = specDefinitionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("SpecDefinition", "id", id));
         if (!entity.getCategory().getId().equals(categoryId)) {
-            throw new ResourceNotFoundException(id);
+            throw new ResourceNotFoundException("SpecDefinition", "id", id);
         }
         return specDefinitionMapper.toResponse(entity);
     }
@@ -49,7 +49,7 @@ public class SpecDefinitionService {
     @Transactional
     public SpecDefinitionResponse create(Integer categoryId, SpecDefinitionCreateRequest request) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException(categoryId));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
 
         if (specDefinitionRepository.existsByCategoryIdAndKeyCode(categoryId, request.getKeyCode())) {
             throw new IllegalArgumentException("Key code '" + request.getKeyCode() + "' already exists in this category");
@@ -65,10 +65,10 @@ public class SpecDefinitionService {
     @Transactional
     public SpecDefinitionResponse update(Integer categoryId, Integer id, SpecDefinitionUpdateRequest request) {
         SpecDefinition entity = specDefinitionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("SpecDefinition", "id", id));
 
         if (!entity.getCategory().getId().equals(categoryId)) {
-            throw new ResourceNotFoundException(id);
+            throw new ResourceNotFoundException("SpecDefinition", "id", id);
         }
 
         boolean keyCodeChanged = !entity.getKeyCode().equals(request.getKeyCode());
@@ -85,10 +85,10 @@ public class SpecDefinitionService {
     @Transactional
     public void delete(Integer categoryId, Integer id) {
         SpecDefinition entity = specDefinitionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("SpecDefinition", "id", id));
 
         if (!entity.getCategory().getId().equals(categoryId)) {
-            throw new ResourceNotFoundException(id);
+            throw new ResourceNotFoundException("SpecDefinition", "id", id);
         }
 
         specDefinitionRepository.delete(entity);
@@ -104,10 +104,10 @@ public class SpecDefinitionService {
     @Transactional
     public SpecDefinitionOptionResponse addOption(Integer categoryId, Integer specDefinitionId, SpecDefinitionOptionCreateRequest request) {
         SpecDefinition specDefinition = specDefinitionRepository.findById(specDefinitionId)
-                .orElseThrow(() -> new ResourceNotFoundException(specDefinitionId));
+                .orElseThrow(() -> new ResourceNotFoundException("SpecDefinition", "id", specDefinitionId));
 
         if (!specDefinition.getCategory().getId().equals(categoryId)) {
-            throw new ResourceNotFoundException(specDefinitionId);
+            throw new ResourceNotFoundException("SpecDefinition", "id", specDefinitionId);
         }
 
         SpecDefinitionOption option = specDefinitionMapper.optionToEntity(request);
@@ -120,11 +120,11 @@ public class SpecDefinitionService {
     @Transactional
     public SpecDefinitionOptionResponse updateOption(Integer categoryId, Integer specDefinitionId, Integer optionId, SpecDefinitionOptionCreateRequest request) {
         SpecDefinitionOption option = specDefinitionOptionRepository.findById(optionId)
-                .orElseThrow(() -> new ResourceNotFoundException(optionId));
+                .orElseThrow(() -> new ResourceNotFoundException("SpecDefinitionOption", "id", optionId));
 
         if (!option.getSpecDefinition().getId().equals(specDefinitionId) ||
             !option.getSpecDefinition().getCategory().getId().equals(categoryId)) {
-            throw new ResourceNotFoundException(optionId);
+            throw new ResourceNotFoundException("SpecDefinitionOption", "id", optionId);
         }
 
         option.setOptionValue(request.getOptionValue());
@@ -139,11 +139,11 @@ public class SpecDefinitionService {
     @Transactional
     public void deleteOption(Integer categoryId, Integer specDefinitionId, Integer optionId) {
         SpecDefinitionOption option = specDefinitionOptionRepository.findById(optionId)
-                .orElseThrow(() -> new ResourceNotFoundException(optionId));
+                .orElseThrow(() -> new ResourceNotFoundException("SpecDefinitionOption", "id", optionId));
 
         if (!option.getSpecDefinition().getId().equals(specDefinitionId) ||
             !option.getSpecDefinition().getCategory().getId().equals(categoryId)) {
-            throw new ResourceNotFoundException(optionId);
+            throw new ResourceNotFoundException("SpecDefinitionOption", "id", optionId);
         }
 
         specDefinitionOptionRepository.delete(option);

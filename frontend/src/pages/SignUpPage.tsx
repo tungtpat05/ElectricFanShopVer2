@@ -9,7 +9,20 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { register } from '../services/authService';
 import { useAuth } from '../context';
+import { ApiErrorResponse } from '../types/apiError';
 import logo from '@/assets/images/common/logo.png';
+
+interface FieldErrors {
+    fullName?: string;
+    email?: string;
+    password?: string;
+}
+
+interface TouchedFields {
+    fullName?: boolean;
+    email?: boolean;
+    password?: boolean;
+}
 
 const SignUpPage = () => {
     const [fullName, setFullName] = useState('');
@@ -18,11 +31,97 @@ const SignUpPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const [errors, setErrors] = useState<FieldErrors>({});
+    const [touched, setTouched] = useState<TouchedFields>({});
+
     const navigate = useNavigate();
     const { loginSuccess } = useAuth();
 
+    const validateField = (name: keyof FieldErrors, value: string): string | undefined => {
+        const trimmed = value.trim();
+        if (name === 'fullName') {
+            if (!trimmed) return 'Full name is required';
+            if (trimmed.length < 2 || trimmed.length > 100) {
+                return 'Full name must be between 2 and 100 characters';
+            }
+        }
+        if (name === 'email') {
+            if (!trimmed) return 'Email is required';
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(trimmed)) {
+                return 'Please enter a valid email address (e.g. user@example.com)';
+            }
+        }
+        if (name === 'password') {
+            if (!value) return 'Password is required';
+            if (value.length < 6) {
+                return 'Password must be at least 6 characters';
+            }
+            if (value.length > 255) {
+                return 'Password must not exceed 255 characters';
+            }
+        }
+        return undefined;
+    };
+
+    const handleBlur = (field: keyof FieldErrors) => {
+        setTouched((prev) => ({ ...prev, [field]: true }));
+        let val = '';
+        if (field === 'fullName') val = fullName;
+        if (field === 'email') val = email;
+        if (field === 'password') val = password;
+
+        const errorMsg = validateField(field, val);
+        setErrors((prev) => ({ ...prev, [field]: errorMsg }));
+    };
+
+    const handleFullNameChange = (val: string) => {
+        setFullName(val);
+        if (touched.fullName) {
+            setErrors((prev) => ({ ...prev, fullName: validateField('fullName', val) }));
+        }
+    };
+
+    const handleEmailChange = (val: string) => {
+        setEmail(val);
+        if (touched.email) {
+            setErrors((prev) => ({ ...prev, email: validateField('email', val) }));
+        }
+    };
+
+    const handlePasswordChange = (val: string) => {
+        setPassword(val);
+        if (touched.password) {
+            setErrors((prev) => ({ ...prev, password: validateField('password', val) }));
+        }
+    };
+
+    const validateForm = (): boolean => {
+        const fullNameErr = validateField('fullName', fullName);
+        const emailErr = validateField('email', email);
+        const passwordErr = validateField('password', password);
+
+        const newErrors: FieldErrors = {
+            fullName: fullNameErr,
+            email: emailErr,
+            password: passwordErr,
+        };
+
+        setErrors(newErrors);
+        setTouched({ fullName: true, email: true, password: true });
+
+        return !fullNameErr && !emailErr && !passwordErr;
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        // Perform instant client-side validation before sending backend API call
+        if (!validateForm()) {
+            return;
+        }
+
         setLoading(true);
         setError(null);
 
@@ -40,15 +139,28 @@ const SignUpPage = () => {
             }
         } catch (err: any) {
             console.error("Sign up error:", err);
+            const apiErrorData = err?.response?.data;
             const status = err?.response?.status;
-            const serverMessage = err?.response?.data?.message || (typeof err?.response?.data === 'string' ? err?.response?.data : null);
 
-            if (status === 409 || status === 400) {
-                setError(serverMessage || 'This email is already in use or the registration information is invalid.');
-            } else if (status === 404) {
-                setError('Registration API not found (404 Not Found). Please check the server.');
+            if (apiErrorData && typeof apiErrorData === 'object') {
+                const { message: apiMsg, details } = apiErrorData as ApiErrorResponse;
+
+                // Map field-specific details from backend error response
+                if (details && Object.keys(details).length > 0) {
+                    setErrors((prev) => ({ ...prev, ...details }));
+                }
+
+                if (status === 409) {
+                    const dupMsg = details?.email || apiMsg || 'This email address is already registered.';
+                    setErrors((prev) => ({ ...prev, email: dupMsg }));
+                    setError('Registration failed: This email is already in use.');
+                } else if (status === 400) {
+                    setError(apiMsg || 'Invalid registration information.');
+                } else {
+                    setError(apiMsg || 'Registration failed. Please try again.');
+                }
             } else {
-                setError(serverMessage || err?.message || 'Registration failed. Please try again.');
+                setError(err?.message || 'Registration failed. Please try again.');
             }
         } finally {
             setLoading(false);
@@ -103,21 +215,6 @@ const SignUpPage = () => {
                         </Typography>
                     </Box>
 
-                    {error && (
-                        <Alert
-                            severity="error"
-                            sx={{
-                                mb: 3,
-                                backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                                color: '#fca5a5',
-                                border: '1px solid rgba(239, 68, 68, 0.3)',
-                                borderRadius: 2,
-                            }}
-                        >
-                            {error}
-                        </Alert>
-                    )}
-
                     {/* Form */}
                     <Stack spacing={3} component="form" noValidate onSubmit={handleSubmit}>
                         <TextField
@@ -126,7 +223,21 @@ const SignUpPage = () => {
                             label="Full Name"
                             name="fullName"
                             value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
+                            onChange={(e) => handleFullNameChange(e.target.value)}
+                            onBlur={() => handleBlur('fullName')}
+                            error={Boolean(touched.fullName && errors.fullName)}
+                            helperText={
+                                touched.fullName && errors.fullName
+                                    ? errors.fullName
+                                    : "Must be between 2 and 100 characters"
+                            }
+                            FormHelperTextProps={{
+                                sx: {
+                                    color: touched.fullName && errors.fullName ? '#ef4444' : '#a1a1aa',
+                                    fontSize: '0.75rem',
+                                    mt: 0.5,
+                                },
+                            }}
                             disabled={loading}
                             sx={{
                                 '& label': { color: '#a1a1aa', fontWeight: 500 },
@@ -148,7 +259,21 @@ const SignUpPage = () => {
                             name="email"
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => handleEmailChange(e.target.value)}
+                            onBlur={() => handleBlur('email')}
+                            error={Boolean((touched.email || errors.email) && errors.email)}
+                            helperText={
+                                (touched.email || errors.email) && errors.email
+                                    ? errors.email
+                                    : "Must be a valid email (e.g. user@example.com)"
+                            }
+                            FormHelperTextProps={{
+                                sx: {
+                                    color: (touched.email || errors.email) && errors.email ? '#ef4444' : '#a1a1aa',
+                                    fontSize: '0.75rem',
+                                    mt: 0.5,
+                                },
+                            }}
                             disabled={loading}
                             sx={{
                                 '& label': { color: '#a1a1aa', fontWeight: 500 },
@@ -170,7 +295,21 @@ const SignUpPage = () => {
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => handlePasswordChange(e.target.value)}
+                            onBlur={() => handleBlur('password')}
+                            error={Boolean(touched.password && errors.password)}
+                            helperText={
+                                touched.password && errors.password
+                                    ? errors.password
+                                    : "Must be at least 6 characters"
+                            }
+                            FormHelperTextProps={{
+                                sx: {
+                                    color: touched.password && errors.password ? '#ef4444' : '#a1a1aa',
+                                    fontSize: '0.75rem',
+                                    mt: 0.5,
+                                },
+                            }}
                             disabled={loading}
                             InputProps={{
                                 endAdornment: (

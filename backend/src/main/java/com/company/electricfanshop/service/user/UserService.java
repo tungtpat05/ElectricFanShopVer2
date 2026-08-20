@@ -20,7 +20,7 @@ public class UserService {
     private final UserSocialAccountRepository userSocialAccountRepository;
 
     public User getByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found with email: " + email));
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
     }
 
 }

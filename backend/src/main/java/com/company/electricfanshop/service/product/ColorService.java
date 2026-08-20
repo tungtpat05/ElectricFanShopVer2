@@ -4,6 +4,7 @@ import com.company.electricfanshop.dto.product.request.ColorCreateRequest;
 import com.company.electricfanshop.dto.product.request.ColorUpdateRequest;
 import com.company.electricfanshop.dto.product.response.ColorResponse;
 import com.company.electricfanshop.entity.product.Color;
+import com.company.electricfanshop.exception.DuplicateResourceException;
 import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.mapper.product.ColorMapper;
 import com.company.electricfanshop.repository.product.ColorRepository;
@@ -24,13 +25,13 @@ public class ColorService {
     }
     public ColorResponse getById(Integer id) {
         Color color = colorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("Color", "id", id));
         return colorMapper.toResponse(color);
     }
 
     public ColorResponse create(ColorCreateRequest request) {
         if(colorRepository.existsByColorName(request.getColorName())) {
-            throw new ResourceNotFoundException(request.getColorName());
+            throw new DuplicateResourceException("Color", "name", request.getColorName());
         }
         Color color = colorMapper.toEntity(request);
         colorRepository.save(color);
@@ -39,7 +40,7 @@ public class ColorService {
 
     public ColorResponse update(Integer id, ColorUpdateRequest request) {
         Color color = colorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("Color", "id", id));
 
         colorMapper.updateEntityFromRequest(request, color);
 

@@ -35,9 +35,9 @@ public class ProductSpecificationService {
 
     public ProductSpecificationResponse getById(Integer productId, Integer specificationId) {
         ProductSpecification specification = productSpecificationRepository.findById(specificationId)
-                .orElseThrow(() -> new ResourceNotFoundException(specificationId));
+                .orElseThrow(() -> new ResourceNotFoundException("ProductSpecification", "id", specificationId));
         if (!specification.getProduct().getId().equals(productId)) {
-            throw new ResourceNotFoundException(specificationId);
+            throw new ResourceNotFoundException("ProductSpecification", "id", specificationId);
         }
         return productSpecificationMapper.toResponse(specification);
     }
@@ -49,10 +49,10 @@ public class ProductSpecificationService {
         }
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException(productId));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
         SpecDefinition specDefinition = specDefinitionRepository.findById(request.getSpecDefinitionId())
-                .orElseThrow(() -> new ResourceNotFoundException(request.getSpecDefinitionId()));
+                .orElseThrow(() -> new ResourceNotFoundException("SpecDefinition", "id", request.getSpecDefinitionId()));
 
         ProductSpecification specification = productSpecificationMapper.toEntity(request);
         specification.setProduct(product);
@@ -60,7 +60,7 @@ public class ProductSpecificationService {
 
         if (request.getOptionId() != null) {
             SpecDefinitionOption option = specDefinitionOptionRepository.findById(request.getOptionId())
-                    .orElseThrow(() -> new ResourceNotFoundException(request.getOptionId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("SpecDefinitionOption", "id", request.getOptionId()));
             specification.setOption(option);
         }
 
@@ -72,10 +72,10 @@ public class ProductSpecificationService {
     @Transactional
     public ProductSpecificationResponse update(Integer productId, Integer specificationId, ProductSpecificationUpdateRequest request) {
         ProductSpecification specification = productSpecificationRepository.findById(specificationId)
-                .orElseThrow(() -> new ResourceNotFoundException(specificationId));
+                .orElseThrow(() -> new ResourceNotFoundException("ProductSpecification", "id", specificationId));
 
         if (!specification.getProduct().getId().equals(productId)) {
-            throw new ResourceNotFoundException(specificationId);
+            throw new ResourceNotFoundException("ProductSpecification", "id", specificationId);
         }
 
         boolean specDefChanged = !specification.getSpecDefinition().getId().equals(request.getSpecDefinitionId());
@@ -85,7 +85,7 @@ public class ProductSpecificationService {
 
         if (specDefChanged) {
             SpecDefinition specDefinition = specDefinitionRepository.findById(request.getSpecDefinitionId())
-                    .orElseThrow(() -> new ResourceNotFoundException(request.getSpecDefinitionId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("SpecDefinition", "id", request.getSpecDefinitionId()));
             specification.setSpecDefinition(specDefinition);
         }
 
@@ -93,7 +93,7 @@ public class ProductSpecificationService {
 
         if (request.getOptionId() != null) {
             SpecDefinitionOption option = specDefinitionOptionRepository.findById(request.getOptionId())
-                    .orElseThrow(() -> new ResourceNotFoundException(request.getOptionId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("SpecDefinitionOption", "id", request.getOptionId()));
             specification.setOption(option);
         } else {
             specification.setOption(null);
@@ -107,10 +107,10 @@ public class ProductSpecificationService {
     @Transactional
     public void delete(Integer productId, Integer specificationId) {
         ProductSpecification specification = productSpecificationRepository.findById(specificationId)
-                .orElseThrow(() -> new ResourceNotFoundException(specificationId));
+                .orElseThrow(() -> new ResourceNotFoundException("ProductSpecification", "id", specificationId));
 
         if (!specification.getProduct().getId().equals(productId)) {
-            throw new ResourceNotFoundException(specificationId);
+            throw new ResourceNotFoundException("ProductSpecification", "id", specificationId);
         }
 
         productSpecificationRepository.delete(specification);

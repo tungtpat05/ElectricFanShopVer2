@@ -32,7 +32,7 @@ public class ProductService {
 
     public ProductResponse getById(Integer id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
         return productMapper.toResponse(product);
     }
 
@@ -62,7 +62,7 @@ public class ProductService {
 
     public ProductResponse update(Integer id, ProductUpdateRequest request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
 
         String oldPublicId = product.getThumbnailPublicId();
         String newPublicId = request.getThumbnailPublicId();

@@ -5,6 +5,7 @@ import com.company.electricfanshop.dto.auth.request.RegisterRequest;
 import com.company.electricfanshop.dto.auth.response.AuthenticationResponse;
 import com.company.electricfanshop.entity.common.enums.Role;
 import com.company.electricfanshop.entity.user.User;
+import com.company.electricfanshop.exception.DuplicateResourceException;
 import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,9 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            throw new DuplicateResourceException("User", "email", registerRequest.getEmail());
+        }
         User user = User.builder()
                 .fullName(registerRequest.getFullName())
                 .email(registerRequest.getEmail())
