@@ -13,6 +13,7 @@ import SignInPage from "../pages/SignInPage.tsx";
 import AuthSuccessPage from "../pages/AuthSuccessPage";
 import SignUpPage from "../pages/SignUpPage.tsx";
 import CartPage from "../pages/CartPage";
+import ProfilePage from "../pages/ProfilePage";
 
 // Admin Imports
 import AdminLayout from "../layouts/AdminLayout";
@@ -65,6 +66,14 @@ const AppRoutes = () => {
             element={
               <ProtectedRoute>
                 <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             }
           />

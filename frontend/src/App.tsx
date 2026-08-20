@@ -15,7 +15,7 @@ const darkTheme = createTheme({
     },
     background: {
       default: "#09090b", // Deep dark background
-      paper: "#18181b", // Zinc 900 paper/card background
+      paper: "#121215", // Sleek dark surface background
     },
     text: {
       primary: "#ffffff",
@@ -57,6 +57,20 @@ const darkTheme = createTheme({
           backgroundColor: "rgba(9, 9, 11, 0.8)",
           backdropFilter: "blur(20px)",
           borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: "none",
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundImage: "none",
         },
       },
     },

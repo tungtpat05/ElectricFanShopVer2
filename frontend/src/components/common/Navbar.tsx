@@ -64,22 +64,68 @@ const ResponsiveAppBar = () => {
     };
 
     const renderUserMenu = (
-        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 0 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 0, gap: 1 }}>
             {isLogin && user ? (
                 <>
                     <Tooltip title="View Shopping Cart">
                         <IconButton
                             onClick={() => navigate('/cart')}
-                            sx={{ color: '#ffffff', mr: 1.5 }}
+                            sx={{
+                                color: 'rgba(255, 255, 255, 0.8)',
+                                p: 0.75,
+                                transition: 'all 0.2s ease-in-out',
+                                '&:hover': {
+                                    color: '#ff6b35',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                                }
+                            }}
                         >
-                            <Badge badgeContent={2} sx={{ "& .MuiBadge-badge": { backgroundColor: "#ff6b35", color: "#ffffff", fontWeight: 700 } }}>
-                                <ShoppingCartIcon sx={{ color: '#ff6b35' }} />
+                            <Badge
+                                badgeContent={2}
+                                sx={{
+                                    "& .MuiBadge-badge": {
+                                        backgroundColor: "#ff6b35",
+                                        color: "#ffffff",
+                                        fontWeight: 700,
+                                        fontSize: "0.65rem",
+                                        height: 16,
+                                        minWidth: 16,
+                                        padding: "0 4px",
+                                    }
+                                }}
+                            >
+                                <ShoppingCartIcon sx={{ fontSize: '1.25rem' }} />
                             </Badge>
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Open settings">
-                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                            <Avatar alt={user.fullName} src="/static/images/avatar/2.jpg" sx={{ border: "2px solid #ff6b35" }} />
+                        <IconButton
+                            onClick={handleOpenUserMenu}
+                            sx={{
+                                p: 0.25,
+                                transition: 'all 0.2s ease-in-out',
+                                borderRadius: '50%',
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    bgcolor: 'rgba(255, 255, 255, 0.08)',
+                                    color: '#f4f4f5',
+                                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                                    fontWeight: 600,
+                                    fontSize: '0.85rem',
+                                    width: 32,
+                                    height: 32,
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                        borderColor: 'rgba(255, 107, 53, 0.8)',
+                                        color: '#ff6b35',
+                                        bgcolor: 'rgba(255, 107, 53, 0.12)',
+                                    }
+                                }}
+                            >
+                                {user.fullName ? user.fullName.trim().charAt(0).toUpperCase() : 'U'}
+                            </Avatar>
                         </IconButton>
                     </Tooltip>
                     <Menu
