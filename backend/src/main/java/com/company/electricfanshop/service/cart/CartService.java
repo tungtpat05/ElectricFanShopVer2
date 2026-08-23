@@ -11,7 +11,6 @@ import com.company.electricfanshop.exception.ResourceNotFoundException;
 import com.company.electricfanshop.mapper.cart.CartMapper;
 import com.company.electricfanshop.repository.cart.CartItemRepository;
 import com.company.electricfanshop.repository.cart.CartRepository;
-import com.company.electricfanshop.repository.product.ProductRepository;
 import com.company.electricfanshop.repository.product.ProductVariantRepository;
 import com.company.electricfanshop.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ import java.util.Optional;
 public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-    private final ProductRepository productRepository;
     private final ProductVariantRepository productVariantRepository;
     private final UserService userService;
     private final CartMapper cartMapper;
