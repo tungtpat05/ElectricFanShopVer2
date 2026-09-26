@@ -9,13 +9,10 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import GridViewIcon from "@mui/icons-material/GridView";
-import ViewListIcon from "@mui/icons-material/ViewList";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ProductItem from "./ProductItem.tsx";
 import FilterSidebar from "./FilterSidebar.tsx";
-import AdventureBanner from "./AdventureBanner.tsx";
 import { Product } from "@/types/product.ts";
 
 interface ProductListProps {
@@ -23,7 +20,6 @@ interface ProductListProps {
 }
 
 const ProductList = ({ products }: ProductListProps) => {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("newest");
 
   // Fallback / mock cards if API didn't return enough products
@@ -94,46 +90,6 @@ const ProductList = ({ products }: ProductListProps) => {
                   <MenuItem value="popular">Popularity</MenuItem>
                 </Select>
               </FormControl>
-
-              {/* Grid / List Toggles */}
-              <Box
-                sx={{
-                  display: "flex",
-                  borderRadius: "8px",
-                  p: 0.5,
-                  backgroundColor: "#121214",
-                  border: "1px solid rgba(255, 255, 255, 0.05)",
-                }}
-              >
-                <IconButton
-                  size="small"
-                  onClick={() => setViewMode("grid")}
-                  sx={{
-                    color: viewMode === "grid" ? "#e28a3a" : "rgba(255,255,255,0.4)",
-                    backgroundColor: viewMode === "grid" ? "rgba(226, 138, 58, 0.1)" : "transparent",
-                    borderRadius: "6px",
-                    "&:hover": {
-                      backgroundColor: viewMode === "grid" ? "rgba(226, 138, 58, 0.15)" : "rgba(255,255,255,0.05)",
-                    },
-                  }}
-                >
-                  <GridViewIcon sx={{ fontSize: "1.1rem" }} />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() => setViewMode("list")}
-                  sx={{
-                    color: viewMode === "list" ? "#e28a3a" : "rgba(255,255,255,0.4)",
-                    backgroundColor: viewMode === "list" ? "rgba(226, 138, 58, 0.1)" : "transparent",
-                    borderRadius: "6px",
-                    "&:hover": {
-                      backgroundColor: viewMode === "list" ? "rgba(226, 138, 58, 0.15)" : "rgba(255,255,255,0.05)",
-                    },
-                  }}
-                >
-                  <ViewListIcon sx={{ fontSize: "1.1rem" }} />
-                </IconButton>
-              </Box>
             </Box>
           </Box>
 
@@ -151,20 +107,9 @@ const ProductList = ({ products }: ProductListProps) => {
             }}
           >
             {displayProducts.length > 0 ? (
-              <>
-                {/* Visual grid cards before banner */}
-                {displayProducts.slice(0, 4).map((product) => (
-                  <ProductItem key={product.id} product={product} />
-                ))}
-
-                {/* Promotional Adventure Banner spanning full grid */}
-                <AdventureBanner />
-
-                {/* Visual grid cards after banner */}
-                {displayProducts.slice(4).map((product) => (
-                  <ProductItem key={product.id} product={product} />
-                ))}
-              </>
+              displayProducts.map((product) => (
+                <ProductItem key={product.id} product={product} />
+              ))
             ) : (
               <Box
                 sx={{

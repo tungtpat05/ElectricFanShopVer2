@@ -5,30 +5,12 @@ import {
   Checkbox,
   FormControlLabel,
   Slider,
+  Skeleton,
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
-
-const BRANDS = [
-  "Honda",
-  "Yamaha",
-  "Kawasaki",
-  "Ducati",
-  "BMW",
-  "KTM",
-  "Triumph",
-  "Harley-Davidson",
-];
-
-const CATEGORIES = [
-  "Naked",
-  "Sport",
-  "Adventure",
-  "Touring",
-  "Cruiser",
-  "Scooter",
-  "Electric",
-];
+import { useBrands } from "../../hooks/useBrands";
+import { useCategories } from "../../hooks/useCategories";
 
 const ENGINES = ["125cc", "300cc", "500cc", "650cc", "900cc+"];
 const TRANSMISSIONS = ["Manual", "Automatic", "DCT"];
@@ -36,6 +18,12 @@ const CONDITIONS = ["New", "Used"];
 const FEATURES = ["ABS", "Quick Shifter", "Traction Control"];
 
 const FilterSidebar = () => {
+  const { brands, loading: brandsLoading } = useBrands();
+  const { categories, loading: categoriesLoading } = useCategories();
+
+  const activeBrands = brands.filter((b) => b.isActive !== false);
+  const activeCategories = categories.filter((c) => c.isActive !== false);
+
   return (
     <Box
       sx={{
@@ -97,28 +85,44 @@ const FilterSidebar = () => {
           Brand
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          {BRANDS.map((brand) => (
-            <FormControlLabel
-              key={brand}
-              control={
-                <Checkbox
-                  size="small"
-                  sx={{
-                    color: "rgba(255,255,255,0.2)",
-                    "&.Mui-checked": { color: "#e28a3a" },
-                  }}
-                />
-              }
-              label={brand}
-              sx={{
-                "& .MuiFormControlLabel-label": {
-                  fontSize: "0.9rem",
-                  color: "rgba(255,255,255,0.7)",
-                },
-                ml: -0.5,
-              }}
-            />
-          ))}
+          {brandsLoading ? (
+            [...Array(4)].map((_, i) => (
+              <Skeleton
+                key={i}
+                variant="text"
+                width="70%"
+                height={28}
+                sx={{ bgcolor: "rgba(255,255,255,0.05)" }}
+              />
+            ))
+          ) : activeBrands.length > 0 ? (
+            activeBrands.map((brand) => (
+              <FormControlLabel
+                key={brand.id}
+                control={
+                  <Checkbox
+                    size="small"
+                    sx={{
+                      color: "rgba(255,255,255,0.2)",
+                      "&.Mui-checked": { color: "#e28a3a" },
+                    }}
+                  />
+                }
+                label={brand.brandName}
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.9rem",
+                    color: "rgba(255,255,255,0.7)",
+                  },
+                  ml: -0.5,
+                }}
+              />
+            ))
+          ) : (
+            <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
+              No brands found
+            </Typography>
+          )}
         </Box>
       </Box>
 
@@ -138,30 +142,46 @@ const FilterSidebar = () => {
           Category
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {CATEGORIES.map((category) => (
-            <Box
-              key={category}
-              sx={{
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "20px",
-                px: 2,
-                py: 0.6,
-                backgroundColor: "transparent",
-                color: "rgba(255,255,255,0.6)",
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "all 0.15s",
-                "&:hover": {
-                  borderColor: "#e28a3a",
-                  color: "#e28a3a",
-                  backgroundColor: "rgba(226, 138, 58, 0.05)",
-                },
-              }}
-            >
-              {category}
-            </Box>
-          ))}
+          {categoriesLoading ? (
+            [...Array(5)].map((_, i) => (
+              <Skeleton
+                key={i}
+                variant="rounded"
+                width={70}
+                height={32}
+                sx={{ bgcolor: "rgba(255,255,255,0.05)", borderRadius: "20px" }}
+              />
+            ))
+          ) : activeCategories.length > 0 ? (
+            activeCategories.map((category) => (
+              <Box
+                key={category.id}
+                sx={{
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "20px",
+                  px: 2,
+                  py: 0.6,
+                  backgroundColor: "transparent",
+                  color: "rgba(255,255,255,0.6)",
+                  fontSize: "0.8rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                  "&:hover": {
+                    borderColor: "#e28a3a",
+                    color: "#e28a3a",
+                    backgroundColor: "rgba(226, 138, 58, 0.05)",
+                  },
+                }}
+              >
+                {category.categoryName}
+              </Box>
+            ))
+          ) : (
+            <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
+              No categories found
+            </Typography>
+          )}
         </Box>
       </Box>
 

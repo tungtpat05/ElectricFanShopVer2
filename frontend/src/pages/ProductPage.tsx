@@ -1,7 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { useProducts } from "../hooks/useProducts";
 import HeroSection from "../components/product/HeroSection.tsx";
-import FeaturedBrands from "../components/product/FeaturedBrands.tsx";
 import ProductList from "../components/product/ProductList.tsx";
 
 const ProductPage = () => {
@@ -12,9 +11,6 @@ const ProductPage = () => {
     return (
       <Box sx={{ mt: "-64px", backgroundColor: "#09090b", minHeight: "100vh" }}>
         <HeroSection />
-        <Box sx={{ px: { xs: 2, md: 6 } }}>
-          <FeaturedBrands />
-        </Box>
         <Box sx={{ py: 6, px: { xs: 2, md: 6 } }}>
           <Grid container spacing={4}>
             {/* Filter Sidebar Skeleton */}
@@ -73,9 +69,6 @@ const ProductPage = () => {
     return (
       <Box sx={{ mt: "-64px", backgroundColor: "#09090b", minHeight: "100vh" }}>
         <HeroSection />
-        <Box sx={{ px: { xs: 2, md: 6 } }}>
-          <FeaturedBrands />
-        </Box>
         <Box sx={{ py: 12, textAlign: "center", color: "white" }}>
           <Box
             sx={{
@@ -125,12 +118,7 @@ const ProductPage = () => {
       {/* 1. Hero / Search section */}
       <HeroSection />
 
-      {/* 2. Featured Brand Logo Grid Section */}
-      <Box sx={{ px: { xs: 2, md: 6 } }}>
-        <FeaturedBrands />
-      </Box>
-
-      {/* 3. Sidebar Filters & Product Catalog Cards Layout */}
+      {/* 2. Sidebar Filters & Product Catalog Cards Layout */}
       <ProductList products={products} />
     </Box>
   );

@@ -1,18 +1,6 @@
-import { Box, Typography, InputBase, Button, Chip } from "@mui/material";
+import { Box, Typography, InputBase, Button } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import heroBanner from "@/assets/images/product/hero-banner.jpg";
-
-const QUICK_TAGS = [
-  "Honda",
-  "Yamaha",
-  "Kawasaki",
-  "BMW",
-  "KTM",
-  "Ducati",
-  "Adventure",
-  "Sport",
-  "Electric",
-];
 
 const HeroSection = () => {
   return (
@@ -113,7 +101,6 @@ const HeroSection = () => {
           display: "flex",
           alignItems: "center",
           boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-          mb: 3,
           transition: "border-color 0.2s",
           "&:focus-within": {
             borderColor: "#e28a3a",
@@ -122,7 +109,7 @@ const HeroSection = () => {
       >
         <SearchIcon sx={{ color: "rgba(255,255,255,0.4)", mr: 1.5 }} />
         <InputBase
-          placeholder="Search motorcycles, brands or categories..."
+          placeholder="Search motorcycles name..."
           sx={{
             flex: 1,
             color: "white",
@@ -149,38 +136,6 @@ const HeroSection = () => {
         >
           Search
         </Button>
-      </Box>
-
-      {/* Quick brand tags */}
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: 1.2,
-          maxWidth: "800px",
-        }}
-      >
-        {QUICK_TAGS.map((tag) => (
-          <Chip
-            key={tag}
-            label={tag}
-            clickable
-            sx={{
-              backgroundColor: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-              color: "rgba(255, 255, 255, 0.8)",
-              fontWeight: 500,
-              fontSize: "0.85rem",
-              transition: "all 0.2s",
-              "&:hover": {
-                backgroundColor: "rgba(226, 138, 58, 0.15)",
-                borderColor: "#e28a3a",
-                color: "#e28a3a",
-              },
-            }}
-          />
-        ))}
       </Box>
     </Box>
   );
