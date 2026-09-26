@@ -3,7 +3,7 @@ package com.company.electricfanshop.controller.auth;
 import com.company.electricfanshop.dto.auth.request.AuthenticationRequest;
 import com.company.electricfanshop.dto.auth.request.RegisterRequest;
 import com.company.electricfanshop.dto.auth.response.AuthenticationResponse;
-import com.company.electricfanshop.entity.user.User;
+import com.company.electricfanshop.dto.user.response.UserResponse;
 import com.company.electricfanshop.service.auth.AuthenticationService;
 import com.company.electricfanshop.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +42,8 @@ public class AuthenticationController {
         }
 
         String email = principal.getName();
-        User user = userService.getByEmail(email);
+        UserResponse response = userService.getByEmail(email);
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(response);
     }
 }

@@ -12,7 +12,7 @@ import com.company.electricfanshop.mapper.cart.CartMapper;
 import com.company.electricfanshop.repository.cart.CartItemRepository;
 import com.company.electricfanshop.repository.cart.CartRepository;
 import com.company.electricfanshop.repository.product.ProductVariantRepository;
-import com.company.electricfanshop.service.user.UserService;
+import com.company.electricfanshop.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +28,16 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductVariantRepository productVariantRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final CartMapper cartMapper;
 
+    private User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+    }
+
     public CartSummaryResponse getCartSummary(Principal principal) {
-        User user = userService.getByEmail(principal.getName());
+        User user = getUserByEmail(principal.getName());
         Optional<Cart> cartOptional = cartRepository.findByUserId(user.getId());
         if (cartOptional.isEmpty()) {
             return cartMapper.toEmptySummary(user);
@@ -44,7 +49,7 @@ public class CartService {
 
     @Transactional
     public CartSummaryResponse addToCart(Principal principal, AddToCartRequest request) {
-        User user = userService.getByEmail(principal.getName());
+        User user = getUserByEmail(principal.getName());
         Cart cart = cartRepository.findByUserId(user.getId())
                 .orElseGet(() -> createCart(user));
 
@@ -98,7 +103,7 @@ public class CartService {
     }
 
     private CartSummaryResponse updateQuantityDelta(Principal principal, Integer variantId, int delta) {
-        User user = userService.getByEmail(principal.getName());
+        User user = getUserByEmail(principal.getName());
         Cart cart = cartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Cart", "userId", user.getId()));
 
@@ -127,7 +132,7 @@ public class CartService {
 
     @Transactional
     public CartSummaryResponse removeFromCart(Principal principal, Integer variantId) {
-        User user = userService.getByEmail(principal.getName());
+        User user = getUserByEmail(principal.getName());
         Optional<Cart> cartOptional = cartRepository.findByUserId(user.getId());
         if (cartOptional.isEmpty()) {
             return cartMapper.toEmptySummary(user);
