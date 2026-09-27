@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -19,11 +19,67 @@ interface ProductListProps {
   products: Product[];
 }
 
+const ITEMS_PER_PAGE = 8;
+
 const ProductList = ({ products }: ProductListProps) => {
   const [sortBy, setSortBy] = useState("newest");
+  const [page, setPage] = useState(1);
 
-  // Fallback / mock cards if API didn't return enough products
-  const displayProducts = products.length > 0 ? products : [];
+  // Reset to page 1 whenever sorting or products list changes
+  useEffect(() => {
+    setPage(1);
+  }, [products.length, sortBy]);
+
+  // Sort products based on selected option
+  const sortedProducts = useMemo(() => {
+    const list = [...products];
+    if (sortBy === "price-low") {
+      list.sort((a, b) => (a.discountPrice || a.basePrice) - (b.discountPrice || b.basePrice));
+    } else if (sortBy === "price-high") {
+      list.sort((a, b) => (b.discountPrice || b.basePrice) - (a.discountPrice || a.basePrice));
+    } else if (sortBy === "newest") {
+      list.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+    }
+    return list;
+  }, [products, sortBy]);
+
+  const totalItems = sortedProducts.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  // Ensure current page is always within valid bounds
+  const currentPage = Math.max(1, Math.min(page, totalPages || 1));
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+  const currentProducts = sortedProducts.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+      window.scrollTo({ top: 350, behavior: "smooth" });
+    }
+  };
+
+  // Helper to generate pagination page numbers
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      if (currentPage > 3) pages.push("...");
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      if (currentPage < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
+    }
+    return pages;
+  };
 
   return (
     <Box sx={{ py: 6, px: { xs: 2, md: 6 }, backgroundColor: "#09090b" }}>
@@ -49,13 +105,13 @@ const ProductList = ({ products }: ProductListProps) => {
             <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
               Showing{" "}
               <Box component="span" sx={{ fontWeight: 800, color: "white" }}>
-                1–{displayProducts.length || 12}
+                {totalItems > 0 ? startIndex + 1 : 0}–{endIndex}
               </Box>{" "}
               of{" "}
               <Box component="span" sx={{ fontWeight: 800, color: "white" }}>
-                582
+                {totalItems}
               </Box>{" "}
-              motorcycles
+              products
             </Typography>
 
             {/* Controls right */}
@@ -87,7 +143,6 @@ const ProductList = ({ products }: ProductListProps) => {
                   <MenuItem value="newest">Newest First</MenuItem>
                   <MenuItem value="price-low">Price: Low to High</MenuItem>
                   <MenuItem value="price-high">Price: High to Low</MenuItem>
-                  <MenuItem value="popular">Popularity</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -106,8 +161,8 @@ const ProductList = ({ products }: ProductListProps) => {
               gap: 3,
             }}
           >
-            {displayProducts.length > 0 ? (
-              displayProducts.map((product) => (
+            {currentProducts.length > 0 ? (
+              currentProducts.map((product) => (
                 <ProductItem key={product.id} product={product} />
               ))
             ) : (
@@ -126,101 +181,117 @@ const ProductList = ({ products }: ProductListProps) => {
                 }}
               >
                 <Typography variant="h6" sx={{ color: "white", mb: 1 }}>
-                  No products retrieved
+                  No products found
                 </Typography>
                 <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.4)" }}>
-                  Connecting with service layer. Wait, or check availability.
+                  Try adjusting your filters or search terms.
                 </Typography>
               </Box>
             )}
           </Box>
 
           {/* Custom Styled Pagination bar */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              mt: 8,
-              gap: 1.5,
-              flexWrap: "wrap",
-            }}
-          >
-            <Button
-              variant="outlined"
-              startIcon={<KeyboardArrowLeftIcon />}
+          {totalPages > 1 && (
+            <Box
               sx={{
-                color: "rgba(255,255,255,0.7)",
-                borderColor: "rgba(255,255,255,0.1)",
-                borderRadius: "30px",
-                px: 3.5,
-                py: 1.2,
-                fontSize: "0.85rem",
-                "&:hover": {
-                  borderColor: "#e28a3a",
-                  color: "#e28a3a",
-                  backgroundColor: "rgba(226, 138, 58, 0.05)",
-                },
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                mt: 8,
+                gap: 1.5,
+                flexWrap: "wrap",
               }}
             >
-              Previous
-            </Button>
-
-            <Box sx={{ display: "flex", gap: 1 }}>
-              {[1, 2, 3, 4].map((page) => (
-                <IconButton
-                  key={page}
-                  sx={{
-                    width: "42px",
-                    height: "42px",
-                    fontSize: "0.9rem",
-                    fontWeight: 700,
-                    color: page === 2 ? "#000" : "white",
-                    backgroundColor: page === 2 ? "#e28a3a" : "transparent",
-                    border: page === 2 ? "none" : "1px solid rgba(255, 255, 255, 0.1)",
-                    "&:hover": {
-                      backgroundColor: page === 2 ? "#f0a256" : "rgba(255,255,255,0.08)",
-                      borderColor: page === 2 ? "none" : "rgba(255,255,255,0.2)",
-                    },
-                  }}
-                >
-                  {page}
-                </IconButton>
-              ))}
-
-              <Typography
-                variant="body2"
+              <Button
+                variant="outlined"
+                startIcon={<KeyboardArrowLeftIcon />}
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
                 sx={{
-                  color: "rgba(255,255,255,0.4)",
-                  alignSelf: "flex-end",
-                  mb: 1.5,
-                  mx: 0.5,
+                  color: "rgba(255,255,255,0.7)",
+                  borderColor: "rgba(255,255,255,0.1)",
+                  borderRadius: "30px",
+                  px: 3.5,
+                  py: 1.2,
+                  fontSize: "0.85rem",
+                  "&.Mui-disabled": {
+                    color: "rgba(255,255,255,0.2)",
+                    borderColor: "rgba(255,255,255,0.05)",
+                  },
+                  "&:hover": {
+                    borderColor: "#e28a3a",
+                    color: "#e28a3a",
+                    backgroundColor: "rgba(226, 138, 58, 0.05)",
+                  },
                 }}
               >
-                ...
-              </Typography>
-            </Box>
+                Previous
+              </Button>
 
-            <Button
-              variant="outlined"
-              endIcon={<KeyboardArrowRightIcon />}
-              sx={{
-                color: "rgba(255,255,255,0.7)",
-                borderColor: "rgba(255,255,255,0.1)",
-                borderRadius: "30px",
-                px: 3.5,
-                py: 1.2,
-                fontSize: "0.85rem",
-                "&:hover": {
-                  borderColor: "#e28a3a",
-                  color: "#e28a3a",
-                  backgroundColor: "rgba(226, 138, 58, 0.05)",
-                },
-              }}
-            >
-              Next
-            </Button>
-          </Box>
+              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                {getPageNumbers().map((p, index) =>
+                  typeof p === "number" ? (
+                    <IconButton
+                      key={p}
+                      onClick={() => handlePageChange(p)}
+                      sx={{
+                        width: "42px",
+                        height: "42px",
+                        fontSize: "0.9rem",
+                        fontWeight: 700,
+                        color: currentPage === p ? "#000" : "white",
+                        backgroundColor: currentPage === p ? "#e28a3a" : "transparent",
+                        border: currentPage === p ? "none" : "1px solid rgba(255, 255, 255, 0.1)",
+                        "&:hover": {
+                          backgroundColor: currentPage === p ? "#f0a256" : "rgba(255,255,255,0.08)",
+                          borderColor: currentPage === p ? "none" : "rgba(255,255,255,0.2)",
+                        },
+                      }}
+                    >
+                      {p}
+                    </IconButton>
+                  ) : (
+                    <Typography
+                      key={`ellipsis-${index}`}
+                      variant="body2"
+                      sx={{
+                        color: "rgba(255,255,255,0.4)",
+                        px: 1,
+                      }}
+                    >
+                      {p}
+                    </Typography>
+                  )
+                )}
+              </Box>
+
+              <Button
+                variant="outlined"
+                endIcon={<KeyboardArrowRightIcon />}
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+                sx={{
+                  color: "rgba(255,255,255,0.7)",
+                  borderColor: "rgba(255,255,255,0.1)",
+                  borderRadius: "30px",
+                  px: 3.5,
+                  py: 1.2,
+                  fontSize: "0.85rem",
+                  "&.Mui-disabled": {
+                    color: "rgba(255,255,255,0.2)",
+                    borderColor: "rgba(255,255,255,0.05)",
+                  },
+                  "&:hover": {
+                    borderColor: "#e28a3a",
+                    color: "#e28a3a",
+                    backgroundColor: "rgba(226, 138, 58, 0.05)",
+                  },
+                }}
+              >
+                Next
+              </Button>
+            </Box>
+          )}
         </Grid>
       </Grid>
     </Box>
@@ -228,3 +299,4 @@ const ProductList = ({ products }: ProductListProps) => {
 };
 
 export default ProductList;
+
