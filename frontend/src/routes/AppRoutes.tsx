@@ -9,11 +9,11 @@ import NotFoundPage from "../pages/NotFoundPage";
 import HomePage from "../pages/HomePage";
 import ProductPage from "../pages/ProductPage";
 import ProductDetailPage from "../pages/ProductDetailPage";
-import SignInPage from "../pages/SignInPage.tsx";
-import AuthSuccessPage from "../pages/AuthSuccessPage";
-import SignUpPage from "../pages/SignUpPage.tsx";
+import SignInPage from "../pages/auth/SignInPage.tsx";
+import AuthSuccessPage from "../pages/auth/AuthSuccessPage.tsx";
+import SignUpPage from "../pages/auth/SignUpPage.tsx";
 import CartPage from "../pages/CartPage";
-import ProfilePage from "../pages/ProfilePage";
+import ProfilePage from "../pages/auth/ProfilePage.tsx";
 
 // Admin Imports
 import AdminLayout from "../layouts/AdminLayout";
@@ -34,7 +34,7 @@ const AppRoutes = () => {
         <Route path="/login" element={<SignInPage />} />
         <Route path="/register" element={<SignUpPage />} />
         <Route path="/auth/success" element={<AuthSuccessPage />} />
-        
+
         {/* Admin Routes */}
         <Route
           path="/admin"
