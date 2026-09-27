@@ -2,7 +2,7 @@ import { Box, Typography, Button, Grid, CircularProgress, Container } from "@mui
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Link } from "react-router-dom";
 import { useProducts } from "@/hooks/useProducts";
-import FeaturedCard from "./FeaturedCard";
+import ProductItem from "./ProductItem";
 
 const FeaturedSection = () => {
   const { products, loading, error } = useProducts();
@@ -94,9 +94,9 @@ const FeaturedSection = () => {
 
         {/* Featured Cards Grid */}
         <Grid container spacing={4}>
-          {featuredProducts.map((product, index) => (
+          {featuredProducts.map((product) => (
             <Grid key={product.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <FeaturedCard product={product} index={index} />
+              <ProductItem product={product} />
             </Grid>
           ))}
         </Grid>

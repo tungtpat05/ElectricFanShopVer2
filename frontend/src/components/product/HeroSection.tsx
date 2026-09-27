@@ -2,7 +2,11 @@ import { Box, Typography, InputBase, Button } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import heroBanner from "@/assets/images/product/hero-banner.jpg";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  count?: number;
+}
+
+const HeroSection = ({ count }: HeroSectionProps) => {
   return (
     <Box
       sx={{
@@ -51,7 +55,7 @@ const HeroSection = () => {
             textTransform: "uppercase",
           }}
         >
-          582 Motorcycles Available
+          {count != null ? `${count} Motorcycles Available` : "No data"}
         </Typography>
       </Box>
 

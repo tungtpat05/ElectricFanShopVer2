@@ -131,7 +131,12 @@ const ProductDetailPage = () => {
         <Grid container spacing={{ xs: 4, md: 6 }}>
           {/* Left Column: Image Showroom */}
           <Grid size={{ xs: 12, md: 6.5 }}>
-            <ProductGallery thumbnailUrl={product.thumbnail} productName={product.productName} />
+            <ProductGallery
+              thumbnailUrl={product.thumbnail}
+              productName={product.productName}
+              images={product.images}
+              variants={product.variants}
+            />
           </Grid>
 
           {/* Right Column: Information Panel */}

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { Product } from "../types/product";
-import { getProductById, getProductSpecifications } from "../services/productService";
+import {
+  getProductById,
+  getProductSpecifications,
+  getProductImages,
+  getProductVariants,
+} from "../services/productService";
 
 export const useProductDetail = (id: number | string | undefined) => {
   const [product, setProduct] = useState<Product | null>(null);
@@ -13,14 +18,19 @@ export const useProductDetail = (id: number | string | undefined) => {
       try {
         setLoading(true);
         setError(null);
-        const [productData, specsData] = await Promise.all([
-          getProductById(Number(id)),
-          getProductSpecifications(Number(id)).catch(() => []),
+        const productId = Number(id);
+        const [productData, specsData, imagesData, variantsData] = await Promise.all([
+          getProductById(productId),
+          getProductSpecifications(productId).catch(() => []),
+          getProductImages(productId).catch(() => []),
+          getProductVariants(productId).catch(() => []),
         ]);
 
         setProduct({
           ...productData,
           specifications: specsData,
+          images: imagesData,
+          variants: variantsData,
         });
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Failed to load product detail";
@@ -36,3 +46,4 @@ export const useProductDetail = (id: number | string | undefined) => {
 
   return { product, loading, error };
 };
+

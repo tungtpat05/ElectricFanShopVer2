@@ -116,7 +116,7 @@ const ProductPage = () => {
   return (
     <Box sx={{ mt: "-64px", backgroundColor: "#09090b", minHeight: "100vh" }}>
       {/* 1. Hero / Search section */}
-      <HeroSection />
+      <HeroSection count={products.length} />
 
       {/* 2. Sidebar Filters & Product Catalog Cards Layout */}
       <ProductList products={products} />

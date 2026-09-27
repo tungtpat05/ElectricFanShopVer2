@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Box,
   Typography,
   Chip,
-  Rating,
   Button,
   Grid,
 } from "@mui/material";
@@ -17,17 +16,11 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context";
-import { Product } from "@/types/product.ts";
+import { Product, ProductVariant } from "@/types/product.ts";
 
 interface ProductInfoProps {
   product: Product;
 }
-
-const COLORS = [
-  { id: "black", value: "#262626", name: "Graphite Black" },
-  { id: "red", value: "#b22222", name: "Candy Chromosphere Red" },
-  { id: "blue", value: "#6d7b8d", name: "Matte Denim Blue" },
-];
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const navigate = useNavigate();
@@ -41,8 +34,11 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       navigate(targetUrl);
     }
   };
-  const [selectedColor, setSelectedColor] = useState(COLORS[0]);
-  const [selectedYear, setSelectedYear] = useState("2024");
+
+  const variants = product.variants || [];
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
+    variants.length > 0 ? variants[0] : null
+  );
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -53,19 +49,33 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     }).format(price);
   };
 
-  const hasDiscount = product.discountPrice && product.discountPrice < product.basePrice;
-  const displayPrice = hasDiscount ? product.discountPrice : product.basePrice;
-  const monthlyPayment = Math.round(displayPrice / 60);
+  const baseOrDiscount = product.discountPrice && product.discountPrice < product.basePrice
+    ? product.discountPrice
+    : product.basePrice;
 
-  const categoryName = product.category?.categoryName || "Naked";
+  const additionalPrice = selectedVariant?.additionalPrice || 0;
+  const displayPrice = (baseOrDiscount || 0) + additionalPrice;
+  const monthlyPayment = displayPrice > 0 ? Math.round(displayPrice / 60) : 0;
+
+  const categoryName = product.category?.categoryName || "No data";
+  const brandName = product.brand?.brandName || "No data";
+  const yearText = product.createdAt ? new Date(product.createdAt).getFullYear() : "No data";
+
+  // Total stock calculated from variants or fallback
+  const totalStock = useMemo(() => {
+    if (variants.length > 0) {
+      return variants.reduce((acc, v) => acc + (v.stockQuantity || 0), 0);
+    }
+    return null;
+  }, [variants]);
 
   const getTagColor = (catName: string) => {
     const name = catName.toLowerCase();
-    if (name.includes("naked")) return "rgba(168, 85, 247, 0.25)"; // Purple
-    if (name.includes("sport")) return "rgba(239, 68, 68, 0.25)"; // Red
-    if (name.includes("adventure")) return "rgba(234, 179, 8, 0.25)"; // Yellow
-    if (name.includes("electric")) return "rgba(59, 130, 246, 0.25)"; // Blue
-    return "rgba(226, 138, 58, 0.25)"; // Default Gold/Orange
+    if (name.includes("naked")) return "rgba(168, 85, 247, 0.25)";
+    if (name.includes("sport")) return "rgba(239, 68, 68, 0.25)";
+    if (name.includes("adventure")) return "rgba(234, 179, 8, 0.25)";
+    if (name.includes("electric")) return "rgba(59, 130, 246, 0.25)";
+    return "rgba(226, 138, 58, 0.25)";
   };
 
   const getTagTextColor = (catName: string) => {
@@ -90,7 +100,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             textTransform: "uppercase",
           }}
         >
-          {product.brand?.brandName || "HONDA"}
+          {brandName}
         </Typography>
         <Box
           sx={{
@@ -120,34 +130,61 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           lineHeight: 1.15,
         }}
       >
-        {product.productName}
+        {product.productName || "No data"}
       </Typography>
 
       {/* Ratings and Stock State Row */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
+        {/* Rating line showing No data since rating endpoint doesn't exist */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <Rating value={4.9} precision={0.1} readOnly size="small" />
-          <Typography variant="body2" sx={{ fontWeight: 700, color: "white", ml: 0.5 }}>
-            4.9
-          </Typography>
-          <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.4)" }}>
-            (128 reviews)
+          <Typography variant="body2" sx={{ fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>
+            Rating: <Box component="span" sx={{ color: "#e28a3a" }}>No data</Box>
           </Typography>
         </Box>
         <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.25)" }}>
           •
         </Typography>
-        <Chip
-          label="• In Stock"
-          size="small"
-          sx={{
-            backgroundColor: "rgba(46, 125, 50, 0.15)",
-            color: "#4caf50",
-            fontWeight: 700,
-            fontSize: "0.75rem",
-            px: 0.5,
-          }}
-        />
+
+        {/* Stock Badge */}
+        {totalStock !== null ? (
+          totalStock > 0 ? (
+            <Chip
+              label={`• In Stock (${totalStock} available)`}
+              size="small"
+              sx={{
+                backgroundColor: "rgba(46, 125, 50, 0.15)",
+                color: "#4caf50",
+                fontWeight: 700,
+                fontSize: "0.75rem",
+                px: 0.5,
+              }}
+            />
+          ) : (
+            <Chip
+              label="• Out of Stock"
+              size="small"
+              sx={{
+                backgroundColor: "rgba(239, 68, 68, 0.15)",
+                color: "#ef4444",
+                fontWeight: 700,
+                fontSize: "0.75rem",
+                px: 0.5,
+              }}
+            />
+          )
+        ) : (
+          <Chip
+            label="• Stock: No data"
+            size="small"
+            sx={{
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
+              color: "rgba(255, 255, 255, 0.5)",
+              fontWeight: 700,
+              fontSize: "0.75rem",
+              px: 0.5,
+            }}
+          />
+        )}
       </Box>
 
       {/* Pricing Information Panel */}
@@ -177,7 +214,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             Starting Price
           </Typography>
           <Typography variant="h4" sx={{ fontWeight: 800, color: "white" }}>
-            {formatPrice(displayPrice)}
+            {displayPrice > 0 ? formatPrice(displayPrice) : "No data"}
           </Typography>
           <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.3)" }}>
             MSRP · Excl. dealer fees
@@ -191,10 +228,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             Est. monthly
           </Typography>
           <Typography variant="h5" sx={{ fontWeight: 800, color: "#e28a3a" }}>
-            ${monthlyPayment}
-            <Typography component="span" variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
-              /mo
-            </Typography>
+            {monthlyPayment > 0 ? `$${monthlyPayment}` : "No data"}
+            {monthlyPayment > 0 && (
+              <Typography component="span" variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
+                /mo
+              </Typography>
+            )}
           </Typography>
           <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.3)" }}>
             0% APR · 60 months
@@ -217,41 +256,50 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             Color
           </Typography>
           <Typography variant="body2" sx={{ fontWeight: 700, color: "rgba(255, 255, 255, 0.7)" }}>
-            {selectedColor.name}
+            {selectedVariant?.color?.colorName || "No data"}
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", gap: 1.5 }}>
-          {COLORS.map((col) => (
-            <Box
-              key={col.id}
-              onClick={() => setSelectedColor(col)}
-              sx={{
-                width: 32,
-                height: 32,
-                borderRadius: "50%",
-                backgroundColor: col.value,
-                border: "2px solid",
-                borderColor: selectedColor.id === col.id ? "white" : "transparent",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.15s",
-                boxShadow: "inset 0px 0px 4px rgba(0,0,0,0.5)",
-                "&:hover": {
-                  transform: "scale(1.1)",
-                },
-              }}
-            >
-              {selectedColor.id === col.id && (
-                <CheckIcon sx={{ fontSize: 16, color: "white" }} />
-              )}
-            </Box>
-          ))}
-        </Box>
+
+        {variants.length > 0 ? (
+          <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
+            {variants.map((v) => {
+              const isSelected = selectedVariant?.id === v.id;
+              const colorValue = v.color?.colorCode || "#333333";
+              return (
+                <Box
+                  key={v.id}
+                  onClick={() => setSelectedVariant(v)}
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: "50%",
+                    backgroundColor: colorValue,
+                    border: "2px solid",
+                    borderColor: isSelected ? "#e28a3a" : "rgba(255,255,255,0.2)",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "all 0.15s",
+                    boxShadow: "inset 0px 0px 4px rgba(0,0,0,0.5)",
+                    "&:hover": {
+                      transform: "scale(1.1)",
+                    },
+                  }}
+                >
+                  {isSelected && <CheckIcon sx={{ fontSize: 16, color: "white" }} />}
+                </Box>
+              );
+            })}
+          </Box>
+        ) : (
+          <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.4)", fontStyle: "italic" }}>
+            No data
+          </Typography>
+        )}
       </Box>
 
-      {/* Model Year Selection Picker */}
+      {/* Model Year Display */}
       <Box>
         <Typography
           variant="caption"
@@ -261,43 +309,17 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             letterSpacing: "0.1em",
             textTransform: "uppercase",
             display: "block",
-            mb: 1.5,
+            mb: 1,
           }}
         >
           Model Year
         </Typography>
-        <Box sx={{ display: "flex", gap: 1.5 }}>
-          {["2024", "2023"].map((year) => {
-            const isActive = selectedYear === year;
-            return (
-              <Button
-                key={year}
-                variant="outlined"
-                onClick={() => setSelectedYear(year)}
-                sx={{
-                  color: isActive ? "#e28a3a" : "rgba(255, 255, 255, 0.4)",
-                  borderColor: isActive ? "#e28a3a" : "rgba(255, 255, 255, 0.15)",
-                  backgroundColor: isActive ? "rgba(226, 138, 58, 0.05)" : "transparent",
-                  fontWeight: 700,
-                  fontSize: "0.85rem",
-                  px: 3,
-                  py: 1,
-                  borderRadius: "20px",
-                  textTransform: "none",
-                  "&:hover": {
-                    borderColor: "#e28a3a",
-                    backgroundColor: "rgba(226, 138, 58, 0.05)",
-                  },
-                }}
-              >
-                {year}
-              </Button>
-            );
-          })}
-        </Box>
+        <Typography variant="body2" sx={{ color: "white", fontWeight: 700 }}>
+          {yearText}
+        </Typography>
       </Box>
 
-      {/* Short Summary Section with Left vertical border */}
+      {/* Short Summary Section */}
       <Box
         sx={{
           borderLeft: "2px solid #e28a3a",
@@ -311,10 +333,10 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             color: "rgba(255, 255, 255, 0.7)",
             fontSize: "0.95rem",
             lineHeight: 1.6,
-            fontStyle: "italic",
+            fontStyle: product.summary ? "italic" : "normal",
           }}
         >
-          {product.summary || "No summary description available for this motorcycle model."}
+          {product.summary || "No data"}
         </Typography>
       </Box>
 

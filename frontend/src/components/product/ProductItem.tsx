@@ -7,7 +7,6 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
-  Rating,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import SpeedIcon from "@mui/icons-material/Speed";
@@ -36,12 +35,25 @@ const ProductItem = ({ product }: ProductItemProps) => {
   const hasDiscount = product.discountPrice && product.discountPrice < product.basePrice;
   const displayPrice = hasDiscount ? product.discountPrice : product.basePrice;
 
-  // Resolve specs dynamically from backend model or default to realistic model specs.
-  const ccVal = 650;
-  const hpVal = 95;
-  const isElectric = product.category?.categoryName?.toLowerCase() === "electric";
-  const transVal = isElectric ? "Direct" : (ccVal > 900 ? "DCT" : "Manual");
-  const absVal = "Standard";
+  // Extract specs dynamically if present, else fallback to No data
+  const specs = product.specifications || [];
+  const findSpec = (keyword: string) => {
+    const found = specs.find((s) =>
+      s.keyCode?.toLowerCase().includes(keyword) || s.displayName?.toLowerCase().includes(keyword)
+    );
+    if (!found) return "No data";
+    if (found.dataType === "select" && found.optionValue) return found.optionValue;
+    if (found.dataType === "number" && found.valueNumber != null) {
+      return found.unit ? `${found.valueNumber} ${found.unit}` : String(found.valueNumber);
+    }
+    return found.value || "No data";
+  };
+
+  const engineVal = findSpec("displacement") !== "No data" ? findSpec("displacement") : findSpec("engine");
+  const powerVal = findSpec("power") !== "No data" ? findSpec("power") : findSpec("hp");
+  const transVal = findSpec("transmission") !== "No data" ? findSpec("transmission") : findSpec("gear");
+  const absVal = findSpec("abs");
+  const yearText = product.createdAt ? new Date(product.createdAt).getFullYear() : "No data";
 
   const getTagColor = (catName: string) => {
     const name = catName.toLowerCase();
@@ -99,8 +111,8 @@ const ProductItem = ({ product }: ProductItemProps) => {
             position: "absolute",
             top: 12,
             left: 12,
-            backgroundColor: getTagColor(product.category?.categoryName || "Sport"),
-            color: getTagTextColor(product.category?.categoryName || "Sport"),
+            backgroundColor: getTagColor(product.category?.categoryName || "No data"),
+            color: getTagTextColor(product.category?.categoryName || "No data"),
             px: 1.5,
             py: 0.4,
             borderRadius: "4px",
@@ -111,7 +123,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
             zIndex: 3,
           }}
         >
-          {product.category?.categoryName || "Sport"}
+          {product.category?.categoryName || "No data"}
         </Box>
 
         {/* Favorite Heart Button */}
@@ -152,8 +164,8 @@ const ProductItem = ({ product }: ProductItemProps) => {
         )}
         <Box
           component="img"
-          src={product.thumbnail || "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=400"}
-          alt={product.productName}
+          src={product.thumbnail || ""}
+          alt={product.productName || "Product"}
           sx={{
             width: "100%",
             height: "100%",
@@ -184,7 +196,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
             zIndex: 3,
           }}
         >
-          2024
+          {yearText}
         </Box>
       </Box>
 
@@ -202,7 +214,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
             display: "block",
           }}
         >
-          {product.brand?.brandName || "MUTED BRAND"}
+          {product.brand?.brandName || "No data"}
         </Typography>
 
         {/* Model/Product Name */}
@@ -221,26 +233,13 @@ const ProductItem = ({ product }: ProductItemProps) => {
             WebkitBoxOrient: "vertical",
           }}
         >
-          {product.productName}
+          {product.productName || "No data"}
         </Typography>
 
-        {/* Rating Line */}
+        {/* Rating Line showing No data */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.8, mb: 2.5 }}>
-          <Rating
-            value={4.9}
-            precision={0.1}
-            readOnly
-            size="small"
-            sx={{
-              color: "#ea580c",
-              "& .MuiRating-iconEmpty": { color: "rgba(255,255,255,0.15)" },
-            }}
-          />
-          <Typography variant="caption" sx={{ fontWeight: 700, color: "rgba(255, 255, 255, 0.9)" }}>
-            4.9
-          </Typography>
-          <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
-            (128 reviews)
+          <Typography variant="caption" sx={{ fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>
+            Rating: <Box component="span" sx={{ color: "#e28a3a" }}>No data</Box>
           </Typography>
         </Box>
 
@@ -263,7 +262,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                 Engine
               </Typography>
               <Typography variant="caption" sx={{ fontWeight: 700, color: "white", fontSize: "0.8rem" }}>
-                {isElectric ? "Electric" : `${ccVal}cc`}
+                {engineVal}
               </Typography>
             </Box>
           </Box>
@@ -275,7 +274,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                 Power
               </Typography>
               <Typography variant="caption" sx={{ fontWeight: 700, color: "white", fontSize: "0.8rem" }}>
-                {hpVal} HP
+                {powerVal}
               </Typography>
             </Box>
           </Box>
