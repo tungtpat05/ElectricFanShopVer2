@@ -8,26 +8,32 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Button,
   CircularProgress,
   InputAdornment,
   Alert,
+  FormHelperText,
 } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
 import SectionCard from "../common/SectionCard";
 import { SpecDefinition, ProductSpecification } from "../../../types/specDefinition";
 import { getSpecDefinitionsByCategory } from "../../../services/specDefinitionService";
-import {
-  getProductSpecifications,
-  createProductSpecification,
-  updateProductSpecification,
-} from "../../../services/productService";
+import { getProductSpecifications } from "../../../services/productService";
+
+export interface SpecValueState {
+  value: string;
+  valueNumber: string;
+  optionId: string;
+  specId?: number;
+}
 
 interface SpecificationSectionProps {
   categoryId?: number;
   productId?: number;
   formData: any;
   onChange: (field: string, value: any) => void;
+  specValues: Record<number, SpecValueState>;
+  onSpecValuesChange: React.Dispatch<React.SetStateAction<Record<number, SpecValueState>>>;
+  onSpecDefsLoaded?: (defs: SpecDefinition[]) => void;
+  errors?: Record<string, string>;
 }
 
 const SpecificationSection: React.FC<SpecificationSectionProps> = ({
@@ -35,32 +41,21 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
   productId,
   formData,
   onChange,
+  specValues,
+  onSpecValuesChange,
+  onSpecDefsLoaded,
+  errors,
 }) => {
   const [specDefs, setSpecDefs] = useState<SpecDefinition[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Form values state for spec definitions: specDefId -> { value, valueNumber, optionId, specId? }
-  const [specValues, setSpecValues] = useState<
-    Record<
-      number,
-      {
-        value: string;
-        valueNumber: string;
-        optionId: string;
-        specId?: number;
-      }
-    >
-  >({});
-
-  const [saving, setSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
-  const [saveError, setSaveError] = useState<string | null>(null);
-
   useEffect(() => {
     const loadData = async () => {
       if (!categoryId) {
         setSpecDefs([]);
+        onSpecDefsLoaded?.([]);
+        onSpecValuesChange({});
         return;
       }
       setLoading(true);
@@ -68,6 +63,7 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
       try {
         const defs = await getSpecDefinitionsByCategory(categoryId, true);
         setSpecDefs(defs);
+        onSpecDefsLoaded?.(defs);
 
         let currentSpecs: ProductSpecification[] = [];
         if (productId) {
@@ -75,22 +71,22 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
         }
 
         // Initialize form values state
-        const initialMap: Record<
-          number,
-          { value: string; valueNumber: string; optionId: string; specId?: number }
-        > = {};
+        const initialMap: Record<number, SpecValueState> = {};
 
         defs.forEach((def) => {
           const found = currentSpecs.find((s) => s.specDefinitionId === def.id);
           initialMap[def.id] = {
             value: found?.value || "",
-            valueNumber: found?.valueNumber !== undefined && found?.valueNumber !== null ? String(found.valueNumber) : "",
+            valueNumber:
+              found?.valueNumber !== undefined && found?.valueNumber !== null
+                ? String(found.valueNumber)
+                : "",
             optionId: found?.optionId ? String(found.optionId) : "",
             specId: found?.id,
           };
         });
 
-        setSpecValues(initialMap);
+        onSpecValuesChange(initialMap);
       } catch (err: any) {
         console.error("Failed to load specifications data:", err);
         setError("Failed to load category specification fields.");
@@ -107,7 +103,7 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
     field: "value" | "valueNumber" | "optionId",
     val: string
   ) => {
-    setSpecValues((prev) => ({
+    onSpecValuesChange((prev) => ({
       ...prev,
       [specDefId]: {
         ...(prev[specDefId] || { value: "", valueNumber: "", optionId: "" }),
@@ -116,73 +112,13 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
     }));
   };
 
-  const handleSaveSpecs = async () => {
-    if (!productId) {
-      alert("Please save the basic product information first before saving detailed specifications.");
-      return;
-    }
-
-    setSaving(true);
-    setSaveSuccess(null);
-    setSaveError(null);
-
-    try {
-      for (const def of specDefs) {
-        const valState = specValues[def.id];
-        if (!valState) continue;
-
-        const hasTextValue = valState.value.trim().length > 0;
-        const hasNumberValue = valState.valueNumber.trim().length > 0;
-        const hasOptionValue = valState.optionId !== "";
-
-        const hasAnyValue = hasTextValue || hasNumberValue || hasOptionValue;
-
-        if (valState.specId) {
-          // Update existing
-          if (hasAnyValue) {
-            await updateProductSpecification(productId, valState.specId, {
-              specDefinitionId: def.id,
-              value: hasTextValue ? valState.value.trim() : undefined,
-              valueNumber: hasNumberValue ? Number(valState.valueNumber) : undefined,
-              optionId: hasOptionValue ? Number(valState.optionId) : undefined,
-            });
-          }
-        } else if (hasAnyValue) {
-          // Create new
-          const created = await createProductSpecification(productId, {
-            specDefinitionId: def.id,
-            value: hasTextValue ? valState.value.trim() : undefined,
-            valueNumber: hasNumberValue ? Number(valState.valueNumber) : undefined,
-            optionId: hasOptionValue ? Number(valState.optionId) : undefined,
-          });
-
-          // update local specId
-          setSpecValues((prev) => ({
-            ...prev,
-            [def.id]: {
-              ...prev[def.id],
-              specId: created.id,
-            },
-          }));
-        }
-      }
-
-      setSaveSuccess("Specifications saved successfully!");
-    } catch (err: any) {
-      console.error("Failed to save product specifications:", err);
-      setSaveError(err?.response?.data?.message || err?.message || "Failed to save specifications.");
-    } finally {
-      setSaving(false);
-    }
-  };
-
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       {/* 1. Category Specifications Section */}
       <SectionCard title="Category Specifications">
         {!categoryId ? (
           <Alert severity="warning" sx={{ backgroundColor: "rgba(234, 179, 8, 0.1)", color: "#facc15" }}>
-            Please select a category in the <strong>Basic Info</strong> tab first to load specification fields.
+            Please select a category in <strong>Product Identity</strong> above to load specification fields.
           </Alert>
         ) : loading ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
@@ -196,22 +132,15 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
           </Typography>
         ) : (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
-            {saveSuccess && <Alert severity="success">{saveSuccess}</Alert>}
-            {saveError && <Alert severity="error">{saveError}</Alert>}
-
-            {!productId && (
-              <Alert severity="info" sx={{ backgroundColor: "rgba(59, 130, 246, 0.1)", color: "#60a5fa" }}>
-                Fill out the values below. After publishing the product, click <strong>"Save Specifications"</strong> to commit these fields.
-              </Alert>
-            )}
-
             <Grid container spacing={2.5}>
               {specDefs.map((def) => {
                 const curVal = specValues[def.id] || { value: "", valueNumber: "", optionId: "" };
+                const specErr = errors?.[`spec_${def.id}`];
+
                 return (
                   <Grid key={def.id} size={{ xs: 12, sm: 6 }}>
                     {def.dataType === "select" ? (
-                      <FormControl fullWidth size="small">
+                      <FormControl fullWidth size="small" error={Boolean(specErr)}>
                         <InputLabel sx={{ color: "#71717a", fontWeight: 600, fontSize: "0.85rem" }}>
                           {def.displayName.toUpperCase()}{def.isRequired ? " *" : ""}
                         </InputLabel>
@@ -230,6 +159,7 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
                             </MenuItem>
                           ))}
                         </Select>
+                        {specErr && <FormHelperText color="error">{specErr}</FormHelperText>}
                       </FormControl>
                     ) : def.dataType === "number" ? (
                       <TextField
@@ -239,6 +169,8 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
                         placeholder={`e.g. 649`}
                         value={curVal.valueNumber}
                         onChange={(e) => handleSpecFieldChange(def.id, "valueNumber", e.target.value)}
+                        error={Boolean(specErr)}
+                        helperText={specErr}
                         InputProps={{
                           endAdornment: def.unit ? (
                             <InputAdornment position="end" sx={{ "& p": { color: "#a1a1aa", fontWeight: 600 } }}>
@@ -257,6 +189,8 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
                         placeholder={`e.g. 95 HP @ 12,000 rpm`}
                         value={curVal.value}
                         onChange={(e) => handleSpecFieldChange(def.id, "value", e.target.value)}
+                        error={Boolean(specErr)}
+                        helperText={specErr}
                         sx={{
                           "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
                         }}
@@ -266,25 +200,6 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
                 );
               })}
             </Grid>
-
-            {productId && (
-              <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-                <Button
-                  variant="contained"
-                  startIcon={<SaveIcon />}
-                  onClick={handleSaveSpecs}
-                  disabled={saving}
-                  sx={{
-                    backgroundColor: "#ff6b35",
-                    color: "#ffffff",
-                    fontWeight: 700,
-                    "&:hover": { backgroundColor: "#e05a2b" },
-                  }}
-                >
-                  {saving ? "Saving Specs..." : "Save Specifications"}
-                </Button>
-              </Box>
-            )}
           </Box>
         )}
       </SectionCard>
@@ -351,3 +266,4 @@ const SpecificationSection: React.FC<SpecificationSectionProps> = ({
 };
 
 export default SpecificationSection;
+

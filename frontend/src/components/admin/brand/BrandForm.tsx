@@ -93,12 +93,15 @@ const BrandForm = ({ mode, brandId, initialData }: BrandFormProps) => {
     };
 
     try {
+      let targetBrandId: number;
       if (mode === "add") {
-        await createBrand(payload);
-      } else if (mode === "edit" && brandId) {
-        await updateBrand(Number(brandId), payload);
+        const created = await createBrand(payload);
+        targetBrandId = created.id;
+      } else {
+        targetBrandId = Number(brandId);
+        await updateBrand(targetBrandId, payload);
       }
-      navigate("/admin/brands");
+      navigate(`/admin/brands/edit/${targetBrandId}`);
     } catch (err: any) {
       console.error("Failed to commit brand changes:", err);
       setSubmitError(err?.response?.data?.message || err?.message || "Failed to commit brand changes. Please try again.");

@@ -216,6 +216,11 @@ const SignUpPage = () => {
                     </Box>
 
                     {/* Form */}
+                    {error && (
+                        <Alert severity="error">
+                            {error}
+                        </Alert>
+                    )}
                     <Stack spacing={3} component="form" noValidate onSubmit={handleSubmit}>
                         <TextField
                             required

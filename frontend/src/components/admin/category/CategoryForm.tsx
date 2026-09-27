@@ -117,12 +117,15 @@ const CategoryForm = ({ mode, categoryId, initialData }: CategoryFormProps) => {
     };
 
     try {
+      let targetCategoryId: number;
       if (mode === "add") {
-        await createCategory(payload);
-      } else if (mode === "edit" && categoryId) {
-        await updateCategory(Number(categoryId), payload);
+        const created = await createCategory(payload);
+        targetCategoryId = created.id;
+      } else {
+        targetCategoryId = Number(categoryId);
+        await updateCategory(targetCategoryId, payload);
       }
-      navigate("/admin/categories");
+      navigate(`/admin/categories/edit/${targetCategoryId}`);
     } catch (err: any) {
       console.error("Failed to commit category changes:", err);
       setSubmitError(err?.response?.data?.message || err?.message || "Failed to commit category changes. Please try again.");

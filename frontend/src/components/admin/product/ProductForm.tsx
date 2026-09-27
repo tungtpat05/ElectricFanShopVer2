@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import BasicInfoSection from "./BasicInfoSection";
 import PricingSection from "./PricingSection";
-import SpecificationSection from "./SpecificationSection";
+import SpecificationSection, { SpecValueState } from "./SpecificationSection";
 import MediaSection from "./MediaSection";
 import VariantSection from "./VariantSection";
 import SectionCard from "../common/SectionCard";
@@ -12,9 +12,15 @@ import SectionCard from "../common/SectionCard";
 import { Brand } from "../../../types/brand";
 import { Category } from "../../../types/category";
 import { Product } from "../../../types/product";
+import { SpecDefinition } from "../../../types/specDefinition";
 import { getBrands } from "../../../services/brandService";
 import { getCategories } from "../../../services/categoryService";
-import { createProduct, updateProduct } from "../../../services/productService";
+import {
+  createProduct,
+  updateProduct,
+  createProductSpecification,
+  updateProductSpecification,
+} from "../../../services/productService";
 
 interface ProductFormProps {
   mode: "add" | "edit";
@@ -22,7 +28,7 @@ interface ProductFormProps {
   initialData?: Product | null;
 }
 
-const tabsList = ["Basic Info", "Pricing", "Specifications", "Product Images", "Variants"];
+const tabsList = ["General Information", "Images", "Variants"];
 
 const slugify = (text: string) => {
   return text
@@ -57,10 +63,14 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
     isActive: true,
   });
 
+  // Specifications state
+  const [specValues, setSpecValues] = useState<Record<number, SpecValueState>>({});
+  const [specDefs, setSpecDefs] = useState<SpecDefinition[]>([]);
+
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  
+
   const [loadingOptions, setLoadingOptions] = useState(false);
   const [optionsError, setOptionsError] = useState<string | null>(null);
 
@@ -159,23 +169,39 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
     if (!formData.thumbnail.trim()) {
       tempErrors.thumbnail = "Thumbnail is required";
     }
+
+    // Validate required category specification fields
+    specDefs.forEach((def) => {
+      if (def.isRequired) {
+        const valState = specValues[def.id];
+        const hasValue =
+          valState &&
+          (valState.value?.trim().length > 0 ||
+            valState.valueNumber?.trim().length > 0 ||
+            valState.optionId !== "");
+        if (!hasValue) {
+          tempErrors[`spec_${def.id}`] = `${def.displayName} is required`;
+        }
+      }
+    });
+
     setErrors(tempErrors);
 
     if (Object.keys(tempErrors).length > 0) {
-      // Auto-switch to the first tab that has an error
+      // Auto-switch to tab containing error
       if (
         tempErrors.productName ||
         tempErrors.slug ||
         tempErrors.brandId ||
         tempErrors.categoryId ||
         tempErrors.summary ||
-        tempErrors.description
+        tempErrors.description ||
+        tempErrors.basePrice ||
+        Object.keys(tempErrors).some((k) => k.startsWith("spec_"))
       ) {
         setActiveTab(0);
-      } else if (tempErrors.basePrice) {
-        setActiveTab(1);
       } else if (tempErrors.thumbnail) {
-        setActiveTab(3);
+        setActiveTab(1); // Images tab
       }
       return false;
     }
@@ -209,12 +235,49 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
     };
 
     try {
+      let targetProductId: number;
+
       if (mode === "add") {
-        await createProduct(payload);
-      } else if (mode === "edit" && productId) {
-        await updateProduct(Number(productId), payload);
+        const created = await createProduct(payload);
+        targetProductId = created.id;
+      } else {
+        targetProductId = Number(productId);
+        await updateProduct(targetProductId, payload);
       }
-      navigate("/admin/products");
+
+      // Save category specifications sequentially if any exist
+      if (specDefs.length > 0 && specValues) {
+        for (const def of specDefs) {
+          const valState = specValues[def.id];
+          if (!valState) continue;
+
+          const hasTextValue = valState.value?.trim().length > 0;
+          const hasNumberValue = valState.valueNumber?.trim().length > 0;
+          const hasOptionValue = valState.optionId !== "";
+
+          const hasAnyValue = hasTextValue || hasNumberValue || hasOptionValue;
+
+          if (valState.specId) {
+            if (hasAnyValue) {
+              await updateProductSpecification(targetProductId, valState.specId, {
+                specDefinitionId: def.id,
+                value: hasTextValue ? valState.value.trim() : undefined,
+                valueNumber: hasNumberValue ? Number(valState.valueNumber) : undefined,
+                optionId: hasOptionValue ? Number(valState.optionId) : undefined,
+              });
+            }
+          } else if (hasAnyValue) {
+            await createProductSpecification(targetProductId, {
+              specDefinitionId: def.id,
+              value: hasTextValue ? valState.value.trim() : undefined,
+              valueNumber: hasNumberValue ? Number(valState.valueNumber) : undefined,
+              optionId: hasOptionValue ? Number(valState.optionId) : undefined,
+            });
+          }
+        }
+      }
+
+      navigate(`/admin/products/edit/${targetProductId}`);
     } catch (err: any) {
       console.error("Failed to commit product changes:", err);
       setSubmitError(err?.response?.data?.message || err?.message || "Failed to commit product changes. Please try again.");
@@ -295,10 +358,10 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
       </Box>
 
       {/* 3. Main Form Grid Layout */}
-      <Grid container spacing={3.5}>
-        {/* Left Side: Active Tab content details */}
-        <Grid size={{ xs: 12, lg: 8.5 }}>
-          {activeTab === 0 && (
+      {activeTab === 0 && (
+        <Grid container spacing={3.5}>
+          {/* Left Side: General Information Sections (Basic Info + Pricing + Specs + Shipping) */}
+          <Grid size={{ xs: 12, lg: 8.5 }} sx={{ display: "flex", flexDirection: "column", gap: 3.5 }}>
             <BasicInfoSection
               formData={formData}
               brands={brands}
@@ -306,19 +369,123 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
               onChange={handleFieldChange}
               errors={errors}
             />
-          )}
-          {activeTab === 1 && (
             <PricingSection formData={formData} onChange={handleFieldChange} errors={errors} />
-          )}
-          {activeTab === 2 && (
             <SpecificationSection
               categoryId={formData.categoryId ? Number(formData.categoryId) : undefined}
               productId={productId ? Number(productId) : undefined}
               formData={formData}
               onChange={handleFieldChange}
+              specValues={specValues}
+              onSpecValuesChange={setSpecValues}
+              onSpecDefsLoaded={setSpecDefs}
+              errors={errors}
             />
-          )}
-          {activeTab === 3 && (
+          </Grid>
+
+          {/* Right Side: Options & Actions */}
+          <Grid size={{ xs: 12, lg: 3.5 }} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <SectionCard title="Status & Visibility">
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.isActive}
+                      onChange={(e) => handleFieldChange("isActive", e.target.checked)}
+                      sx={{
+                        "& .MuiSwitch-switchBase.Mui-checked": {
+                          color: "#ff6b35",
+                        },
+                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                          backgroundColor: "#ff6b35",
+                        },
+                      }}
+                    />
+                  }
+                  label="Active Status"
+                  labelPlacement="start"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mx: 0,
+                    color: "#e4e4e7",
+                    "& .MuiTypography-root": { fontSize: "0.9rem", fontWeight: 600 },
+                  }}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.isFeatured}
+                      onChange={(e) => handleFieldChange("isFeatured", e.target.checked)}
+                      sx={{
+                        "& .MuiSwitch-switchBase.Mui-checked": {
+                          color: "#ff6b35",
+                        },
+                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                          backgroundColor: "#ff6b35",
+                        },
+                      }}
+                    />
+                  }
+                  label="Featured Product"
+                  labelPlacement="start"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mx: 0,
+                    color: "#e4e4e7",
+                    "& .MuiTypography-root": { fontSize: "0.9rem", fontWeight: 600 },
+                  }}
+                />
+              </Box>
+            </SectionCard>
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+              <Button
+                fullWidth
+                type="submit"
+                variant="contained"
+                disabled={submitting}
+                sx={{
+                  py: 1.25,
+                  backgroundColor: "#ff6b35",
+                  color: "#ffffff",
+                  fontWeight: 700,
+                  borderRadius: 2,
+                  boxShadow: "0 4px 12px rgba(255, 107, 53, 0.15)",
+                  "&:hover": {
+                    backgroundColor: "#e05a2b",
+                  },
+                }}
+              >
+                {submitting ? "Saving..." : mode === "add" ? "Publish Product" : "Save Changes"}
+              </Button>
+
+              <Button
+                fullWidth
+                disabled={submitting}
+                onClick={handleCancel}
+                sx={{
+                  py: 1.25,
+                  color: "#71717a",
+                  fontWeight: 600,
+                  borderRadius: 2,
+                  "&:hover": {
+                    color: "#ef4444",
+                    backgroundColor: "rgba(239, 68, 68, 0.05)",
+                  },
+                }}
+              >
+                Cancel
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+      )}
+
+      {activeTab === 1 && (
+        <Grid container spacing={3.5}>
+          <Grid size={{ xs: 12 }}>
             <MediaSection
               productId={productId ? Number(productId) : undefined}
               thumbnail={formData.thumbnail}
@@ -330,117 +497,24 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
               error={errors.thumbnail}
               productName={formData.productName}
             />
-          )}
-          {activeTab === 4 && (
+          </Grid>
+        </Grid>
+      )}
+
+      {activeTab === 2 && (
+        <Grid container spacing={3.5}>
+          <Grid size={{ xs: 12 }}>
             <VariantSection
               productId={productId ? Number(productId) : undefined}
               productName={formData.productName}
               disabled={submitting}
             />
-          )}
+          </Grid>
         </Grid>
-
-        {/* Right Side: Options & Actions */}
-        <Grid size={{ xs: 12, lg: 3.5 }} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <SectionCard title="Status & Visibility">
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formData.isActive}
-                    onChange={(e) => handleFieldChange("isActive", e.target.checked)}
-                    sx={{
-                      "& .MuiSwitch-switchBase.Mui-checked": {
-                        color: "#ff6b35",
-                      },
-                      "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                        backgroundColor: "#ff6b35",
-                      },
-                    }}
-                  />
-                }
-                label="Active Status"
-                labelPlacement="start"
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  mx: 0,
-                  color: "#e4e4e7",
-                  "& .MuiTypography-root": { fontSize: "0.9rem", fontWeight: 600 },
-                }}
-              />
-
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formData.isFeatured}
-                    onChange={(e) => handleFieldChange("isFeatured", e.target.checked)}
-                    sx={{
-                      "& .MuiSwitch-switchBase.Mui-checked": {
-                        color: "#ff6b35",
-                      },
-                      "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                        backgroundColor: "#ff6b35",
-                      },
-                    }}
-                  />
-                }
-                label="Featured Product"
-                labelPlacement="start"
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  mx: 0,
-                  color: "#e4e4e7",
-                  "& .MuiTypography-root": { fontSize: "0.9rem", fontWeight: 600 },
-                }}
-              />
-            </Box>
-          </SectionCard>
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-            <Button
-              fullWidth
-              type="submit"
-              variant="contained"
-              disabled={submitting}
-              sx={{
-                py: 1.25,
-                backgroundColor: "#ff6b35",
-                color: "#ffffff",
-                fontWeight: 700,
-                borderRadius: 2,
-                boxShadow: "0 4px 12px rgba(255, 107, 53, 0.15)",
-                "&:hover": {
-                  backgroundColor: "#e05a2b",
-                },
-              }}
-            >
-              {submitting ? "Saving..." : mode === "add" ? "Publish Product" : "Save Changes"}
-            </Button>
-
-            <Button
-              fullWidth
-              disabled={submitting}
-              onClick={handleCancel}
-              sx={{
-                py: 1.25,
-                color: "#71717a",
-                fontWeight: 600,
-                borderRadius: 2,
-                "&:hover": {
-                  color: "#ef4444",
-                  backgroundColor: "rgba(239, 68, 68, 0.05)",
-                },
-              }}
-            >
-              Cancel
-            </Button>
-          </Box>
-        </Grid>
-      </Grid>
+      )}
     </Box>
   );
 };
 
 export default ProductForm;
+
