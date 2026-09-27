@@ -1,10 +1,7 @@
-import { Box, Typography, Button, InputBase, Container } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { Box, Typography, Button, Container } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useNavigate } from "react-router-dom";
-
-const POPULAR_TAGS = ["Honda", "BMW GS", "Ducati", "Adventure", "Sport", "Electric"];
 
 const HomeHero = () => {
   const navigate = useNavigate();
@@ -97,104 +94,6 @@ const HomeHero = () => {
           Discover over 10,000 motorcycles from the world's greatest manufacturers.
           Sport, naked, adventure, touring, electric — every machine, one destination.
         </Typography>
-
-        {/* Search Bar */}
-        <Box
-          sx={{
-            width: "100%",
-            maxWidth: "680px",
-            mx: "auto",
-            backgroundColor: "rgba(18, 18, 20, 0.75)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            borderRadius: "100px",
-            pl: 3,
-            pr: 1,
-            py: 1,
-            display: "flex",
-            alignItems: "center",
-            boxShadow: "0 20px 40px rgba(0, 0, 0, 0.5)",
-            mb: 3.5,
-            transition: "border-color 0.2s, box-shadow 0.2s",
-            "&:focus-within": {
-              borderColor: "#e28a3a",
-              boxShadow: "0 20px 40px rgba(226, 138, 58, 0.15)",
-            },
-          }}
-        >
-          <SearchIcon sx={{ color: "rgba(255, 255, 255, 0.4)", mr: 1.5 }} />
-          <InputBase
-            placeholder="Search by brand, model, or category..."
-            sx={{
-              flex: 1,
-              color: "white",
-              fontSize: "0.95rem",
-              "& input::placeholder": {
-                color: "rgba(255, 255, 255, 0.4)",
-                opacity: 1,
-              },
-            }}
-          />
-          <Button
-            variant="contained"
-            onClick={() => navigate("/products")}
-            endIcon={<ArrowForwardIcon />}
-            sx={{
-              backgroundColor: "#e28a3a",
-              color: "#000000",
-              fontWeight: 700,
-              borderRadius: "100px",
-              px: 4,
-              py: 1.2,
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "#f0a256",
-              },
-            }}
-          >
-            Search
-          </Button>
-        </Box>
-
-        {/* Popular Tags */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: 1.5,
-            mb: 6,
-          }}
-        >
-          <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.4)", fontSize: "0.85rem" }}>
-            Popular:
-          </Typography>
-          {POPULAR_TAGS.map((tag) => (
-            <Box
-              key={tag}
-              onClick={() => navigate("/products")}
-              sx={{
-                color: "rgba(255, 255, 255, 0.8)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                borderRadius: "100px",
-                px: 2,
-                py: 0.5,
-                fontSize: "0.8rem",
-                fontWeight: 500,
-                cursor: "pointer",
-                transition: "all 0.2s",
-                "&:hover": {
-                  borderColor: "#e28a3a",
-                  color: "#e28a3a",
-                  backgroundColor: "rgba(226, 138, 58, 0.05)",
-                },
-              }}
-            >
-              {tag}
-            </Box>
-          ))}
-        </Box>
 
         {/* CTA Buttons */}
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 3, flexWrap: "wrap" }}>
