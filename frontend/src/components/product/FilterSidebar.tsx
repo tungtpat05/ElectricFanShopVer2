@@ -8,13 +8,11 @@ import {
   Skeleton,
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import FlashOnIcon from "@mui/icons-material/FlashOn";
 import { useBrands } from "../../hooks/useBrands";
 import { useCategories } from "../../hooks/useCategories";
 
 const ENGINES = ["125cc", "300cc", "500cc", "650cc", "900cc+"];
 const TRANSMISSIONS = ["Manual", "Automatic", "DCT"];
-const CONDITIONS = ["New", "Used"];
 const FEATURES = ["ABS", "Quick Shifter", "Traction Control"];
 
 const FilterSidebar = () => {
@@ -325,101 +323,9 @@ const FilterSidebar = () => {
         </Box>
       </Box>
 
-      {/* Fuel Type */}
-      <Box>
-        <Typography
-          variant="caption"
-          sx={{
-            fontWeight: 800,
-            color: "rgba(255,255,255,0.4)",
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            display: "block",
-            mb: 1.5,
-          }}
-        >
-          Fuel Type
-        </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          <Box
-            sx={{
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: "20px",
-              px: 2.5,
-              py: 0.6,
-              color: "rgba(255,255,255,0.6)",
-              fontSize: "0.8rem",
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "all 0.15s",
-              "&:hover": { borderColor: "#e28a3a", color: "#e28a3a" },
-            }}
-          >
-            Gasoline
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 0.5,
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: "20px",
-              px: 2.5,
-              py: 0.6,
-              color: "rgba(255,255,255,0.6)",
-              fontSize: "0.8rem",
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "all 0.15s",
-              "&:hover": { borderColor: "#e28a3a", color: "#e28a3a5" },
-            }}
-          >
-            <FlashOnIcon sx={{ fontSize: "0.95rem", color: "#e28a3a" }} />
-            Electric
-          </Box>
-        </Box>
-      </Box>
 
-      {/* Condition tags */}
-      <Box>
-        <Typography
-          variant="caption"
-          sx={{
-            fontWeight: 800,
-            color: "rgba(255,255,255,0.4)",
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            display: "block",
-            mb: 1.5,
-          }}
-        >
-          Condition
-        </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {CONDITIONS.map((cond) => (
-            <Box
-              key={cond}
-              sx={{
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "20px",
-                px: 3,
-                py: 0.6,
-                color: "rgba(255,255,255,0.6)",
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "all 0.15s",
-                "&:hover": {
-                  borderColor: "#e28a3a",
-                  color: "#e28a3a",
-                },
-              }}
-            >
-              {cond}
-            </Box>
-          ))}
-        </Box>
-      </Box>
+
+
 
       {/* Features checkboxes */}
       <Box>
