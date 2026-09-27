@@ -3,22 +3,20 @@ import {
   Box,
   Typography,
   Button,
-  Avatar,
-  TextField,
   CircularProgress,
   IconButton,
   Tooltip,
   Paper,
-  Chip
+  Chip,
 } from "@mui/material";
 import {
   ArrowUpward,
   ArrowDownward,
   Delete,
-  CloudUpload,
   DragIndicator,
   AddPhotoAlternate,
-  Refresh
+  Refresh,
+  PhotoLibrary,
 } from "@mui/icons-material";
 import SectionCard from "../common/SectionCard";
 import {
@@ -27,31 +25,21 @@ import {
   addProductImage,
   updateProductImage,
   deleteProductImage,
-  reorderProductImages
+  reorderProductImages,
 } from "../../../services/productService";
 import { ProductImage } from "../../../types/product";
 
-interface MediaSectionProps {
+interface ImageSectionProps {
   productId?: number;
-  thumbnail: string;
-  onChange: (url: string, publicId: string) => void;
   disabled?: boolean;
-  error?: string;
   productName?: string;
 }
 
-const MediaSection = ({
+const ImageSection = ({
   productId,
-  thumbnail,
-  onChange,
   disabled,
-  error,
-  productName
-}: MediaSectionProps) => {
-  // Thumbnail State
-  const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
-  const [thumbnailError, setThumbnailError] = useState<string | null>(null);
-
+  productName,
+}: ImageSectionProps) => {
   // Gallery Images State
   const [images, setImages] = useState<ProductImage[]>([]);
   const [loadingImages, setLoadingImages] = useState(false);
@@ -83,27 +71,6 @@ const MediaSection = ({
     };
     void fetchImages();
   }, [productId]);
-
-  // Thumbnail Upload Handler
-  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploadingThumbnail(true);
-    setThumbnailError(null);
-
-    try {
-      const response = await uploadProductImage(file);
-      onChange(response.url, response.publicId);
-    } catch (err: any) {
-      console.error("Failed to upload thumbnail:", err);
-      setThumbnailError(
-        err?.response?.data?.message || err?.message || "Failed to upload thumbnail."
-      );
-    } finally {
-      setUploadingThumbnail(false);
-    }
-  };
 
   // Add New Gallery Image Handler
   const handleAddGalleryImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,7 +110,7 @@ const MediaSection = ({
       const uploadRes = await uploadProductImage(file);
       const updated = await updateProductImage(productId, imageId, {
         imageUrl: uploadRes.url,
-        imagePublicId: uploadRes.publicId
+        imagePublicId: uploadRes.publicId,
       });
       setImages((prev) =>
         prev.map((img) => (img.id === imageId ? updated : img))
@@ -256,89 +223,42 @@ const MediaSection = ({
     }
   };
 
-  return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 3.5 }}>
-      {/* SECTION 1: THUMBNAIL IMAGE */}
-      <SectionCard title="Product Thumbnail">
+  if (!productId) {
+    return (
+      <SectionCard title="Product Gallery Images & Display Order">
         <Box
           sx={{
+            py: 6,
+            px: 3,
+            textAlign: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.02)",
+            borderRadius: 2,
+            border: "1px dashed rgba(255, 255, 255, 0.12)",
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: { xs: "center", sm: "flex-start" },
-            gap: 3,
-            py: 1
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Avatar
-            variant="rounded"
-            src={thumbnail.trim() || undefined}
-            sx={{
-              width: 140,
-              height: 140,
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-              backgroundColor: "#27272a",
-              fontSize: "2.5rem",
-              fontWeight: 600,
-              color: "#ff6b35"
-            }}
-          >
-            {!thumbnail.trim() && (productName ? productName.charAt(0).toUpperCase() : "?")}
-          </Avatar>
-          <Box sx={{ flex: 1, width: "100%", display: "flex", flexDirection: "column", gap: 2 }}>
-            <TextField
-              required
-              fullWidth
-              label="THUMBNAIL IMAGE URL"
-              placeholder="No thumbnail uploaded yet"
-              value={thumbnail}
-              error={Boolean(error)}
-              helperText={error}
-              slotProps={{
-                input: {
-                  readOnly: true
-                }
-              }}
-              InputProps={{
-                readOnly: true
-              }}
-              sx={{
-                "& label": { color: "#71717a", fontWeight: 600, fontSize: "0.85rem" },
-                "& input": { fontSize: "0.95rem", color: "#a1a1aa" }
-              }}
-            />
-            <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
-              <Button
-                variant="outlined"
-                component="label"
-                disabled={disabled || uploadingThumbnail}
-                startIcon={uploadingThumbnail ? <CircularProgress size={18} color="inherit" /> : <CloudUpload />}
-                sx={{
-                  borderColor: "#71717a",
-                  color: "#ffffff",
-                  fontWeight: 600,
-                  "&:hover": {
-                    borderColor: "#ff6b35",
-                    backgroundColor: "rgba(255, 107, 53, 0.05)"
-                  }
-                }}
-              >
-                {uploadingThumbnail ? "Uploading..." : "Upload Thumbnail"}
-                <input type="file" hidden accept="image/*" onChange={handleThumbnailUpload} />
-              </Button>
-              {thumbnailError && (
-                <Typography color="error" variant="caption" sx={{ fontWeight: 550 }}>
-                  {thumbnailError}
-                </Typography>
-              )}
-            </Box>
-          </Box>
+          <PhotoLibrary sx={{ fontSize: 48, color: "#71717a", mb: 1.5 }} />
+          <Typography variant="h6" sx={{ color: "#ffffff", fontWeight: 650, mb: 1 }}>
+            Save Basic Info First
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#71717a", maxWidth: 480, mx: "auto", lineHeight: 1.6 }}>
+            Please publish or save the product basic information first. After creation, you will be able to manage gallery images for{" "}
+            <strong style={{ color: "#e4e4e7" }}>{productName || "this product"}</strong> here.
+          </Typography>
         </Box>
       </SectionCard>
+    );
+  }
 
-      {/* SECTION 2: PRODUCT GALLERY IMAGES (ORDERING & MANAGEMENT) */}
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 3.5 }}>
+      {/* PRODUCT GALLERY IMAGES (ORDERING & MANAGEMENT) */}
       <SectionCard title="Product Gallery Images & Display Order">
         <Typography variant="body2" sx={{ color: "#71717a", mb: 2.5, fontWeight: 500 }}>
-          Manage additional product images below. Drag and drop cards or use the Up/Down buttons to adjust display order.
+          Manage additional product gallery images below for {productName || "this product"}. Drag and drop cards or use the Up/Down buttons to adjust display order.
         </Typography>
 
         {galleryError && (
@@ -348,7 +268,7 @@ const MediaSection = ({
               p: 1.5,
               borderRadius: 2,
               backgroundColor: "rgba(239, 68, 68, 0.1)",
-              border: "1px solid rgba(239, 68, 68, 0.2)"
+              border: "1px solid rgba(239, 68, 68, 0.2)",
             }}
           >
             <Typography color="error" variant="caption" sx={{ fontWeight: 600 }}>
@@ -357,21 +277,7 @@ const MediaSection = ({
           </Box>
         )}
 
-        {!productId ? (
-          <Box
-            sx={{
-              p: 3,
-              borderRadius: 2,
-              border: "1px dashed rgba(255, 255, 255, 0.15)",
-              backgroundColor: "#18181b",
-              textAlign: "center"
-            }}
-          >
-            <Typography variant="body2" sx={{ color: "#a1a1aa", fontWeight: 500 }}>
-              Please save the product first to enable adding and reordering gallery images.
-            </Typography>
-          </Box>
-        ) : loadingImages ? (
+        {loadingImages ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
             <CircularProgress color="warning" size={32} />
           </Box>
@@ -380,7 +286,7 @@ const MediaSection = ({
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: 2
+              gap: 2,
             }}
           >
             {images.map((img, index) => {
@@ -413,8 +319,8 @@ const MediaSection = ({
                     cursor: "grab",
                     "&:hover": {
                       borderColor: "rgba(255, 107, 53, 0.4)",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
-                    }
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                    },
                   }}
                 >
                   {/* Drag Handle & Order Badge */}
@@ -428,7 +334,7 @@ const MediaSection = ({
                         color: "#ff6b35",
                         fontWeight: 700,
                         fontSize: "0.75rem",
-                        height: 24
+                        height: 24,
                       }}
                     />
                   </Box>
@@ -444,7 +350,7 @@ const MediaSection = ({
                       objectFit: "cover",
                       borderRadius: 1.5,
                       border: "1px solid rgba(255, 255, 255, 0.1)",
-                      backgroundColor: "#27272a"
+                      backgroundColor: "#27272a",
                     }}
                   />
 
@@ -473,7 +379,7 @@ const MediaSection = ({
                           onClick={() => handleMoveImage(index, "up")}
                           sx={{
                             color: index === 0 ? "#3f3f46" : "#a1a1aa",
-                            "&:hover": { color: "#ff6b35", backgroundColor: "rgba(255, 107, 53, 0.1)" }
+                            "&:hover": { color: "#ff6b35", backgroundColor: "rgba(255, 107, 53, 0.1)" },
                           }}
                         >
                           <ArrowUpward fontSize="small" />
@@ -490,7 +396,7 @@ const MediaSection = ({
                           onClick={() => handleMoveImage(index, "down")}
                           sx={{
                             color: index === images.length - 1 ? "#3f3f46" : "#a1a1aa",
-                            "&:hover": { color: "#ff6b35", backgroundColor: "rgba(255, 107, 53, 0.1)" }
+                            "&:hover": { color: "#ff6b35", backgroundColor: "rgba(255, 107, 53, 0.1)" },
                           }}
                         >
                           <ArrowDownward fontSize="small" />
@@ -521,8 +427,8 @@ const MediaSection = ({
                           "&:hover": {
                             borderColor: "#ff6b35",
                             color: "#ff6b35",
-                            backgroundColor: "rgba(255, 107, 53, 0.05)"
-                          }
+                            backgroundColor: "rgba(255, 107, 53, 0.05)",
+                          },
                         }}
                       >
                         {replacingImageId === img.id ? "Replacing..." : "Replace"}
@@ -543,7 +449,7 @@ const MediaSection = ({
                         onClick={() => handleDeleteGalleryImage(img.id)}
                         sx={{
                           color: "#ef4444",
-                          "&:hover": { backgroundColor: "rgba(239, 68, 68, 0.1)" }
+                          "&:hover": { backgroundColor: "rgba(239, 68, 68, 0.1)" },
                         }}
                       >
                         {deletingImageId === img.id ? (
@@ -572,8 +478,8 @@ const MediaSection = ({
                 transition: "all 0.2s ease",
                 "&:hover": {
                   borderColor: "#ff6b35",
-                  backgroundColor: "rgba(255, 107, 53, 0.03)"
-                }
+                  backgroundColor: "rgba(255, 107, 53, 0.03)",
+                },
               }}
             >
               <Button
@@ -590,7 +496,7 @@ const MediaSection = ({
                   color: "#ffffff",
                   fontWeight: 650,
                   fontSize: "0.9rem",
-                  textTransform: "none"
+                  textTransform: "none",
                 }}
               >
                 {addingImage ? "Uploading new image..." : "+ Add New Product Image"}
@@ -604,4 +510,4 @@ const MediaSection = ({
   );
 };
 
-export default MediaSection;
+export default ImageSection;

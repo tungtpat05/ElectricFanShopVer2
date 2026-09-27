@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Box, Tabs, Tab, Grid, Button, Switch, FormControlLabel, CircularProgress, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import BasicInfoSection from "./BasicInfoSection";
-import PricingSection from "./PricingSection";
-import SpecificationSection, { SpecValueState } from "./SpecificationSection";
-import MediaSection from "./MediaSection";
+import BasicInfoSection, { SpecValueState } from "./BasicInfoSection";
+import ImageSection from "./ImageSection";
 import VariantSection from "./VariantSection";
 import SectionCard from "../common/SectionCard";
 
@@ -28,7 +26,7 @@ interface ProductFormProps {
   initialData?: Product | null;
 }
 
-const tabsList = ["General Information", "Images", "Variants"];
+const tabsList = ["Basic Information", "Images", "Variants"];
 
 const slugify = (text: string) => {
   return text
@@ -188,21 +186,8 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
     setErrors(tempErrors);
 
     if (Object.keys(tempErrors).length > 0) {
-      // Auto-switch to tab containing error
-      if (
-        tempErrors.productName ||
-        tempErrors.slug ||
-        tempErrors.brandId ||
-        tempErrors.categoryId ||
-        tempErrors.summary ||
-        tempErrors.description ||
-        tempErrors.basePrice ||
-        Object.keys(tempErrors).some((k) => k.startsWith("spec_"))
-      ) {
-        setActiveTab(0);
-      } else if (tempErrors.thumbnail) {
-        setActiveTab(1); // Images tab
-      }
+      // All basic fields, pricing, specs, AND thumbnail are now in Tab 0 (General Information)
+      setActiveTab(0);
       return false;
     }
     return true;
@@ -360,24 +345,18 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
       {/* 3. Main Form Grid Layout */}
       {activeTab === 0 && (
         <Grid container spacing={3.5}>
-          {/* Left Side: General Information Sections (Basic Info + Pricing + Specs + Shipping) */}
+          {/* Left Side: General Information Sections (Thumbnail + Basic Info + Pricing + Specs + Shipping) */}
           <Grid size={{ xs: 12, lg: 8.5 }} sx={{ display: "flex", flexDirection: "column", gap: 3.5 }}>
             <BasicInfoSection
               formData={formData}
               brands={brands}
               categories={categories}
               onChange={handleFieldChange}
-              errors={errors}
-            />
-            <PricingSection formData={formData} onChange={handleFieldChange} errors={errors} />
-            <SpecificationSection
-              categoryId={formData.categoryId ? Number(formData.categoryId) : undefined}
-              productId={productId ? Number(productId) : undefined}
-              formData={formData}
-              onChange={handleFieldChange}
               specValues={specValues}
               onSpecValuesChange={setSpecValues}
               onSpecDefsLoaded={setSpecDefs}
+              productId={productId ? Number(productId) : undefined}
+              disabled={submitting}
               errors={errors}
             />
           </Grid>
@@ -486,15 +465,9 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
       {activeTab === 1 && (
         <Grid container spacing={3.5}>
           <Grid size={{ xs: 12 }}>
-            <MediaSection
+            <ImageSection
               productId={productId ? Number(productId) : undefined}
-              thumbnail={formData.thumbnail}
-              onChange={(url, publicId) => {
-                handleFieldChange("thumbnail", url);
-                handleFieldChange("thumbnailPublicId", publicId);
-              }}
               disabled={submitting}
-              error={errors.thumbnail}
               productName={formData.productName}
             />
           </Grid>
@@ -517,4 +490,3 @@ const ProductForm = ({ mode, productId, initialData }: ProductFormProps) => {
 };
 
 export default ProductForm;
-

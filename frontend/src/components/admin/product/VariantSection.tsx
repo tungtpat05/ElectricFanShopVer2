@@ -299,15 +299,20 @@ const VariantSection = ({ productId, productName, disabled }: VariantSectionProp
             textAlign: "center",
             backgroundColor: "rgba(255, 255, 255, 0.02)",
             borderRadius: 2,
-            border: "1px dashed rgba(255, 255, 255, 0.1)"
+            border: "1px dashed rgba(255, 255, 255, 0.12)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Style sx={{ fontSize: 48, color: "#71717a", mb: 1.5 }} />
           <Typography variant="h6" sx={{ color: "#ffffff", fontWeight: 650, mb: 1 }}>
             Save Basic Info First
           </Typography>
-          <Typography variant="body2" sx={{ color: "#71717a", maxWidth: 460, mx: "auto" }}>
-            Please publish or save the product basic information first. After creation, you will be able to manage variants for <strong>{productName || "this product"}</strong> here.
+          <Typography variant="body2" sx={{ color: "#71717a", maxWidth: 480, mx: "auto", lineHeight: 1.6 }}>
+            Please publish or save the product basic information first. After creation, you will be able to manage variants for{" "}
+            <strong style={{ color: "#e4e4e7" }}>{productName || "this product"}</strong> here.
           </Typography>
         </Box>
       </SectionCard>
