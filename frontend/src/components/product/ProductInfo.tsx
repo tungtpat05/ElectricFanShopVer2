@@ -4,15 +4,10 @@ import {
   Typography,
   Chip,
   Button,
-  Grid,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import GppGoodIcon from "@mui/icons-material/GppGood";
-import RestoreIcon from "@mui/icons-material/Restore";
-import StorefrontIcon from "@mui/icons-material/Storefront";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context";
@@ -55,7 +50,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
   const additionalPrice = selectedVariant?.additionalPrice || 0;
   const displayPrice = (baseOrDiscount || 0) + additionalPrice;
-  const monthlyPayment = displayPrice > 0 ? Math.round(displayPrice / 60) : 0;
 
   const categoryName = product.category?.categoryName || "No data";
   const brandName = product.brand?.brandName || "No data";
@@ -195,50 +189,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           borderRadius: "16px",
           p: 3,
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
         }}
       >
-        <Box>
-          <Typography
-            variant="caption"
-            sx={{
-              fontWeight: 800,
-              color: "rgba(255, 255, 255, 0.3)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              display: "block",
-              mb: 0.5,
-            }}
-          >
-            Starting Price
-          </Typography>
-          <Typography variant="h4" sx={{ fontWeight: 800, color: "white" }}>
-            {displayPrice > 0 ? formatPrice(displayPrice) : "No data"}
-          </Typography>
-          <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.3)" }}>
-            MSRP · Excl. dealer fees
-          </Typography>
-        </Box>
-        <Box sx={{ textAlign: "right" }}>
-          <Typography
-            variant="caption"
-            sx={{ color: "rgba(255, 255, 255, 0.4)", display: "block" }}
-          >
-            Est. monthly
-          </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 800, color: "#e28a3a" }}>
-            {monthlyPayment > 0 ? `$${monthlyPayment}` : "No data"}
-            {monthlyPayment > 0 && (
-              <Typography component="span" variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
-                /mo
-              </Typography>
-            )}
-          </Typography>
-          <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.3)" }}>
-            0% APR · 60 months
-          </Typography>
-        </Box>
+        <Typography variant="h4" sx={{ fontWeight: 800, color: "white" }}>
+          {displayPrice > 0 ? formatPrice(displayPrice) : "No data"}
+        </Typography>
       </Box>
 
       {/* Color Selection Picker */}
@@ -452,54 +408,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           Compare
         </Button>
       </Box>
-
-      {/* Services Grid (Benefits List) */}
-      <Grid container spacing={2.5}>
-        <Grid size={{ xs: 6 }} sx={{ display: "flex", gap: 1.5 }}>
-          <LocalShippingIcon sx={{ color: "#e28a3a", mt: 0.2 }} />
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "white" }}>
-              Free Delivery
-            </Typography>
-            <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
-              On new models
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid size={{ xs: 6 }} sx={{ display: "flex", gap: 1.5 }}>
-          <GppGoodIcon sx={{ color: "#e28a3a", mt: 0.2 }} />
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "white" }}>
-              3-Year Warranty
-            </Typography>
-            <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
-              Brand Certified
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid size={{ xs: 6 }} sx={{ display: "flex", gap: 1.5 }}>
-          <RestoreIcon sx={{ color: "#e28a3a", mt: 0.2 }} />
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "white" }}>
-              30-Day Returns
-            </Typography>
-            <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
-              No questions asked
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid size={{ xs: 6 }} sx={{ display: "flex", gap: 1.5 }}>
-          <StorefrontIcon sx={{ color: "#e28a3a", mt: 0.2 }} />
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 700, color: "white" }}>
-              Find a Dealer
-            </Typography>
-            <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.4)" }}>
-              250+ locations
-            </Typography>
-          </Box>
-        </Grid>
-      </Grid>
     </Box>
   );
 };

@@ -70,11 +70,11 @@ const SpecStrip: React.FC<SpecStripProps> = ({ product }) => {
   return (
     <Box
       sx={{
-        backgroundColor: "#0d0d0f",
-        borderTop: "1px solid rgba(255, 255, 255, 0.05)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
-        py: 4,
-        px: { xs: 2, md: 6 },
+        backgroundColor: "#121214",
+        border: "1px solid rgba(255, 255, 255, 0.05)",
+        borderRadius: "16px",
+        py: 3,
+        px: 3,
         width: "100%",
         display: "grid",
         gridTemplateColumns: {

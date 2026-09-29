@@ -147,7 +147,9 @@ const ProductDetailPage = () => {
       </Box>
 
       {/* Quick Specifications Strip */}
-      <SpecStrip product={product} />
+      <Box sx={{ px: { xs: 2, md: 6 }, mb: 6 }}>
+        <SpecStrip product={product} />
+      </Box>
 
       {/* Detailed specs, features and description block */}
       <Box sx={{ px: { xs: 2, md: 6 } }}>
