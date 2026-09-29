@@ -3,28 +3,20 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { Product } from "@/types/product";
-
-export interface CartItem {
-  id: number;
-  product: Product;
-  quantity: number;
-}
+import { CartItemResponse } from "@/types/cart";
 
 interface CartItemCardProps {
-  item: CartItem;
-  onIncrease: (id: number) => void;
-  onDecrease: (id: number) => void;
-  onRemove: (id: number) => void;
+  item: CartItemResponse;
+  onIncrease: (variantId: number) => void;
+  onDecrease: (variantId: number) => void;
+  onRemove: (variantId: number) => void;
 }
 
 const CartItemCard = ({ item, onIncrease, onDecrease, onRemove }: CartItemCardProps) => {
-  const { product, quantity } = item;
+  const { variantId, productName, thumbnail, variantImage, color, unitPrice, quantity, lineTotal } = item;
   
-  const ccVal = 650;
-  const hpVal = 95;
-  const singlePrice = product.discountPrice || product.basePrice;
-  const totalPrice = singlePrice * quantity;
+  const displayImage = variantImage || thumbnail || "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=300";
+  const colorName = color?.colorName || "Standard";
 
   return (
     <Box
@@ -65,8 +57,8 @@ const CartItemCard = ({ item, onIncrease, onDecrease, onRemove }: CartItemCardPr
         >
           <Box
             component="img"
-            src={product.thumbnail || "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=300"}
-            alt={product.productName}
+            src={displayImage}
+            alt={productName}
             sx={{
               width: "100%",
               height: "100%",
@@ -91,7 +83,7 @@ const CartItemCard = ({ item, onIncrease, onDecrease, onRemove }: CartItemCardPr
               display: "block",
             }}
           >
-            {product.brand?.brandName || "Honda"}
+            Color: {colorName}
           </Typography>
 
           <Typography
@@ -105,24 +97,11 @@ const CartItemCard = ({ item, onIncrease, onDecrease, onRemove }: CartItemCardPr
               fontFamily: "'Outfit', sans-serif",
             }}
           >
-            {product.productName}
-          </Typography>
-
-          {/* Mini Specs */}
-          <Typography
-            variant="caption"
-            sx={{
-              color: "rgba(255, 255, 255, 0.4)",
-              display: "block",
-              fontSize: "0.75rem",
-              mb: 2,
-            }}
-          >
-            Engine: {ccVal}cc &nbsp;•&nbsp; Power: {hpVal} HP &nbsp;•&nbsp; {(product.category?.categoryName || "Sport").toUpperCase()}
+            {productName}
           </Typography>
 
           {/* Action Links */}
-          <Box sx={{ display: "flex", gap: 3 }}>
+          <Box sx={{ display: "flex", gap: 3, mt: 1 }}>
             <Button
               variant="text"
               startIcon={<FavoriteBorderIcon sx={{ fontSize: "1rem" }} />}
@@ -143,7 +122,7 @@ const CartItemCard = ({ item, onIncrease, onDecrease, onRemove }: CartItemCardPr
             </Button>
             <Button
               variant="text"
-              onClick={() => onRemove(item.id)}
+              onClick={() => onRemove(variantId)}
               startIcon={<DeleteOutlineIcon sx={{ fontSize: "1rem" }} />}
               sx={{
                 color: "rgba(255, 255, 255, 0.45)",
@@ -187,7 +166,7 @@ const CartItemCard = ({ item, onIncrease, onDecrease, onRemove }: CartItemCardPr
         >
           <IconButton
             size="small"
-            onClick={() => onDecrease(item.id)}
+            onClick={() => onDecrease(variantId)}
             disabled={quantity <= 1}
             sx={{
               color: "rgba(255,255,255,0.7)",
@@ -208,7 +187,7 @@ const CartItemCard = ({ item, onIncrease, onDecrease, onRemove }: CartItemCardPr
           >
             {quantity}
           </Typography>
-          <IconButton size="small" onClick={() => onIncrease(item.id)} sx={{ color: "rgba(255,255,255,0.7)" }}>
+          <IconButton size="small" onClick={() => onIncrease(variantId)} sx={{ color: "rgba(255,255,255,0.7)" }}>
             <AddIcon sx={{ fontSize: "0.95rem" }} />
           </IconButton>
         </Box>
@@ -216,11 +195,11 @@ const CartItemCard = ({ item, onIncrease, onDecrease, onRemove }: CartItemCardPr
         {/* Pricing columns */}
         <Box sx={{ textAlign: "right", minWidth: { xs: "auto", sm: "110px" } }}>
           <Typography variant="h6" sx={{ color: "#ffffff", fontWeight: 800, fontSize: "1.15rem" }}>
-            ${totalPrice.toLocaleString()}
+            ${(lineTotal || unitPrice * quantity).toLocaleString()}
           </Typography>
           {quantity > 1 && (
             <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.35)", fontSize: "0.75rem", display: "block", mt: 0.2 }}>
-              (${singlePrice.toLocaleString()} each)
+              (${unitPrice.toLocaleString()} each)
             </Typography>
           )}
         </Box>

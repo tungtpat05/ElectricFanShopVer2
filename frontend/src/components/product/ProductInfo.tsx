@@ -4,13 +4,15 @@ import {
   Typography,
   Chip,
   Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import CheckIcon from "@mui/icons-material/Check";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/context";
+import { useAuth, useCart } from "@/context";
 import { Product, ProductVariant } from "@/types/product.ts";
 
 interface ProductInfoProps {
@@ -21,12 +23,53 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isLogin, user } = useAuth();
+  const { addItemToCart } = useCart();
 
-  const handlePurchaseAction = (targetUrl: string = "/cart") => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+
+  const handleAddToCart = async () => {
     if (!isLogin || !user) {
       navigate("/login", { state: { from: location } });
+      return;
+    }
+    if (selectedVariant?.id) {
+      try {
+        await addItemToCart(selectedVariant.id, 1);
+        setSnackbarMessage(`Added "${product.productName}" to your shopping cart!`);
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      } catch (err) {
+        console.error("Failed to add product variant to cart:", err);
+        setSnackbarMessage("Failed to add item to cart. Please try again.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      }
     } else {
-      navigate(targetUrl);
+      setSnackbarMessage("The product has no variants or Out of Stock. It cannot be added to the cart.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    if (!isLogin || !user) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+    if (selectedVariant?.id) {
+      try {
+        await addItemToCart(selectedVariant.id, 1);
+        navigate("/cart");
+      } catch (err) {
+        console.error("Failed to add product variant to cart:", err);
+        setSnackbarMessage("Failed to add item to cart. Please try again.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      }
+    } else {
+      navigate("/cart");
     }
   };
 
@@ -301,7 +344,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <Button
           variant="contained"
           fullWidth
-          onClick={() => handlePurchaseAction("/cart")}
+          onClick={handleAddToCart}
           sx={{
             backgroundColor: "#e28a3a",
             color: "#000000",
@@ -320,7 +363,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <Button
           variant="outlined"
           fullWidth
-          onClick={() => handlePurchaseAction("/cart")}
+          onClick={handleBuyNow}
           sx={{
             borderColor: "#e28a3a",
             color: "#e28a3a",
@@ -408,6 +451,28 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           Compare
         </Button>
       </Box>
+
+      {/* Toast Notification for Add to Cart */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3500}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={snackbarSeverity}
+          variant="filled"
+          sx={{
+            width: "100%",
+            fontWeight: 700,
+            backgroundColor: snackbarSeverity === "success" ? "#e28a3a" : undefined,
+            color: snackbarSeverity === "success" ? "#000000" : undefined,
+          }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

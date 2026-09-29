@@ -15,7 +15,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
 import { useNavigate } from 'react-router-dom';
 import logo from "@/assets/images/common/logo.png";
-import { useAuth } from '../../context';
+import { useAuth, useCart } from '../../context';
 
 const navItems = [
     {name: 'Product', path: '/products'},
@@ -26,6 +26,7 @@ const ResponsiveAppBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
     const { isLogin, user, logout, loading } = useAuth();
+    const { cart } = useCart();
     const navigate = useNavigate();
 
     const userRole = user?.role?.toUpperCase() || "";
@@ -81,7 +82,7 @@ const ResponsiveAppBar = () => {
                             }}
                         >
                             <Badge
-                                badgeContent={2}
+                                badgeContent={cart?.totalQuantity || 0}
                                 sx={{
                                     "& .MuiBadge-badge": {
                                         backgroundColor: "#ff6b35",

@@ -182,34 +182,6 @@ const CartSummary = ({ subtotal, deliveryFee, tax, total }: CartSummaryProps) =>
           Continue Shopping
         </Button>
       </Box>
-
-      {/* Trust Badges Payment */}
-      <Box sx={{ textAlign: "center" }}>
-        <Typography variant="caption" sx={{ color: "rgba(255, 255, 255, 0.3)", display: "block", mb: 2, fontWeight: 600, letterSpacing: "0.02em" }}>
-          WE ACCEPT SECURE PAYMENTS
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "center", gap: 1.2, flexWrap: "wrap" }}>
-          {PAYMENT_METHODS.map((method) => (
-            <Box
-              key={method}
-              sx={{
-                border: "1px solid rgba(255, 255, 255, 0.05)",
-                backgroundColor: "rgba(255, 255, 255, 0.02)",
-                borderRadius: "6px",
-                px: 1.4,
-                py: 0.5,
-                fontSize: "0.68rem",
-                color: "rgba(255, 255, 255, 0.5)",
-                fontWeight: 700,
-                letterSpacing: "0.02em",
-                fontFamily: "monospace",
-              }}
-            >
-              {method.toUpperCase()}
-            </Box>
-          ))}
-        </Box>
-      </Box>
     </Box>
   );
 };

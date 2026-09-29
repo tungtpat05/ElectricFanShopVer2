@@ -1,63 +1,37 @@
-import { useEffect, useState } from "react";
 import { Box, Container, Typography, Grid, CircularProgress, Breadcrumbs } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Link } from "react-router-dom";
-import { useProducts } from "@/hooks/useProducts";
-import CartItemCard, { CartItem } from "@/components/cart/CartItemCard";
+import { useCart } from "@/context";
+import CartItemCard from "@/components/cart/CartItemCard";
 import CartSummary from "@/components/cart/CartSummary";
 import EmptyCart from "@/components/cart/EmptyCart";
 import RelatedProducts from "@/components/product/RelatedProducts";
 
 const CartPage = () => {
-  const { products, loading: productsLoading } = useProducts();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [initialized, setInitialized] = useState(false);
+  const { cart, loading, increaseCartItem, decreaseCartItem, removeCartItem } = useCart();
 
-  // Load the first 2 products as mock cart items from backend
-  useEffect(() => {
-    if (products.length >= 2 && !initialized) {
-      setCartItems([
-        { id: 1, product: products[0], quantity: 1 },
-        { id: 2, product: products[1], quantity: 2 },
-      ]);
-      setInitialized(true);
-    }
-  }, [products, initialized]);
-
-  const handleIncrease = (id: number) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  const handleDecrease = (id: number) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
-
-  const handleRemove = (id: number) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
+  const cartItems = cart?.items || [];
+  const totalQuantity = cart?.totalQuantity ?? cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   // Calculations
-  const subtotal = cartItems.reduce((acc, item) => {
-    const price = item.product.discountPrice || item.product.basePrice;
-    return acc + price * item.quantity;
-  }, 0);
-
-  const deliveryFee = subtotal > 20000 ? 0 : 250;
+  const subtotal = cart?.totalPrice ?? cartItems.reduce((acc, item) => acc + (item.lineTotal || item.unitPrice * item.quantity), 0);
+  const deliveryFee = subtotal === 0 ? 0 : subtotal > 20000 ? 0 : 250;
   const tax = Math.round(subtotal * 0.05);
   const total = subtotal + deliveryFee + tax;
-  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  if (productsLoading && !initialized) {
+  const handleIncrease = (variantId: number) => {
+    increaseCartItem(variantId, 1);
+  };
+
+  const handleDecrease = (variantId: number) => {
+    decreaseCartItem(variantId, 1);
+  };
+
+  const handleRemove = (variantId: number) => {
+    removeCartItem(variantId);
+  };
+
+  if (loading && !cart) {
     return (
       <Box
         sx={{
@@ -143,7 +117,7 @@ const CartPage = () => {
               <Box>
                 {cartItems.map((item) => (
                   <CartItemCard
-                    key={item.id}
+                    key={item.id || item.variantId}
                     item={item}
                     onIncrease={handleIncrease}
                     onDecrease={handleDecrease}
@@ -167,7 +141,7 @@ const CartPage = () => {
 
         {/* You May Also Like Recommendations Block */}
         <Box sx={{ mt: 6 }}>
-          <RelatedProducts currentProductId={cartItems[0]?.product?.id || 1} />
+          <RelatedProducts currentProductId={cartItems[0]?.productId || 1} />
         </Box>
       </Container>
     </Box>
